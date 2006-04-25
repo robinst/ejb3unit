@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ejb3unit</name>
+	<comment>Ejb3Unit - Out-of-Container EJB 3.0 Testing - The Ejb3Unit project will automate Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 conform J2EE projects. You need to download the AspectJ maven plugin: maven plugin:download -DgroupId=maven -DartifactId=maven-aspectj-plugin -Dversion=3.2</comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.maven.ide.eclipse.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.atlassw.tools.eclipse.checkstyle.CheckstyleBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.maven.ide.eclipse.maven2Nature</nature>
+		<nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
+	</natures>
+</projectDescription>
