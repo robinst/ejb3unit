@@ -49,8 +49,8 @@
 	<scm>
 		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit/</url>
 		<connection>
-			scm:svn:https://https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
-		<developerConnection>scm:svn:https://https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</developerConnection>
+			scm:svn:https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</developerConnection>
 	</scm>
 	<organization>
 		<name>BM-Org</name>
