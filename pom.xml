@@ -47,9 +47,10 @@
 		</developer>
 	</developers>
 	<scm>
+		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit/</url>
 		<connection>
-			scm:cvs:pserver:anonymous@cvs.sourceforge.net:/cvsroot/ejb3unit:ejb3unit
-		</connection>
+			scm:svn:https://https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
+		<developerConnection>scm:svn:https://https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</developerConnection>
 	</scm>
 	<organization>
 		<name>BM-Org</name>
