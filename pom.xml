@@ -85,9 +85,9 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>javax.ejb</groupId>
-			<artifactId>ejb3x</artifactId>
-			<version>jboss4.0.3</version>
+			<groupId>org.jboss</groupId>
+			<artifactId>jboss-ejb3x</artifactId>
+			<version>4.0.4-CR2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
