@@ -140,7 +140,7 @@ public final class AutomaticBeanEqualsTester extends Assert {
 			back = BaseRandomDataGenerator.getValueFloat();
 		} else if (Ejb3Utils.getNonPrimitiveType(forField) == Integer.class) {
 			back = BaseRandomDataGenerator.getValueInt();
-		} else if (Ejb3Utils.getNonPrimitiveType(forField) == String.class) {
+		} else if (Ejb3Utils.getNonPrimitiveType(forField) == Long.class) {
 			back = BaseRandomDataGenerator.getValueLong();
 		} else if (Ejb3Utils.getNonPrimitiveType(forField) == Short.class) {
 			back = BaseRandomDataGenerator.getValueShort();
