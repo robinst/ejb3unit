@@ -1,6 +1,7 @@
 package com.bm.testsuite;
 
 import com.bm.introspectors.JbossServiceIntrospector;
+import com.bm.testsuite.fixture.InitialDataSet;
 
 /**
  * Base Jboss-Service test case.
@@ -23,5 +24,20 @@ public class BaseJbossServiceTest<T> extends BaseSessionBeanTest<T> {
 				new JbossServiceIntrospector<T>(sessionBeanToTest),
 				usedEntityBeans);
 	}
+    
+    /**
+     * Constructor.
+     * 
+     * @param sessionBeanToTest - to test
+     * @param usedEntityBeans - used 
+     * @param initialData -
+     *            the inital data to create in the db
+     */
+    public BaseJbossServiceTest(Class<T> sessionBeanToTest,
+            Class[] usedEntityBeans,  InitialDataSet... initialData) {
+        super(sessionBeanToTest,
+                new JbossServiceIntrospector<T>(sessionBeanToTest),
+                usedEntityBeans, initialData);
+    }
 
 }
