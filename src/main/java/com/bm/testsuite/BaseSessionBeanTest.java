@@ -130,7 +130,7 @@ public abstract class BaseSessionBeanTest<T> extends BaseTest {
         // ds.shutdownInMemoryDatabase();
         // }
 
-        // delete all objects (faster tan shutdown and restart everything)
+        // delete all objects (faster than shutdown and restart everything)
         final BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg.getConfiguration());
         if (this.initalDataSet != null) {
             for (InitialDataSet current : this.initalDataSet) {

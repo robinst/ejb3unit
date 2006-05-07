@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -235,11 +236,13 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
         try {
             con = ds.getConnection();
             prep = con.prepareStatement(deleteSQL.toString());
+            prep.execute();
         } catch (SQLException e) {
             new RuntimeException(e);
         } finally {
             SQLUtils.cleanup(con, prep);
         }
+        
     }
 
     /**
