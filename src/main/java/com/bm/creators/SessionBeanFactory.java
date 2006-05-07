@@ -189,7 +189,7 @@ public final class SessionBeanFactory<T> {
 					} else {
 						Class implementation = this.dicoverer
 								.findImplementation(akt.getType());
-						log.info("Using: Local/Remote Interface ("
+						log.debug("Using: Local/Remote Interface ("
 								+ akt.getType() + ") -->Implemetation ("
 								+ implementation + ")");
 						// get the right introspector

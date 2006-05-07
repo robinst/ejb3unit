@@ -51,7 +51,7 @@ public class EntityBeanIntrospector<T> extends AbstractIntrospector<T>
 		// iterate over the annotations
 		for (Annotation a : classAnnotations) {
 			if (a instanceof Entity) {
-				log.info("The class to introspect "
+				log.debug("The class to introspect "
 						+ toInspect.getCanonicalName() + " is an Entity-Bean");
 				isSessionBean = true;
 				if (AccessTypeFinder.findAccessType(toInspect).equals(AccessType.FIELD)) {
@@ -71,7 +71,7 @@ public class EntityBeanIntrospector<T> extends AbstractIntrospector<T>
 
 		if (!isTableNameSpecified) {
 			this.tableName = this.generateDefautTableName(toInspect);
-			log.info("The class " + toInspect.getSimpleName()
+			log.debug("The class " + toInspect.getSimpleName()
 					+ " doas not specify a table name! Uning default Name: "
 					+ this.tableName);
 

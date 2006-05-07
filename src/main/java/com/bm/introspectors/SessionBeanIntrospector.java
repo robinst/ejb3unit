@@ -59,10 +59,10 @@ public class SessionBeanIntrospector<T> {
 		// display the right massage
 		for (Annotation a : classAnnotations) {
 			if (a instanceof Stateless) {
-				log.info("The class " + toInspect.getCanonicalName()
+				log.debug("The class " + toInspect.getCanonicalName()
 						+ " is a Stateless-Session-Bean");
 			} else if (a instanceof Stateful) {
-				log.info("The class " + toInspect.getCanonicalName()
+				log.debug("The class " + toInspect.getCanonicalName()
 						+ " is a Statefull-Session-Bean");
 			}
 		}

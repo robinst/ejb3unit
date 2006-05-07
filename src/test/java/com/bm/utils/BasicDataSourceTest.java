@@ -32,8 +32,8 @@ public class BasicDataSourceTest extends TestCase {
 		assertNotNull(con);
 		DatabaseMetaData mt = con.getMetaData();
 		assertNotNull(mt);
-		log.info(mt.getDatabaseProductVersion());
-		log.info(mt.getDatabaseProductName());
+		log.debug(mt.getDatabaseProductVersion());
+		log.debug(mt.getDatabaseProductName());
 		con.close();
 
 	}

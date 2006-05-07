@@ -164,7 +164,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 		final EntityManager manager = emf.createEntityManager();
 		EntityTransaction tx = manager.getTransaction();
 		try {
-			log.info("Pre-Test-Persist: Need to persist ONE Entiy-Bean of type"
+			log.debug("Pre-Test-Persist: Need to persist ONE Entiy-Bean of type"
 					+ this.beanType);
 			tx.begin();
 			manager.persist(toPersist);
