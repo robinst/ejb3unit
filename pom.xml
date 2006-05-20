@@ -1,8 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>bm</artifactId>
 		<groupId>com.bm</groupId>
-		<version>1.0.1</version>
+		<version>1.0.2-SNAPSHOT</version>
+		<relativePath>../bm/pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bm</groupId>
@@ -10,11 +12,11 @@
 	<name>ejb3unit</name>
 	<version>1.1.0-beta-2-SNAPSHOT</version>
 	<description>Out of Container Testing of EJB 3.0</description>
-	<url />
+	<url/>
 	<issueManagement>
 		<url>http://dasemi.homeftp.net:8080/browse/COM</url>
 	</issueManagement>
-	<ciManagement>  
+	<ciManagement>
 		<system>continuum</system>
 		<notifiers>
 			<notifier>
@@ -35,14 +37,14 @@
 			<name>Dabiel Wiese</name>
 			<email>Dabiel.Wiese@siemens.com</email>
 			<organization>Siemens</organization>
-			<timezone />
+			<timezone/>
 		</developer>
 		<developer>
 			<id>fabian</id>
 			<name>Fabian Bauschulte</name>
 			<email>Fabian.Bauschulte@rewe-group.com</email>
 			<organization>RIS</organization>
-			<timezone />
+			<timezone/>
 		</developer>
 	</developers>
 	<scm>
@@ -59,7 +61,7 @@
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<finalName>ejb3unit</finalName>
 		<plugins>
-
+			
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -69,7 +71,7 @@
 					<!-- <forkMode>none</forkMode>-->
 					<argLine>-Xmx300m</argLine>
 					<printSummary>true</printSummary>
-					<reportFormat>plain</reportFormat> 
+					<reportFormat>plain</reportFormat>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -161,8 +163,8 @@
 			<artifactId>ejb3-persistence</artifactId>
 			<version>1.0.0-publicdraft-20060322</version>
 		</dependency>
-
+		
 	</dependencies>
-	<reporting />
-
+	<reporting/>
+	
 </project>
