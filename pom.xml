@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>bm</artifactId>
 		<groupId>com.bm</groupId>
@@ -10,9 +9,9 @@
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.1.0-beta-2-SNAPSHOT</version>
+	<version>1.1.0-beta-2</version>
 	<description>Out of Container Testing of EJB 3.0</description>
-	<url/>
+	<url />
 	<issueManagement>
 		<url>http://dasemi.homeftp.net:8080/browse/COM</url>
 	</issueManagement>
@@ -37,20 +36,20 @@
 			<name>Dabiel Wiese</name>
 			<email>Dabiel.Wiese@siemens.com</email>
 			<organization>Siemens</organization>
-			<timezone/>
+			<timezone />
 		</developer>
 		<developer>
 			<id>fabian</id>
 			<name>Fabian Bauschulte</name>
 			<email>Fabian.Bauschulte@rewe-group.com</email>
 			<organization>RIS</organization>
-			<timezone/>
+			<timezone />
 		</developer>
 	</developers>
 	<scm>
-		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit/</url>
-		<connection>scm:svn:https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
-		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/tags/ejb3unit-1.1.0-beta-2</url>
+		<connection>scm:svn:https://svn.sourceforge.net/svnroot/ejb3unit/tags/ejb3unit-1.1.0-beta-2</connection>
+		<developerConnection>scm:svn:https://svn.sourceforge.net/svnroot/ejb3unit/tags/ejb3unit-1.1.0-beta-2</developerConnection>
 	</scm>
 	<organization>
 		<name>BM-Org</name>
