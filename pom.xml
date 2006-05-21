@@ -165,6 +165,26 @@
 		</dependency>
 		
 	</dependencies>
-	<reporting/>
+	<reporting>
+		<plugins>
+			
+			<plugin>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<linkXref>true</linkXref>
+					<sourceEncoding>utf-8</sourceEncoding>
+					<minimumTokens>80</minimumTokens>
+					<targetJdk>1.5</targetJdk>
+				</configuration>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>cpd</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 	
 </project>
