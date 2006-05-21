@@ -59,7 +59,7 @@
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<finalName>ejb3unit</finalName>
+		<finalName>ejb3unit-1.1.0-beta-2</finalName>
 		<plugins>
 			
 			<plugin>
