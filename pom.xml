@@ -18,7 +18,7 @@
 	<ciManagement>
 		<system>continuum</system>
 		<notifiers>
-			<notifier>
+			<notifier> 
 				<configuration>
 					<address>fabian@bauschulte.de</address>
 				</configuration>
