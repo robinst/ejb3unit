@@ -14,7 +14,7 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.hibernate.ejb.Ejb3Configuration;
 
 /**
- * This class reads and holds the configuration.
+ * This class reads and holds the ejb3unit configuration.
  * 
  * @author Daniel Wiese
  */
