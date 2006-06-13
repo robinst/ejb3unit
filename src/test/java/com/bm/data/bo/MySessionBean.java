@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -23,6 +24,9 @@ public class MySessionBean implements IMySessionBean {
 
 	@Resource(name = "java:/MSSqlDS")
 	private DataSource ds;
+	
+	@Resource
+    private SessionContext ctx;
 
 	@PersistenceContext
 	private EntityManager manager;

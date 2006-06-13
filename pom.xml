@@ -87,6 +87,13 @@
 			<artifactId>jboss-ejb3x</artifactId>
 			<version>4.0.4-CR2</version>
 		</dependency>
+		<!-- contaions session context (chnge later to jbos-j2ee.jar) -->
+		<dependency>
+			<groupId>org.jboss</groupId>
+			<artifactId>jbossall-client</artifactId>
+			<version>4.0.4-CR2</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>

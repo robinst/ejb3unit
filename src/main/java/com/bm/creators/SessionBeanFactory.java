@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.EJB;
 import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -20,6 +21,7 @@ import com.bm.introspectors.Property;
 import com.bm.introspectors.SessionBeanIntrospector;
 import com.bm.utils.BasicDataSource;
 import com.bm.utils.Ejb3Utils;
+import com.bm.utils.FakedSessionContext;
 import com.bm.utils.ImplementationDiscoverer;
 
 /**
@@ -169,7 +171,9 @@ public final class SessionBeanFactory<T> {
 					if (akt.getType().equals(DataSource.class)) {
 						akt.setField(toCreate, new BasicDataSource(
 								this.configuration));
-					} else {
+					} else if (akt.getType().equals(SessionContext.class)){
+						akt.setField(toCreate, new FakedSessionContext());
+					}else {
 						throw new RuntimeException(
 								"Can´t inject a rossource of type: "
 										+ akt.getType());
