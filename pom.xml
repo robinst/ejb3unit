@@ -125,9 +125,9 @@
 			<version>1.5.3</version>
 		</dependency>
 		<dependency>
-			<groupId>ehcache</groupId>
+			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-			<version>1.2</version>
+			<version>1.2BM</version>
 		</dependency>
 		<dependency>
 			<groupId>antlr</groupId>
@@ -170,7 +170,7 @@
 			<version>1.0.0-publicdraft-20060322</version>
 		</dependency>
 		
-	</dependencies>
+	</dependencies> 
 	<reporting>
 		<plugins>
 			
