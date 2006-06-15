@@ -125,9 +125,9 @@
 			<version>1.5.3</version>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.ehcache</groupId>
+			<groupId>net.sourceforge.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-			<version>1.2BM</version>
+			<version>1.2-BM</version>
 		</dependency>
 		<dependency>
 			<groupId>antlr</groupId>
