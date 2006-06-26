@@ -1,6 +1,10 @@
 package com.bm.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +61,7 @@ public class ImplementationDiscoverer {
 
     private void init(Class toFind) {
         // Translate the package name into an absolute path
+        boolean isLoadInJar = false;
         String name = toFind.getName().replace('.', '/');
         URL loc = toFind.getResource("/" + name + ".class");
 
@@ -67,16 +72,42 @@ public class ImplementationDiscoverer {
             int index = s.indexOf('!');
             // It confirm it is a jar file
             if (index != -1) {
-                f = new File(s.substring(5).replace('!', File.separatorChar));
-
-                throw new IllegalArgumentException(
-                        "Class disoverey in Jar files is currently not supported!)");
+                isLoadInJar = true;
             }
         }
-        File rootDirectory = Ejb3Utils.getRootPackageDir(f, toFind.getName());
-        findClassesRecursive("", rootDirectory);
-        // generate interface-impl map
-        this.makeInterfaceImplemantationMap();
+
+        if (!isLoadInJar) {
+            File rootDirectory = Ejb3Utils.getRootPackageDir(f, toFind.getName());
+            findClassesRecursive("", rootDirectory);
+            // generate interface-impl map
+            this.makeInterfaceImplemantationMap();
+        } else {
+            findImplementationInJarFiles(loc);
+        }
+    }
+
+    private void findImplementationInJarFiles(URL locationInJar) {
+        String jarName = Ejb3Utils.isolateJarName(locationInJar);
+        // windows bug with spaces
+        jarName = jarName.replaceAll("\\%20", " ");
+        try {
+            File tempdir = new File(System.getProperty("java.io.tmpdir"));
+            InputStream input = new FileInputStream(jarName);
+            Ejb3Utils.unjar(input, tempdir);
+            input.close();
+
+            findClassesRecursive("", tempdir);
+            // generate interface-impl map
+            this.makeInterfaceImplemantationMap();
+
+        } catch (FileNotFoundException e) {
+            // TODO DW Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO DW Auto-generated catch block
+            e.printStackTrace();
+        }
+
     }
 
     private void makeInterfaceImplemantationMap() {

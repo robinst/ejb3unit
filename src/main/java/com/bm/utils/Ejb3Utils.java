@@ -1,9 +1,14 @@
 package com.bm.utils;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -12,6 +17,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.jar.JarInputStream;
+import java.util.zip.ZipEntry;
 
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -26,10 +33,181 @@ import com.bm.introspectors.Property;
  * @author Daniel Wiese
  */
 public final class Ejb3Utils {
+    
+    /**
+     * This field is used to OSTYPE_WINDOWS.
+     */
+    public static final int OSTYPE_WINDOWS = 1;
+
+    /**
+     * This field is used to OSTYPE_WINNT.
+     */
+    public static final int OSTYPE_WINNT = 2;
+
+    /**
+     * This field is used to OSTYPE_WINCE.
+     */
+    public static final int OSTYPE_WINCE = 3;
+
+    /**
+     * This field is used to OSTYPE_LINUX.
+     */
+    public static final int OSTYPE_LINUX = 4;
+
+    /**
+     * This field is used to OSTYPE_MAC.
+     */
+    public static final int OSTYPE_MAC = 5;
+
+    /**
+     * This field is used to OSTYPE_SOLARIS.
+     */
+    public static final int OSTYPE_SOLARIS = 6;
+
+    /**
+     * This field is used to OSTYPE_NETWARE.
+     */
+    public static final int OSTYPE_NETWARE = 7;
+
+    /**
+     * This field is used to OSTYPE_OS2.
+     */
+    public static final int OSTYPE_OS2 = 8;
+
+    /**
+     * This field is used to OSTYPE_UNKNOWN.
+     */
+    public static final int OSTYPE_UNKNOWN = 9;
+
+    /** default type * */
+    private static int type = OSTYPE_UNKNOWN;
 
 	private Ejb3Utils() {
 		// intentinally left blank
 	}
+    
+    /**
+     * Isolates a jar file when a file was found inside a jar.
+     * 
+     * @param fileInJar -
+     *            the path to the file inside the jar file
+     * @return - the name of the jar file
+     */
+    public static String isolateJarName(URL fileInJar) {
+        String urlSt = fileInJar.getFile();
+        urlSt = urlSt.substring("file:/".length(), urlSt.indexOf("!"));
+        // under linux, solaris we need an absolute path
+        if (getOs() == OSTYPE_LINUX || getOs() == OSTYPE_SOLARIS) {
+            urlSt = "/" + urlSt;
+        }
+        return urlSt;
+    }
+    
+    /**
+     * Determines the OS.
+     * 
+     * @return an integer identifying the OS (one of the OSTYPE constants)
+     */
+    public static int getOs() {
+        if (type == OSTYPE_UNKNOWN) {
+
+            final String osname = System.getProperty("os.name").toLowerCase();
+
+            if (osname.indexOf("windows") != -1) {
+                if (osname.indexOf("nt") != -1 || osname.indexOf("2000") != -1
+                        || osname.indexOf("xp") != -1) {
+                    type = OSTYPE_WINNT;
+                } else if (osname.indexOf("ce") != -1) {
+                    type = OSTYPE_WINCE;
+                } else {
+                    type = OSTYPE_WINDOWS;
+                }
+            } else if (osname.indexOf("linux") != -1 || osname.indexOf("bsd") != -1) {
+                type = OSTYPE_LINUX;
+            } else if (osname.indexOf("mac os") != -1 || osname.indexOf("macos") != -1) {
+                type = OSTYPE_MAC;
+            } else if (osname.indexOf("solaris") != -1) {
+                type = OSTYPE_SOLARIS; // could also be old freebsd version
+            } else if (osname.indexOf("netware") != -1) {
+                type = OSTYPE_NETWARE;
+            } else if (osname.indexOf("os/2") != -1) {
+                type = OSTYPE_OS2;
+            } else {
+                type = OSTYPE_UNKNOWN;
+            }
+        }
+
+        return type;
+    }
+    
+    /**
+     * Dump the contents of a JarArchive to the dpecified destination.
+     * 
+     * @param in -
+     *            the jar archive as input stream
+     * @param dest -
+     *            the destination (to extract the content)
+     * @throws IOException -
+     *             in an error case
+     */
+    public static void unjar(InputStream in, File dest) throws IOException {
+
+        if (!dest.exists()) {
+            dest.mkdirs();
+        }
+
+        if (!dest.isDirectory()) {
+            throw new IOException("Destination must be a directory.");
+        }
+
+        JarInputStream jin = new JarInputStream(in);
+        final byte[] buffer = new byte[1024];
+        ZipEntry entry = jin.getNextEntry();
+        while (entry != null) {
+
+            String fileName = entry.getName();
+            if (fileName.charAt(fileName.length() - 1) == '/') {
+                fileName = fileName.substring(0, fileName.length() - 1);
+            }
+
+            if (fileName.charAt(0) == '/') {
+                fileName = fileName.substring(1);
+            }
+
+            if (File.separatorChar != '/') {
+                fileName = fileName.replace('/', File.separatorChar);
+            }
+
+            final File file = new File(dest, fileName);
+            if (entry.isDirectory()) {
+                // make sure the directory exists
+                file.mkdirs();
+                jin.closeEntry();
+            } else {
+                // make sure the directory exists
+                final File parent = file.getParentFile();
+                if (parent != null && !parent.exists()) {
+                    parent.mkdirs();
+                }
+
+                // dump the file
+
+                final OutputStream out = new FileOutputStream(file);
+                int len = 0;
+                while ((len = jin.read(buffer, 0, buffer.length)) != -1) {
+                    out.write(buffer, 0, len);
+                }
+
+                out.flush();
+                out.close();
+                jin.closeEntry();
+
+            }
+
+            entry = jin.getNextEntry();
+        }
+        jin.close();
+    }
 
 	/**
 	 * Returns all business (local, remote) interfaces of the class.

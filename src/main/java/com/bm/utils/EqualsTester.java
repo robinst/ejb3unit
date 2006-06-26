@@ -71,6 +71,7 @@ public class EqualsTester extends Assert {
 	 * @param d
 	 *            A subclass of A with the same values. If A is an instance of a
 	 *            final class then this must be null
+     * @param checkSubclass - id a subclass should be checked
 	 */
 	public EqualsTester(final Object a, final Object b, final Object c,
 			final Object d, boolean checkSubclass) {

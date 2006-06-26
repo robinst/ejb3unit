@@ -37,9 +37,9 @@ public class BasicDataSource implements DataSource {
 
 	/**
 	 * The connection.
-	 * 
 	 * @author Daniel Wiese
 	 * @since 08.11.2005
+     * @return connection
 	 * @see javax.sql.DataSource#getConnection()
 	 */
 	public Connection getConnection() throws SQLException {
