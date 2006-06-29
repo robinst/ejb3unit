@@ -2,7 +2,7 @@
 	<parent>
 		<artifactId>bm</artifactId>
 		<groupId>com.bm</groupId>
-		<version>1.0.1</version>
+		<version>1.0.3-SNAPSHOT</version>
 		<relativePath>../bm/pom.xml</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
