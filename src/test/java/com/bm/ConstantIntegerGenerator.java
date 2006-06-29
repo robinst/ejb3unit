@@ -29,7 +29,7 @@ public class ConstantIntegerGenerator implements Generator<Integer> {
 	/**
 	 * Generates a value for a distinct type T for a specified field - the field
 	 * is used as an additional information an can be the same for all calls.
-	 * 
+	 * @return the value generated
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
 	public Integer getValue() {

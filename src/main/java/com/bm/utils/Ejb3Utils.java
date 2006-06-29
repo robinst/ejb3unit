@@ -33,7 +33,7 @@ import com.bm.introspectors.Property;
  * @author Daniel Wiese
  */
 public final class Ejb3Utils {
-    
+
     /**
      * This field is used to OSTYPE_WINDOWS.
      */
@@ -82,10 +82,10 @@ public final class Ejb3Utils {
     /** default type * */
     private static int type = OSTYPE_UNKNOWN;
 
-	private Ejb3Utils() {
-		// intentinally left blank
-	}
-    
+    private Ejb3Utils() {
+        // intentinally left blank
+    }
+
     /**
      * Isolates a jar file when a file was found inside a jar.
      * 
@@ -102,7 +102,7 @@ public final class Ejb3Utils {
         }
         return urlSt;
     }
-    
+
     /**
      * Determines the OS.
      * 
@@ -139,7 +139,7 @@ public final class Ejb3Utils {
 
         return type;
     }
-    
+
     /**
      * Dump the contents of a JarArchive to the dpecified destination.
      * 
@@ -147,11 +147,13 @@ public final class Ejb3Utils {
      *            the jar archive as input stream
      * @param dest -
      *            the destination (to extract the content)
+     * @return - a list with all extracted files
      * @throws IOException -
      *             in an error case
      */
-    public static void unjar(InputStream in, File dest) throws IOException {
+    public static List<File> unjar(InputStream in, File dest) throws IOException {
 
+        final List<File> back = new ArrayList<File>();
         if (!dest.exists()) {
             dest.mkdirs();
         }
@@ -201,236 +203,292 @@ public final class Ejb3Utils {
                 out.flush();
                 out.close();
                 jin.closeEntry();
+                back.add(file);
 
             }
 
             entry = jin.getNextEntry();
         }
         jin.close();
+        return back;
     }
 
-	/**
-	 * Returns all business (local, remote) interfaces of the class.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 05.02.2006
-	 * @param toAnalyse -
-	 *            the session bean /service to analyse
-	 * @return - the interfaces
-	 */
-	public static List<Class> getLocalRemoteInterfaces(Class toAnalyse) {
-		final List<Class> back = new ArrayList<Class>();
-		if (toAnalyse != null) {
-			Class[] interfaces = toAnalyse.getInterfaces();
-			if (interfaces != null) {
-				for (Class<Object> interf : interfaces) {
-					if (interf.getAnnotation(Local.class) != null
-							|| interf.getAnnotation(Remote.class) != null) {
-						back.add(interf);
-					}
-				}
-			}
-		}
+    /**
+     * Scan for files in jar file.
+     * 
+     * @param in -
+     *            the jar archive as input stream
+     * 
+     * @return - a list with all extracted files
+     * @throws IOException -
+     *             in an error case
+     */
+    public static List<String> scanFileNamesInArchive(InputStream in) throws IOException {
 
-		return back;
-	}
-	
-	/**
-	 * This method will do the transformation of primitive types if neccessary.
-	 * 
-	 * @param aktField -
-	 *            the field to inspect
-	 * @return the declaring type (or primitive representant)
-	 */
-	public static Class getNonPrimitiveType(Property aktField) {
-		return getNonPrimitiveType(aktField.getType());
+        final List<String> back = new ArrayList<String>();
 
-	}
-	
-	/**
-	 * This method will do the transformation of primitive types if neccessary.
-	 * 
-	 * @param aktField -
-	 *            the field to inspect
-	 * @return the declaring type (or primitive representant)
-	 */
-	public static Class getNonPrimitiveType(Class aktField) {
-		if (aktField == double.class) {
-			return Double.class;
-		} else if (aktField == float.class) {
-			return Float.class;
-		} else if (aktField == int.class) {
-			return Integer.class;
-		} else if (aktField == boolean.class) {
-			return Boolean.class;
-		} else if (aktField == char.class) {
-			return Character.class;
-		} else if (aktField == byte[].class) {
-			return Byte.class;
-		} else if (aktField == long.class) {
-			return Long.class;
-		} else if (aktField == short.class) {
-			return Short.class;
-		} else {
-			return aktField;
-		}
+        JarInputStream jin = new JarInputStream(in);
+        ZipEntry entry = jin.getNextEntry();
+        while (entry != null) {
 
-	}
-	
-	/**
-	 * Returns a generator type for a givven generator.
-	 * @author Daniel Wiese
-	 * @since 17.04.2006
-	 * @param actGenerator - given genrator
-	 * @return returns a given genrator type
-	 */
-	public static GeneratorType getGeneratorTypeAnnotation(Generator actGenerator) {
-		Annotation[] classAnnotations = actGenerator.getClass()
-				.getAnnotations();
-		// iterate over the annotations
-		for (Annotation a : classAnnotations) {
-			if (a instanceof GeneratorType) {
-				final GeneratorType gT = (GeneratorType) a;
-				return gT;
-			}
-		}
-		return null;
-	}
+            String fileName = entry.getName();
+            if (fileName.charAt(fileName.length() - 1) == '/') {
+                fileName = fileName.substring(0, fileName.length() - 1);
+            }
 
-	/**
-	 * Returns the riht collection type for the given property.
-	 * 
-	 * @param forProperty -
-	 *            for which property
-	 * @return - the rigt collection type
-	 */
-	public static Collection getRightCollectionType(Property forProperty) {
-		if (forProperty.getType().equals(List.class)) {
-			return new ArrayList();
-		} else if (forProperty.getType().equals(Set.class)) {
-			return new HashSet();
-		} else if (forProperty.getType().equals(LinkedList.class)) {
-			return new LinkedList();
-		} else if (forProperty.getType().equals(Vector.class)) {
-			return new Vector();
-		} else if (forProperty.getType().equals(Set.class)) {
-			return new HashSet();
-		} else {
-			return new ArrayList();
-		}
-	}
+            if (fileName.charAt(0) == '/') {
+                fileName = fileName.substring(1);
+            }
 
-	/**
-	 * Returns all fields (including fields from all superclasses) of a class.
-	 * 
-	 * @param forClass -
-	 *            for which class
-	 * @return - all fields
-	 */
-	public static Field[] getAllFields(Class forClass) {
-		final List<Field> fields = new ArrayList<Field>();
-		Class aktClass = forClass;
-		while (!aktClass.equals(Object.class)) {
-			Field[] tmp = aktClass.getDeclaredFields();
-			for (Field akt : tmp) {
-				fields.add(akt);
-			}
-			aktClass = aktClass.getSuperclass();
-		}
-		return fields.toArray(new Field[fields.size()]);
-	}
+            if (File.separatorChar != '/') {
+                fileName = fileName.replace('/', File.separatorChar);
+            }
 
-	/**
-	 * Returns all fields (including fields from all superclasses) of a class.
-	 * 
-	 * @param forClass -
-	 *            for which class
-	 * @return - all fields
-	 */
-	public static Method[] getAllMethods(Class forClass) {
-		final List<Method> methods = new ArrayList<Method>();
-		Class aktClass = forClass;
-		while (!aktClass.equals(Object.class)) {
-			Method[] tmp = aktClass.getDeclaredMethods();
-			for (Method akt : tmp) {
-				methods.add(akt);
-			}
-			aktClass = aktClass.getSuperclass();
-		}
-		return methods.toArray(new Method[methods.size()]);
-	}
+            if (!entry.isDirectory()) {
+                back.add(fileName);
+            }
 
-	/**
-	 * Retrun a short class name. E.g. java.util.StringTokenizer will be
-	 * StringTokenizer
-	 * 
-	 * @param longClassName -
-	 *            the long fully qualified calss name
-	 * @return - short class name
-	 */
-	public static String getShortClassName(String longClassName) {
-		final StringTokenizer tk = new StringTokenizer(longClassName, ".");
-		String last = longClassName;
-		while (tk.hasMoreTokens()) {
-			last = tk.nextToken();
-		}
+            entry = jin.getNextEntry();
+        }
+        jin.close();
+        return back;
+    }
 
-		return last;
-	}
+    /**
+     * Returns all business (local, remote) interfaces of the class.
+     * 
+     * @author Daniel Wiese
+     * @since 05.02.2006
+     * @param toAnalyse -
+     *            the session bean /service to analyse
+     * @return - the interfaces
+     */
+    public static List<Class> getLocalRemoteInterfaces(Class toAnalyse) {
+        final List<Class> back = new ArrayList<Class>();
+        if (toAnalyse != null) {
+            Class[] interfaces = toAnalyse.getInterfaces();
+            if (interfaces != null) {
+                for (Class<Object> interf : interfaces) {
+                    if (interf.getAnnotation(Local.class) != null
+                            || interf.getAnnotation(Remote.class) != null) {
+                        back.add(interf);
+                    }
+                }
+            }
+        }
 
-	/**
-	 * Retrun a short class name. E.g. java.util.StringTokenizer will be
-	 * StringTokenizer
-	 * 
-	 * @param longClassName -
-	 *            the long fully qualified calss name
-	 * @return - short class name
-	 */
-	public static String getPackageName(String longClassName) {
-		final StringTokenizer tk = new StringTokenizer(longClassName, ".");
-		final StringBuilder sb = new StringBuilder();
-		String last = longClassName;
-		while (tk.hasMoreTokens()) {
-			last = tk.nextToken();
-			if (tk.hasMoreTokens()) {
-				sb.append(last);
-				sb.append(".");
-			}
-		}
+        return back;
+    }
 
-		return sb.toString().substring(0, sb.toString().length() - 1);
-	}
+    /**
+     * This method will do the transformation of primitive types if neccessary.
+     * 
+     * @param aktField -
+     *            the field to inspect
+     * @return the declaring type (or primitive representant)
+     */
+    public static Class getNonPrimitiveType(Property aktField) {
+        return getNonPrimitiveType(aktField.getType());
 
-	/**
-	 * Retrurns the root package directory e.g com.ejb3unit.eg --> returns com.
-	 * 
-	 * @param location -
-	 *            the location of th epackage
-	 * 
-	 * @param longPackageName -
-	 *            the long fully qualified class name
-	 * @return - root file name
-	 */
-	public static File getRootPackageDir(File location, String longPackageName) {
-		final StringTokenizer tk = new StringTokenizer(longPackageName, ".");
-		File back = location;
-		while (tk.hasMoreTokens()) {
-			tk.nextToken();
-			back = back.getParentFile();
-		}
-		return back;
-	}
+    }
 
-	/**
-	 * Retrun a short class name. E.g. java.util.StringTokenizer will be
-	 * StringTokenizer
-	 * 
-	 * @param clazz -
-	 *            for class
-	 * @return - short class name
-	 */
-	public static String getShortClassName(Class clazz) {
-		return getShortClassName(clazz.getName());
-	}
+    /**
+     * This method will do the transformation of primitive types if neccessary.
+     * 
+     * @param aktField -
+     *            the field to inspect
+     * @return the declaring type (or primitive representant)
+     */
+    public static Class getNonPrimitiveType(Class aktField) {
+        if (aktField == double.class) {
+            return Double.class;
+        } else if (aktField == float.class) {
+            return Float.class;
+        } else if (aktField == int.class) {
+            return Integer.class;
+        } else if (aktField == boolean.class) {
+            return Boolean.class;
+        } else if (aktField == char.class) {
+            return Character.class;
+        } else if (aktField == byte[].class) {
+            return Byte.class;
+        } else if (aktField == long.class) {
+            return Long.class;
+        } else if (aktField == short.class) {
+            return Short.class;
+        } else {
+            return aktField;
+        }
+
+    }
+
+    /**
+     * Returns a generator type for a givven generator.
+     * 
+     * @author Daniel Wiese
+     * @since 17.04.2006
+     * @param actGenerator -
+     *            given genrator
+     * @return returns a given genrator type
+     */
+    public static GeneratorType getGeneratorTypeAnnotation(Generator actGenerator) {
+        Annotation[] classAnnotations = actGenerator.getClass().getAnnotations();
+        // iterate over the annotations
+        for (Annotation a : classAnnotations) {
+            if (a instanceof GeneratorType) {
+                final GeneratorType gT = (GeneratorType) a;
+                return gT;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the riht collection type for the given property.
+     * 
+     * @param forProperty -
+     *            for which property
+     * @return - the rigt collection type
+     */
+    public static Collection getRightCollectionType(Property forProperty) {
+        if (forProperty.getType().equals(List.class)) {
+            return new ArrayList();
+        } else if (forProperty.getType().equals(Set.class)) {
+            return new HashSet();
+        } else if (forProperty.getType().equals(LinkedList.class)) {
+            return new LinkedList();
+        } else if (forProperty.getType().equals(Vector.class)) {
+            return new Vector();
+        } else if (forProperty.getType().equals(Set.class)) {
+            return new HashSet();
+        } else {
+            return new ArrayList();
+        }
+    }
+
+    /**
+     * Returns all fields (including fields from all superclasses) of a class.
+     * 
+     * @param forClass -
+     *            for which class
+     * @return - all fields
+     */
+    public static Field[] getAllFields(Class forClass) {
+        final List<Field> fields = new ArrayList<Field>();
+        Class aktClass = forClass;
+        while (!aktClass.equals(Object.class)) {
+            Field[] tmp = aktClass.getDeclaredFields();
+            for (Field akt : tmp) {
+                fields.add(akt);
+            }
+            aktClass = aktClass.getSuperclass();
+        }
+        return fields.toArray(new Field[fields.size()]);
+    }
+
+    /**
+     * Returns all fields (including fields from all superclasses) of a class.
+     * 
+     * @param forClass -
+     *            for which class
+     * @return - all fields
+     */
+    public static Method[] getAllMethods(Class forClass) {
+        final List<Method> methods = new ArrayList<Method>();
+        Class aktClass = forClass;
+        while (!aktClass.equals(Object.class)) {
+            Method[] tmp = aktClass.getDeclaredMethods();
+            for (Method akt : tmp) {
+                methods.add(akt);
+            }
+            aktClass = aktClass.getSuperclass();
+        }
+        return methods.toArray(new Method[methods.size()]);
+    }
+
+    /**
+     * Retrun a short class name. E.g. java.util.StringTokenizer will be
+     * StringTokenizer
+     * 
+     * @param longClassName -
+     *            the long fully qualified calss name
+     * @return - short class name
+     */
+    public static String getShortClassName(String longClassName) {
+        final StringTokenizer tk = new StringTokenizer(longClassName, ".");
+        String last = longClassName;
+        while (tk.hasMoreTokens()) {
+            last = tk.nextToken();
+        }
+
+        return last;
+    }
+
+    /**
+     * Retrun a short class name. E.g. java.util.StringTokenizer will be
+     * StringTokenizer
+     * 
+     * @param longClassName -
+     *            the long fully qualified calss name
+     * @return - short class name
+     */
+    public static String getPackageName(String longClassName) {
+        final StringTokenizer tk = new StringTokenizer(longClassName, ".");
+        final StringBuilder sb = new StringBuilder();
+        String last = longClassName;
+        while (tk.hasMoreTokens()) {
+            last = tk.nextToken();
+            if (tk.hasMoreTokens()) {
+                sb.append(last);
+                sb.append(".");
+            }
+        }
+
+        return sb.toString().substring(0, sb.toString().length() - 1);
+    }
+
+    /**
+     * Retrurns the root package directory e.g com.ejb3unit.eg --> returns com.
+     * 
+     * @param location -
+     *            the location of th epackage
+     * 
+     * @param longPackageName -
+     *            the long fully qualified class name
+     * @return - root file name
+     */
+    public static File getRootPackageDir(File location, String longPackageName) {
+        final StringTokenizer tk = new StringTokenizer(longPackageName, ".");
+        File back = location;
+        while (tk.hasMoreTokens()) {
+            tk.nextToken();
+            back = back.getParentFile();
+        }
+        return back;
+    }
+
+    /**
+     * Retrun a short class name. E.g. java.util.StringTokenizer will be
+     * StringTokenizer
+     * 
+     * @param clazz -
+     *            for class
+     * @return - short class name
+     */
+    public static String getShortClassName(Class clazz) {
+        return getShortClassName(clazz.getName());
+    }
+
+    /**
+     * Returns a path to an temp directory.
+     * 
+     * @author Daniel Wiese
+     * @since 29.06.2006
+     * @return - a path to a temp directory.
+     */
+    public static File getTempDirectory() {
+        File tempdir = new File(System.getProperty("java.io.tmpdir"));
+        return tempdir;
+    }
 
 }

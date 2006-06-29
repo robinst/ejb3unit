@@ -91,21 +91,20 @@ public class ImplementationDiscoverer {
         // windows bug with spaces
         jarName = jarName.replaceAll("\\%20", " ");
         try {
-            File tempdir = new File(System.getProperty("java.io.tmpdir"));
             InputStream input = new FileInputStream(jarName);
-            Ejb3Utils.unjar(input, tempdir);
+            
+            List<String> back = Ejb3Utils.scanFileNamesInArchive(input);
             input.close();
-
-            findClassesRecursive("", tempdir);
+            this.findClassesFromList(back);
             // generate interface-impl map
             this.makeInterfaceImplemantationMap();
 
         } catch (FileNotFoundException e) {
-            // TODO DW Auto-generated catch block
-            e.printStackTrace();
+            log.error("File not found", e);
+            throw new IllegalArgumentException("Cant find implementation");
         } catch (IOException e) {
-            // TODO DW Auto-generated catch block
-            e.printStackTrace();
+            log.error("File not found", e);
+            throw new IllegalArgumentException("Cant find implementation");
         }
 
     }
@@ -173,6 +172,35 @@ public class ImplementationDiscoverer {
                         newPackageName = currentPackageName + "." + fileNames[i];
                     }
                     findClassesRecursive(newPackageName, files[i]);
+                }
+            }
+        }
+    }
+
+    /**
+     * Iterate over a given root directory and search class files
+     * 
+     * @author Daniel Wiese
+     * @since 13.11.2005
+     * @param currentPackageName -
+     *            the package we are starting with
+     * @param directory .
+     *            the current directory
+     */
+    private void findClassesFromList(List<String> files) {
+
+        for (String file : files) {
+            if (file.endsWith(".class")) {
+                // removes the .class extension
+                String classname = file.substring(0, file.length() - 6);
+                classname = classname.replace("\\", ".");
+                try {
+                    // Try to find the class on the class path
+                    Class c = Class.forName(classname);
+                    this.allClasses.add(c);
+
+                } catch (ClassNotFoundException cnfex) {
+                    log.debug("Can´t load class: " + cnfex);
                 }
             }
         }

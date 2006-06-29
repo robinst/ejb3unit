@@ -1,12 +1,13 @@
 package com.bm.testsuite.fixture;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,15 +38,67 @@ import com.bm.utils.csv.CSVParser;
  */
 public class CSVInitialDataSet<T> implements InitialDataSet {
 
-    private final EntityBeanIntrospector<T> introspector;
+    private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+            .getLogger(CSVInitialDataSet.class);
 
-    private final String[] propertyMapping;
+    private EntityBeanIntrospector<T> introspector;
 
-    private final Property[] propertyInfo;
+    private String[] propertyMapping;
 
-    private final String insertSQLString;
+    private Property[] propertyInfo;
 
-    private final URL file;
+    private String insertSQLString;
+
+    private File file;
+
+    /**
+     * Constructor.
+     * 
+     * @param entityBeanClass -
+     *            the corresponding enetity bean class
+     * @param propertyMapping -
+     *            a string array whith the meaning the first column of the cvs
+     *            file belongs to the property with the name
+     *            <code>propertyMapping[0]</code>
+     * @param isCompressed - true if compressed (zip)
+     * @param csvFileName -
+     *            the name of the cvs file
+     */
+    public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName, boolean isCompressed,
+            String... propertyMapping) {
+        initialize(entityBeanClass, propertyMapping);
+        if (isCompressed) {
+            try {
+                URL compressedFile = Thread.currentThread().getContextClassLoader().getResource(
+                        csvFileName);
+                if (compressedFile == null) {
+                    throw new IllegalArgumentException("Can´t find the CVS file named ("
+                            + csvFileName + ")");
+                }
+                File tempDir = Ejb3Utils.getTempDirectory();
+                InputStream input = new FileInputStream(compressedFile.getFile());
+                List<File> extracted = Ejb3Utils.unjar(input, tempDir);
+                input.close();
+                if (extracted.isEmpty()) {
+                    throw new IllegalArgumentException("The copressed file " + csvFileName
+                            + " was empty");
+                } else if (extracted.size() != 1) {
+                    throw new IllegalArgumentException("The copressed file " + csvFileName
+                            + " must contain exactly ONE file");
+                }
+
+                file = extracted.get(0);
+            } catch (FileNotFoundException e) {
+                log.error("The file " + csvFileName + " was not found", e);
+                throw new IllegalArgumentException("The file was not found");
+            } catch (IOException e) {
+                log.error("The file " + csvFileName + " could not be accessed", e);
+                throw new IllegalArgumentException("The file could not be accessed");
+            }
+
+        }
+
+    }
 
     /**
      * Constructor.
@@ -61,6 +114,24 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
      */
     public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
             String... propertyMapping) {
+        initialize(entityBeanClass, propertyMapping);
+        final URL tmp = Thread.currentThread().getContextClassLoader().getResource(csvFileName);
+        if (tmp == null) {
+            throw new IllegalArgumentException("Can´t find the CVS file named (" + csvFileName
+                    + ")");
+        }
+
+        file = new File(tmp.getFile());
+
+    }
+
+    /**
+     * @author Daniel Wiese
+     * @since 29.06.2006
+     * @param entityBeanClass
+     * @param propertyMapping
+     */
+    private void initialize(Class<T> entityBeanClass, String... propertyMapping) {
         this.introspector = new EntityBeanIntrospector<T>(entityBeanClass);
         // init configuration if not yet done
         if (!Ejb3UnitCfg.isInitialized()) {
@@ -71,12 +142,6 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
         this.propertyMapping = propertyMapping;
         this.propertyInfo = new Property[propertyMapping.length];
         this.insertSQLString = this.buildInsertSQL();
-        file = Thread.currentThread().getContextClassLoader().getResource(csvFileName);
-        if (file == null) {
-            throw new IllegalArgumentException("Can´t find the CVS file named (" + csvFileName
-                    + ")");
-        }
-
     }
 
     private String buildInsertSQL() {
@@ -180,7 +245,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
         try {
             con = ds.getConnection();
             prep = con.prepareStatement(this.insertSQLString);
-            final CSVParser parser = new CSVParser(new FileInputStream(file.getFile()));
+            final CSVParser parser = new CSVParser(new FileInputStream(file));
             parser.setCommentStart("#;!");
             parser.setEscapes("nrtf", "\n\r\t\f");
             String value;
@@ -242,7 +307,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
         } finally {
             SQLUtils.cleanup(con, prep);
         }
-        
+
     }
 
     /**
