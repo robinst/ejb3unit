@@ -200,7 +200,7 @@ public class ImplementationDiscoverer {
                     this.allClasses.add(c);
 
                 } catch (ClassNotFoundException cnfex) {
-                    log.debug("Can´t load class: " + cnfex);
+                    log.error("Can´t load class: " + cnfex);
                 }
             }
         }
