@@ -194,6 +194,7 @@ public class ImplementationDiscoverer {
                 // removes the .class extension
                 String classname = file.substring(0, file.length() - 6);
                 classname = classname.replace("\\", ".");
+                classname = classname.replace("/", ".");
                 try {
                     // Try to find the class on the class path
                     Class c = Class.forName(classname);
