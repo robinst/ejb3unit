@@ -73,17 +73,7 @@ public class MockedSessionBeanTest<T> extends BaseTest {
      *            the value to set
      */
     protected void setValueForField(String fieldName, Object toSet) {
-        try {
-            final Field field = this.beanUnderTestClass.getDeclaredField(fieldName);
-            Property prop = new Property(field);
-            prop.setField(this.beanToTest, toSet);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        this.setValueForField(this.beanToTest, fieldName, toSet);
     }
 
     /**
