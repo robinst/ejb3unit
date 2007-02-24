@@ -56,7 +56,8 @@ public final class AutomaticBeanEqualsTester extends Assert {
 				// size)
 				for (int k = 0; k < fields.size(); k++) {
 					final T differentInstance = beanToTest.newInstance();
-					copyProperties(differentInstance, fields, lastGeneratedValues);
+					copyProperties(differentInstance, fields,
+							lastGeneratedValues);
 					changeOnePropertyValue(differentInstance,
 							lastGeneratedValues, fields, k);
 

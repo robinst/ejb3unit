@@ -96,10 +96,11 @@ public class UndoScriptGenerator<T> {
 		}
 
 	}
-	
+
 	/**
 	 * This method returns a delete all statement for the table (bean type).
 	 * ATTENTION: This method will not delete referenced collections
+	 * 
 	 * @return delete all statement
 	 */
 	public String getDeleteAllStatement() {

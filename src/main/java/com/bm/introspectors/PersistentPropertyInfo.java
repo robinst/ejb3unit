@@ -111,6 +111,7 @@ public class PersistentPropertyInfo {
 
 	/**
 	 * Returns the entityReleationInfo.
+	 * 
 	 * @return Returns the entityReleationInfo.
 	 */
 	public EntityReleationInfo getEntityReleationInfo() {
@@ -119,6 +120,7 @@ public class PersistentPropertyInfo {
 
 	/**
 	 * The entityReleationInfo to set.
+	 * 
 	 * @param entityReleationInfo
 	 *            The entityReleationInfo to set.
 	 */

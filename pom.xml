@@ -81,12 +81,30 @@
 			<version>3.8.1</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- logging -->
 		<dependency>
-			<groupId>org.jboss</groupId>
-			<artifactId>jboss-ejb3x</artifactId>
-			<version>4.0.4-CR2</version>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
 		</dependency>
-		<!-- contaions session context (chnge later to jbos-j2ee.jar) -->
+		<!-- commons dependencies -->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<!-- for mock testing -->
+		<dependency>
+			<groupId>jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+		<!-- contains session context (change later to jboss-j2ee.jar) -->
 		<dependency>
 			<groupId>org.jboss</groupId>
 			<artifactId>jbossall-client</artifactId>
@@ -94,86 +112,21 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-configuration</groupId>
-			<artifactId>commons-configuration</artifactId>
-			<version>1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>jmock</groupId>
-			<artifactId>jmock</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>2.1_3</version>
-		</dependency>
-		<dependency>
-			<groupId>asm</groupId>
-			<artifactId>asm-attrs</artifactId>
-			<version>1.5.3</version>
-		</dependency>
-		<dependency>
-			<groupId>net.sourceforge.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>1.2-BM</version>
-		</dependency>
-		<dependency>
-			<groupId>antlr</groupId>
-			<artifactId>antlr</artifactId>
-			<version>2.7.6rc1</version>
-		</dependency>
+		   <groupId>org.hibernate</groupId>
+  			<artifactId>hibernate-entitymanager</artifactId>
+			<version>3.2.1.ga</version>
+	      </dependency>
+	      <dependency>
+			 <groupId>org.hibernate</groupId>
+			 <artifactId>hibernate</artifactId>
+			 <version>3.2.1.ga</version>
+	      </dependency>
+		<!-- for in momory database -->
 		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>1.8.0.1</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.transaction</groupId>
-			<artifactId>jta</artifactId>
-			<version>1.0.1B</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.13</version>
-		</dependency>
-		<dependency>
-			<groupId>javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-			<version>1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss</groupId>
-			<artifactId>jboss-archive-browsing</artifactId>
-			<version>5.0.0-alpha</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate</artifactId>
-			<version>3.2.0-CR-1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>ejb3-persistence</artifactId>
-			<version>1.0.0-publicdraft-20060322</version>
-		</dependency>
-		
 	</dependencies> 
 	<reporting>
 		<plugins>

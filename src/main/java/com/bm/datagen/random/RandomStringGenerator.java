@@ -12,24 +12,31 @@ import com.bm.introspectors.Property;
 
 /**
  * Generates random string values - distinguish between PK and non PK fields.
+ * 
  * @author Daniel Wiese
- *
+ * 
  */
 @GeneratorType(className = String.class, fieldType = FieldType.ALL_TYPES)
 public class RandomStringGenerator extends BaseUniqueValueGenerator<String>
 		implements Generator<String> {
 
 	private int lastLength = 255;
-	@ForProperty private Property forProperty;
-	@UsedIntrospector private Introspector<Object> introspector;
+
+	@ForProperty
+	private Property forProperty;
+
+	@UsedIntrospector
+	private Introspector<Object> introspector;
 
 	/**
 	 * Returns the next String.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
 	public String getValue() {
-		lastLength = introspector.getPresistentFieldInfo(forProperty).getLength();
+		lastLength = introspector.getPresistentFieldInfo(forProperty)
+				.getLength();
 
 		if (introspector.getPkFields().contains(forProperty)) {
 			// generate non simple strings for non pk fields

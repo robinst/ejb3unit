@@ -66,8 +66,8 @@ public class MyOtherSessionBeanTest extends
 		};
 
 		mySessionBean.expects(once()).method("getDs").will(returnValue(ds));
-		
-		//call the expected operation
+
+		// call the expected operation
 		toTest.executeOperation();
 
 	}

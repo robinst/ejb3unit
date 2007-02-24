@@ -20,13 +20,13 @@ import junit.framework.Assert;
  * the equals contract, refer to the book "Practical Java" by Peter Haggar
  * 
  * <pre>
- *   // WRONG way of implementing equals
- *   public boolean equals( final Object object ) {
- *       if( object instanceof this ) {
- *          // do check
- *       }
- *       return false;
- *   }
+ *    // WRONG way of implementing equals
+ *    public boolean equals( final Object object ) {
+ *        if( object instanceof this ) {
+ *           // do check
+ *        }
+ *        return false;
+ *    }
  * </pre>
  * 
  * The correct way to implement equals is as follows
@@ -71,7 +71,8 @@ public class EqualsTester extends Assert {
 	 * @param d
 	 *            A subclass of A with the same values. If A is an instance of a
 	 *            final class then this must be null
-     * @param checkSubclass - id a subclass should be checked
+	 * @param checkSubclass -
+	 *            id a subclass should be checked
 	 */
 	public EqualsTester(final Object a, final Object b, final Object c,
 			final Object d, boolean checkSubclass) {

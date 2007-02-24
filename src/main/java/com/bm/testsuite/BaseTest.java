@@ -123,28 +123,30 @@ public class BaseTest extends MockObjectTestCase {
 	public void testNothing() {
 		// intentionally left blank
 	}
-    
-    /**
-     * Sets a value for a field in the tested-bean instance.
-     * 
-     * @author Daniel Wiese
-     * @since 02.05.2006
-     * @param fieldName -
-     *            the name of the field
-     * @param toSet -
-     *            the value to set
-     */
-    protected void setValueForField(Object forObject, String fieldName, Object toSet) {
-        try {
-            final Field field = forObject.getClass().getDeclaredField(fieldName);
-            Property prop = new Property(field);
-            prop.setField(forObject, toSet);
-        } catch (SecurityException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchFieldException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
+	/**
+	 * Sets a value for a field in the tested-bean instance.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 02.05.2006
+	 * @param fieldName -
+	 *            the name of the field
+	 * @param toSet -
+	 *            the value to set
+	 */
+	protected void setValueForField(Object forObject, String fieldName,
+			Object toSet) {
+		try {
+			final Field field = forObject.getClass()
+					.getDeclaredField(fieldName);
+			Property prop = new Property(field);
+			prop.setField(forObject, toSet);
+		} catch (SecurityException e) {
+			throw new RuntimeException(e);
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

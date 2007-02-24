@@ -7,15 +7,16 @@ import com.bm.datagen.utils.BaseRandomDataGenerator;
 
 /**
  * Generates random string values - distinguish between PK and non PK fields.
+ * 
  * @author Daniel Wiese
- *
+ * 
  */
 @GeneratorType(className = String.class, fieldType = FieldType.NON_PK_FIELDS)
-public class PrimitiveRandomStringGenerator
-		implements Generator<String> {
+public class PrimitiveRandomStringGenerator implements Generator<String> {
 
 	/**
 	 * Returns the next String.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

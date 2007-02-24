@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 /**
  * Local Interface.
+ * 
  * @author Daniel Wiese
  * @since 08.11.2005
  */
@@ -27,9 +28,10 @@ public interface IMyOtherSessionBean extends Serializable {
 	 * @return Returns the em.
 	 */
 	EntityManager getEm();
-	
-	/** 
+
+	/**
 	 * rturns a reference to a other sb.
+	 * 
 	 * @return reference to a other sb.
 	 */
 	IMySessionBean getSessionBean();

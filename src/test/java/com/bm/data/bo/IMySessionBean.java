@@ -9,14 +9,16 @@ import javax.sql.DataSource;
 
 /**
  * Local Interface.
+ * 
  * @author Daniel Wiese
  * @since 08.11.2005
  */
 @Local
 public interface IMySessionBean extends Serializable {
-	
+
 	/**
-	 * Returns a testlist. 
+	 * Returns a testlist.
+	 * 
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
 	 * @return - a test list

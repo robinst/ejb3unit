@@ -14,19 +14,16 @@ import com.bm.datagen.utils.BaseRandomDataGenerator;
  * 
  */
 @GeneratorType(className = Date.class, fieldType = FieldType.NON_PK_FIELDS)
-public class PrimitiveRandomDateGenerator
-		implements Generator<Date> {
-	
+public class PrimitiveRandomDateGenerator implements Generator<Date> {
 
 	/**
 	 * Returns the date.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
 	public Date getValue() {
 		return BaseRandomDataGenerator.getValueDate();
 	}
-
-	
 
 }

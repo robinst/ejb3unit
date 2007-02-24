@@ -24,9 +24,9 @@ public class MySessionBean implements IMySessionBean {
 
 	@Resource(name = "java:/MSSqlDS")
 	private DataSource ds;
-	
+
 	@Resource
-    private SessionContext ctx;
+	private SessionContext ctx;
 
 	@PersistenceContext
 	private EntityManager manager;

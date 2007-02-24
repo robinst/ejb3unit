@@ -19,12 +19,16 @@ import com.bm.introspectors.Property;
 @GeneratorType(className = Integer.class, fieldType = FieldType.ALL_TYPES)
 public class RandomIntegerGenerator extends BaseUniqueValueGenerator<Integer>
 		implements Generator<Integer> {
-	
-	@ForProperty private Property forProperty;
-	@UsedIntrospector private Introspector<Object> introspector;
+
+	@ForProperty
+	private Property forProperty;
+
+	@UsedIntrospector
+	private Introspector<Object> introspector;
 
 	/**
 	 * Returns the next Integer.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

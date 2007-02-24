@@ -6,9 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation can be used in generators
- * if a generator need a reference to the entity bean instance
- * where this generator is used for.
+ * This annotation can be used in generators if a generator need a reference to
+ * the entity bean instance where this generator is used for.
+ * 
  * @author Daniel Wiese
  */
 @Target(ElementType.FIELD)

@@ -18,7 +18,8 @@ import com.bm.utils.UndoScriptGenerator;
  * Represents an initial dataset for entity beans.
  * 
  * @author Daniel Wiese
- * @param <T> - der typ des Entity Beans welches initial angelegt wird.
+ * @param <T> -
+ *            der typ des Entity Beans welches initial angelegt wird.
  * 
  */
 public abstract class EntityInitialDataSet<T> implements InitialDataSet {
@@ -32,7 +33,10 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 
 	/**
 	 * Constructor.
-	 * @param entityType - die klasse der entity benas die initial angelegt werden sollen.
+	 * 
+	 * @param entityType -
+	 *            die klasse der entity benas die initial angelegt werden
+	 *            sollen.
 	 */
 	public EntityInitialDataSet(Class<T> entityType) {
 		undo = new UndoScriptGenerator<T>(new EntityBeanIntrospector<T>(

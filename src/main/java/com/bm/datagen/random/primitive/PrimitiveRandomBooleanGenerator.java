@@ -16,6 +16,7 @@ public class PrimitiveRandomBooleanGenerator implements Generator<Boolean> {
 
 	/**
 	 * Returns the next boolean value.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

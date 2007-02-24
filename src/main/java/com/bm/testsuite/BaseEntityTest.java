@@ -141,7 +141,8 @@ public abstract class BaseEntityTest<T> extends BaseTest {
 				EntityTransaction tx = manager.getTransaction();
 				tx.begin();
 				for (Object beanToDelete : this.undo.getCreatedObjects()) {
-					this.manager.remove(beanToDelete);
+					Object attached = this.manager.merge(beanToDelete);
+					this.manager.remove(attached);
 				}
 
 				// the transaction must be committed

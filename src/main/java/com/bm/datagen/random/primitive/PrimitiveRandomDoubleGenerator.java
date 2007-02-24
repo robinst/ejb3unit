@@ -16,6 +16,7 @@ public class PrimitiveRandomDoubleGenerator implements Generator<Double> {
 
 	/**
 	 * Returns the next Double.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

@@ -17,10 +17,10 @@ public class CompressedCSVInitialDataSetTest extends TestCase {
 	 */
 	public void testRead_happyPath() {
 		final CSVInitialDataSet toTest = new CSVInitialDataSet<StockWKNBo>(
-				StockWKNBo.class, "allstatData.csv.zip", true, "wkn", "aktienName",
-				"isin", "symbol", "kaufModus", "branchenCode", "branche",
-				"transaktionenProTag", "zumHandelZugelassen", "volatilitaet",
-				"durchschnittskaufkurs");
+				StockWKNBo.class, "allstatData.csv.zip", true, "wkn",
+				"aktienName", "isin", "symbol", "kaufModus", "branchenCode",
+				"branche", "transaktionenProTag", "zumHandelZugelassen",
+				"volatilitaet", "durchschnittskaufkurs");
 		toTest.create();
 	}
 }

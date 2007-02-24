@@ -63,7 +63,8 @@ public class GeneratorDependencyInjector {
 	 * Invokes all annotated Prepare methods at the current generator.
 	 * 
 	 * @PrepareGenerator methods in generator
-	 * @param toInvoke - the generator wich method gets invoked
+	 * @param toInvoke -
+	 *            the generator wich method gets invoked
 	 */
 	public void callPrepare(Generator toInvoke) {
 		Method[] methods = Ejb3Utils.getAllMethods(toInvoke.getClass());
@@ -81,7 +82,8 @@ public class GeneratorDependencyInjector {
 	 * Invokes all annotated clean up methods.
 	 * 
 	 * @CleanupGenerator methods in generator
-	 * @param toInvoke - the cleanup method of the generator. 
+	 * @param toInvoke -
+	 *            the cleanup method of the generator.
 	 */
 	public void callCleanup(Generator toInvoke) {
 		Method[] methods = Ejb3Utils.getAllMethods(toInvoke.getClass());
@@ -97,6 +99,7 @@ public class GeneratorDependencyInjector {
 
 	/**
 	 * The current object to inject.
+	 * 
 	 * @param instance
 	 *            The instance to set.
 	 */
@@ -106,6 +109,7 @@ public class GeneratorDependencyInjector {
 
 	/**
 	 * The current introspector.
+	 * 
 	 * @param introspector
 	 *            The introspector to set.
 	 */
@@ -114,7 +118,8 @@ public class GeneratorDependencyInjector {
 	}
 
 	/**
-	 * The property to inject. 
+	 * The property to inject.
+	 * 
 	 * @param property
 	 *            The property to set.
 	 */

@@ -12,18 +12,23 @@ import com.bm.introspectors.Property;
 
 /**
  * Generates random Long values - distinguish between PK and non PK fields.
+ * 
  * @author Daniel Wiese
- *
+ * 
  */
 @GeneratorType(className = Long.class, fieldType = FieldType.ALL_TYPES)
 public class RandomLongGenerator extends BaseUniqueValueGenerator<Long>
 		implements Generator<Long> {
-	
-	@ForProperty private Property forProperty;
-	@UsedIntrospector private Introspector<Object> introspector;
+
+	@ForProperty
+	private Property forProperty;
+
+	@UsedIntrospector
+	private Introspector<Object> introspector;
 
 	/**
 	 * Returns the next Long.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
@@ -35,7 +40,5 @@ public class RandomLongGenerator extends BaseUniqueValueGenerator<Long>
 	protected Long generateCadidate() {
 		return BaseRandomDataGenerator.getValueLong();
 	}
-	
-	
 
 }

@@ -23,7 +23,7 @@ import java.io.Reader;
  * field on each end, and one in the middle. One token is returned as a space.<br>
  * 
  * <pre>
- *  ,second,,&quot; &quot;,fifth,
+ *   ,second,,&quot; &quot;,fifth,
  * </pre>
  * 
  * <P>
@@ -364,9 +364,9 @@ public class CSVParser implements CSVParse {
 	 * lines would be comments:<br>
 	 * 
 	 * <pre>
-	 *   # Comment
-	 *   ; Another Comment
-	 *   ! Yet another comment
+	 *    # Comment
+	 *    ; Another Comment
+	 *    ! Yet another comment
 	 * </pre>
 	 * 
 	 * By default there are no comments in CVS files. Commas and quotes may not

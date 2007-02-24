@@ -12,16 +12,16 @@ import junit.framework.TestCase;
  */
 public class SimpleGetterSetterTestTest extends TestCase {
 
-    /**
-     * Junit test.
-     * 
-     * @author Daniel Wiese
-     * @since 29.06.2006
-     */
-    public void testSimpleGetterSetter() {
-        StockWKNBo bean = new StockWKNBo(870737);
-        final SimpleGetterSetterTest toTest = new SimpleGetterSetterTest(bean);
-        toTest.testGetterSetter();
-    }
+	/**
+	 * Junit test.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 29.06.2006
+	 */
+	public void testSimpleGetterSetter() {
+		StockWKNBo bean = new StockWKNBo(870737);
+		final SimpleGetterSetterTest toTest = new SimpleGetterSetterTest(bean);
+		toTest.testGetterSetter();
+	}
 
 }

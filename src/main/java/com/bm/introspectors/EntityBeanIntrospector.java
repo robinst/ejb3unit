@@ -54,7 +54,8 @@ public class EntityBeanIntrospector<T> extends AbstractIntrospector<T>
 				log.debug("The class to introspect "
 						+ toInspect.getCanonicalName() + " is an Entity-Bean");
 				isSessionBean = true;
-				if (AccessTypeFinder.findAccessType(toInspect).equals(AccessType.FIELD)) {
+				if (AccessTypeFinder.findAccessType(toInspect).equals(
+						AccessType.FIELD)) {
 					isAccessTypeField = true;
 				}
 			} else if (a instanceof Table) {

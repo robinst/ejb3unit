@@ -11,8 +11,9 @@ import junit.framework.TestCase;
 
 /**
  * JUnit test case.
+ * 
  * @author Daniel Wiese
- *
+ * 
  */
 public class DependencyInjectorTest extends TestCase {
 
@@ -30,8 +31,8 @@ public class DependencyInjectorTest extends TestCase {
 		assertNotNull(sessionBeanToTest.getDs());
 		assertNotNull(sessionBeanToTest.getEm());
 		assertNotNull(sessionBeanToTest.getSessionBean());
-		
-		//test if a mock object for every field exists
+
+		// test if a mock object for every field exists
 		assertNotNull(back.get("manager"));
 		assertNotNull(back.get("ds"));
 		assertNotNull(back.get("mySessionBean"));

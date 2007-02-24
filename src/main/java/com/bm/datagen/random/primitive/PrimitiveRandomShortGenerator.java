@@ -16,6 +16,7 @@ public class PrimitiveRandomShortGenerator implements Generator<Short> {
 
 	/**
 	 * Returns the next Short.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

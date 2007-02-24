@@ -12,13 +12,11 @@ import com.bm.datagen.utils.BaseRandomDataGenerator;
  * 
  */
 @GeneratorType(className = Integer.class, fieldType = FieldType.NON_PK_FIELDS)
-public class PrimitiveRandomIntegerGenerator 
-		implements Generator<Integer> {
-	
-	
+public class PrimitiveRandomIntegerGenerator implements Generator<Integer> {
 
 	/**
 	 * Returns the next Integer.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

@@ -21,12 +21,16 @@ import com.bm.introspectors.Property;
 @GeneratorType(className = Date.class, fieldType = FieldType.ALL_TYPES)
 public class RandomDateGenerator extends BaseUniqueValueGenerator<Date>
 		implements Generator<Date> {
-	
-	@ForProperty private Property forProperty;
-	@UsedIntrospector private Introspector<Object> introspector;
+
+	@ForProperty
+	private Property forProperty;
+
+	@UsedIntrospector
+	private Introspector<Object> introspector;
 
 	/**
 	 * Returns the date.
+	 * 
 	 * @return - the generated value
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

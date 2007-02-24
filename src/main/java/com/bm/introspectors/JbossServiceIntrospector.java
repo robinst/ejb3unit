@@ -1,6 +1,5 @@
 package com.bm.introspectors;
 
-
 /**
  * Introspector for jboss service.
  * 
@@ -33,7 +32,8 @@ public class JbossServiceIntrospector<T> extends SessionBeanIntrospector<T> {
 	 *            to check
 	 * @return true id the introspector will accept this class
 	 */
-	public static boolean accept(@SuppressWarnings("unused") Class toCheck) {
+	public static boolean accept(@SuppressWarnings("unused")
+	Class toCheck) {
 		// TODO Check if is really a Jboss service: Annotation @Service
 		return true;
 	}

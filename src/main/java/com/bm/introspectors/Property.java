@@ -97,14 +97,14 @@ public class Property {
 					PropertyUtils.setProperty(instance, this.propertyName,
 							value);
 				} catch (InvocationTargetException e) {
-					log.error("Can´t set the value (" + value + ") in property: "
-							+ this.propertyName);
+					log.error("Can´t set the value (" + value
+							+ ") in property: " + this.propertyName);
 					throw new IllegalAccessException(
 							"Can´t invoke the setter method set"
 									+ this.propertyName);
 				} catch (NoSuchMethodException e) {
-					log.error("Can´t set the value (" + value + ") in property: "
-							+ this.propertyName);
+					log.error("Can´t set the value (" + value
+							+ ") in property: " + this.propertyName);
 					throw new IllegalAccessException(
 							"Can´t invoke the setter method set"
 									+ this.propertyName);
@@ -232,7 +232,9 @@ public class Property {
 
 	/**
 	 * Equals.
-	 * @param other the other to compare
+	 * 
+	 * @param other
+	 *            the other to compare
 	 * @return - true if equal
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -253,6 +255,7 @@ public class Property {
 
 	/**
 	 * Hash Code.
+	 * 
 	 * @return the hash code
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -285,6 +288,7 @@ public class Property {
 
 	/**
 	 * To String.
+	 * 
 	 * @return - formatted string
 	 * @see java.lang.Object#toString()
 	 */

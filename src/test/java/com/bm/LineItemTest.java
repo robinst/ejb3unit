@@ -26,11 +26,13 @@ public class LineItemTest extends BaseEntityTest<LineItem> {
 
 	/**
 	 * Innec Test class.
+	 * 
 	 * @author Daniel Wiese
 	 * @since 21.11.2005
 	 */
 	@GeneratorType(className = Order.class)
-	private static final class MyOrderCreator extends SingleBeanGenerator<Order> {
+	private static final class MyOrderCreator extends
+			SingleBeanGenerator<Order> {
 		private MyOrderCreator() {
 			super(Order.class);
 		}

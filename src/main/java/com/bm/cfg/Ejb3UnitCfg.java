@@ -1,16 +1,12 @@
 package com.bm.cfg;
 
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Properties;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.SystemConfiguration;
 import org.hibernate.ejb.Ejb3Configuration;
 
 /**
@@ -49,7 +45,7 @@ public final class Ejb3UnitCfg {
 	/** Konfiguration key. * */
 	private static Ejb3UnitCfg singelton = null;
 
-	private final CompositeConfiguration config;
+	private final Properties config;
 
 	private EntityManagerFactory entityManagerFactory = null;
 
@@ -60,19 +56,18 @@ public final class Ejb3UnitCfg {
 	private Ejb3UnitCfg() {
 		this.currentEntytiesToTest = new ArrayList<Class<? extends Object>>();
 		try {
-			URL propertyPath = Thread.currentThread().getContextClassLoader()
-					.getResource(EJB3UNIT_PROPERTIES_NAME);
-			config = new CompositeConfiguration();
-			if (propertyPath != null) {
-				// config.addConfiguration(new SystemConfiguration());
-				config.addConfiguration(new PropertiesConfiguration(
-						propertyPath));
+			final InputStream inStr = Thread.currentThread()
+					.getContextClassLoader().getResourceAsStream(
+							EJB3UNIT_PROPERTIES_NAME);
+			config = new Properties();
+			if (inStr != null) {
+				config.load(inStr);
+
 			} else {
 				// run the system in memory if no config if found
 				System.setProperty(KEY_IN_MEMORY_TEST, "true");
-				config.addConfiguration(new SystemConfiguration());
 			}
-		} catch (ConfigurationException e) {
+		} catch (Exception e) {
 			// propagete the exception
 			throw new RuntimeException(e);
 		}
@@ -128,7 +123,7 @@ public final class Ejb3UnitCfg {
 	 * @return - a value of an config key
 	 */
 	public String getValue(String key) {
-		return this.config.getString(key);
+		return this.config.getProperty(key);
 	}
 
 	/**
@@ -146,6 +141,7 @@ public final class Ejb3UnitCfg {
 					cfg.addAnnotatedClass(entityToTest);
 				}
 			}
+			// fix later for now it´s working
 			singelton.entityManagerFactory = cfg.createEntityManagerFactory();
 		}
 
@@ -163,7 +159,8 @@ public final class Ejb3UnitCfg {
 		// tranform the ejb3unit configuration to the hibernate
 		// configuration
 		final Properties prop = cfg.getProperties();
-		if (this.config.getBoolean(KEY_IN_MEMORY_TEST)) {
+		if (Boolean
+				.valueOf(this.config.getProperty(KEY_IN_MEMORY_TEST, "true"))) {
 			// configuration for in memory db
 			this.inMemory = true;
 			this.setProperty(prop, "hibernate.connection.url",
@@ -178,22 +175,22 @@ public final class Ejb3UnitCfg {
 		} else {
 			this.inMemory = false;
 			this.setProperty(prop, "hibernate.connection.url", this.config
-					.getString(KEY_CONNECTION_URL));
+					.getProperty(KEY_CONNECTION_URL));
 			this.setProperty(prop, "hibernate.connection.driver_class",
-					this.config.getString(KEY_CONNECTION_DRIVER_CLASS));
+					this.config.getProperty(KEY_CONNECTION_DRIVER_CLASS));
 			this.setProperty(prop, "hibernate.connection.username", this.config
-					.getString(KEY_CONNECTION_USERNAME));
+					.getProperty(KEY_CONNECTION_USERNAME));
 			this.setProperty(prop, "hibernate.connection.password", this.config
-					.getString(KEY_CONNECTION_PASSWORD));
+					.getProperty(KEY_CONNECTION_PASSWORD));
 			this.setProperty(prop, "dialect", this.config
-					.getString(KEY_SQL_DIALECT));
+					.getProperty(KEY_SQL_DIALECT));
 			this.setProperty(prop, "hibernate.show_sql", this.config
-					.getString(KEY_SHOW_SQL));
+					.getProperty(KEY_SHOW_SQL));
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", this.config
-					.getString(KEY_AUTOMATIC_SHEMA_UPDATE));
+					.getProperty(KEY_AUTOMATIC_SHEMA_UPDATE));
 		}
 		this.setProperty(prop, "hibernate.show_sql", this.config
-				.getString(KEY_SHOW_SQL));
+				.getProperty(KEY_SHOW_SQL));
 		// static properties
 		this.setProperty(prop, "hibernate.transaction.factory_class",
 				"org.hibernate.transaction.JDBCTransactionFactory");

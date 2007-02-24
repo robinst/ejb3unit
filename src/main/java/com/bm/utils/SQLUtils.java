@@ -13,65 +13,66 @@ import java.sql.ResultSet;
  */
 public final class SQLUtils {
 
-    /**
-     * 
-     * Constructor.
-     */
-    private SQLUtils() {
-        // intentionally left blank
-    }
+	/**
+	 * 
+	 * Constructor.
+	 */
+	private SQLUtils() {
+		// intentionally left blank
+	}
 
-    /**
-     * Close the resources.
-     * 
-     * @param con
-     *            -connection
-     * @param prst -
-     *            prepared statement
-     * @param rs -
-     *            result set
-     */
-    public static void cleanup(Connection con, PreparedStatement prst, ResultSet rs) {
-        if (rs != null) {
-            try {
-                rs.close();
-            } catch (Throwable e) {
-            }
-        }
-        if (prst != null) {
-            try {
-                prst.close();
-            } catch (Throwable e) {
-            }
-        }
-        if (con != null) {
-            try {
-                con.close();
-            } catch (Throwable e) {
-            }
-        }
-    }
+	/**
+	 * Close the resources.
+	 * 
+	 * @param con
+	 *            -connection
+	 * @param prst -
+	 *            prepared statement
+	 * @param rs -
+	 *            result set
+	 */
+	public static void cleanup(Connection con, PreparedStatement prst,
+			ResultSet rs) {
+		if (rs != null) {
+			try {
+				rs.close();
+			} catch (Throwable e) {
+			}
+		}
+		if (prst != null) {
+			try {
+				prst.close();
+			} catch (Throwable e) {
+			}
+		}
+		if (con != null) {
+			try {
+				con.close();
+			} catch (Throwable e) {
+			}
+		}
+	}
 
-    /**
-     * Close the resources.
-     * 
-     * @param con
-     *            -connection
-     */
-    public static void cleanup(Connection con) {
-        cleanup(con, null, null);
-    }
+	/**
+	 * Close the resources.
+	 * 
+	 * @param con
+	 *            -connection
+	 */
+	public static void cleanup(Connection con) {
+		cleanup(con, null, null);
+	}
 
-    /**
-     * Close the resources.
-     * 
-     * @param con
-     *            -connection
-     * @param prst -
-     *            prepared statement
-     */
-    public static void cleanup(Connection con, PreparedStatement prst) {
-        cleanup(con, prst, null);
-    }
+	/**
+	 * Close the resources.
+	 * 
+	 * @param con
+	 *            -connection
+	 * @param prst -
+	 *            prepared statement
+	 */
+	public static void cleanup(Connection con, PreparedStatement prst) {
+		cleanup(con, prst, null);
+	}
 
 }
