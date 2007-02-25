@@ -33,7 +33,7 @@ public class ClassFinder {
 
 	/**
 	 * Searches all classer in a given directory (up to top lever and from there
-	 * recursive) of in a given jar file
+	 * recursive) of in a given jar file.
 	 * 
 	 * @param firstSearchClue -
 	 *            the location of this class will be used as a hint , where to
@@ -121,7 +121,7 @@ public class ClassFinder {
 							.length() - 6);
 
 					// Try to find the class on the class path
-					final String toAdd=currentPackageName + "." + classname;
+					final String toAdd = currentPackageName + "." + classname;
 					this.allClasses.add(toAdd.replace('.', '/'));
 
 				} else if (files[i].isDirectory()) {

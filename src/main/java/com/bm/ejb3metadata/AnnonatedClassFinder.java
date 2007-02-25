@@ -18,7 +18,7 @@ import com.bm.ejb3metadata.utils.MetadataUtils;
  */
 public class AnnonatedClassFinder {
 
-	private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger
+	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
 			.getLogger(AnnonatedClassFinder.class);
 
 	/**
@@ -37,7 +37,7 @@ public class AnnonatedClassFinder {
 
 	/**
 	 * Searches all classes in a given directory (up to top lever and from there
-	 * recursive) of in a given jar file
+	 * recursive) of in a given jar file.
 	 * 
 	 * @param firstSearchClue -
 	 *            the location of this class will be used as a hint , where to

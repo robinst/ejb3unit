@@ -1,15 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>bm</artifactId>
-		<groupId>com.bm</groupId>
-		<version>1.0.5</version>
-		<relativePath>../bm/pom.xml</relativePath>
-	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.1.0-beta-5-SNAPSHOT</version>
+	<version>1.1.0-RC1</version>
 	<description>Out of Container Testing of EJB 3.0</description>
 	<url />
 	<issueManagement>
@@ -47,9 +41,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/tags/ejb3unit-1.1.0-beta-4</url>
-		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/ejb3unit-1.1.0-beta-4</connection>
-		<developerConnection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/ejb3unit-1.1.0-beta-4</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/tags/${version}</url>
+		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/${version}</connection>
+		<developerConnection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/${version}</developerConnection>
 	</scm>
 	<organization>
 		<name>BM-Org</name>
@@ -59,7 +53,6 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<plugins>
-			
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -104,7 +97,6 @@
 			<artifactId>jmock</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-		
 		<dependency>
 		   <groupId>org.hibernate</groupId>
   			<artifactId>hibernate-entitymanager</artifactId>
@@ -124,7 +116,6 @@
 	</dependencies> 
 	<reporting>
 		<plugins>
-			
 			<plugin>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
@@ -143,5 +134,14 @@
 			</plugin>
 		</plugins>
 	</reporting>
-	
+	<distributionManagement>
+		<site>
+			<id>ejb3unit-site</id>
+			<url>file://C:/mavenUpload/</url>
+		</site>
+		<repository>
+			<id>ejb3unit-repo</id>
+			<url>file://C:/mavenUpload/</url>
+		</repository>
+	</distributionManagement>
 </project>
