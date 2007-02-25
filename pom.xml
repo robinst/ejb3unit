@@ -3,12 +3,9 @@
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.1.0-RC1</version>
+	<version>1.1.0-RC1-SNAPSHOT</version>
 	<description>Out of Container Testing of EJB 3.0</description>
-	<url />
-	<issueManagement>
-		<url>http://dasemi.homeftp.net:8080/browse/COM</url>
-	</issueManagement>
+	<url>http://ejb3unit.sourceforge.net/</url>
 	<ciManagement>
 		<system>continuum</system>
 		<notifiers>
@@ -28,14 +25,14 @@
 		<developer>
 			<id>daniel</id>
 			<name>Dabiel Wiese</name>
-			<email>Dabiel.Wiese@siemens.com</email>
+			<email>Dabiel.Wiese(at)siemens.com</email>
 			<organization>Siemens</organization>
 			<timezone />
 		</developer>
 		<developer>
 			<id>fabian</id>
 			<name>Fabian Bauschulte</name>
-			<email>Fabian.Bauschulte@rewe-group.com</email>
+			<email>Fabian.Bauschulte(at)rewe-group.com</email>
 			<organization>RIS</organization>
 			<timezone />
 		</developer>
@@ -45,10 +42,6 @@
 		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/${version}</connection>
 		<developerConnection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/${version}</developerConnection>
 	</scm>
-	<organization>
-		<name>BM-Org</name>
-		<url>http://dasemi.homeftp.net:8090/bm/ejb3unit</url>
-	</organization>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
