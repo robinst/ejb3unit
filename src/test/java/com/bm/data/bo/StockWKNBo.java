@@ -3,11 +3,9 @@ package com.bm.data.bo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -17,36 +15,18 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Repraesentiert eine Aktie wie ADIDAS.
+ *  Test entity bean with annotated fields. Represents a stock like ADIDAS.
  * 
  * @author Daniel Wiese since 11.09.2005
  */
 @Entity
-@Table(name = "allstatdata")
-@NamedQuery(name = "StockWKNBo.alleAktien", query = "from com.bm.data.bo.StockWKNBo")
+@Table(name = "stocks")
+@NamedQuery(name = "StockWKNBo.allStocks", query = "from com.bm.data.bo.StockWKNBo")
 public class StockWKNBo implements Comparable, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Transient
-	private boolean istGeholt = false;
-
-	@Transient
-	private boolean istGeparsed = false;
-
-	@Transient
-	private Set<Integer> usedParser = null;
-
-	@Transient
-	private double precission = -1;
-
-	@Transient
-	private double f1 = -1;
-
-	@Transient
-	private double recall = -1;
-
-	@Transient
-	private String resultText = null;
+	private String notes = null;
 
 	/** primary key * */
 	@Id
@@ -136,8 +116,7 @@ public class StockWKNBo implements Comparable, Serializable {
 	}
 
 	/**
-	 * Compare to.
-	 * @see java.lang.Comparable#compareTo(Object)
+	 * {@inheritDoc}
 	 */
 	public int compareTo(Object o) {
 		if (o instanceof StockWKNBo) {
@@ -165,9 +144,7 @@ public class StockWKNBo implements Comparable, Serializable {
 	}
 
 	/**
-	 * To String.
-	 * @author Daniel Wiese since 11.09.2005
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
 	public String toString() { 
 		StringBuffer sb = new StringBuffer();
@@ -175,159 +152,33 @@ public class StockWKNBo implements Comparable, Serializable {
 		sb.append("  [WKN:");
 		sb.append(this.getWkn());
 		sb.append("]  Geholt:[");
-		sb.append((this.istGeholt) ? "Ja" : "Nein");
-		sb.append("]  Geparsed:[");
-		sb.append((this.istGeparsed) ? "Ja" : "Nein");
 		sb.append("]");
 
 		return sb.toString();
 	}
 
+	
+
+	
+
 	/**
-	 * Registriert einen Parser mit dem diese Aktie an diesem Tag bereits
-	 * geparsed wurde.
-	 * 
-	 * @param parserId -
-	 *            de unique id of the used parser
+	 * Get notes.
+	 * @return notes.
 	 */
-	public void setUsedParser(Integer parserId) {
-		if (this.usedParser == null) {
-			this.usedParser = new HashSet<Integer>();
-		}
-		if (!this.usedParser.contains(parserId)) {
-			this.usedParser.add(parserId);
-		}
+	public String getNotes() {
+		return notes;
 	}
 
 	/**
-	 * Ueberpruft ob ein bestimmter Parser fuer diese Aktie schon benutzt wurde.
-	 * 
-	 * @param maxFactoryNumber -
-	 *            the maximum factories available
-	 * @return true wenn benutzt
+	 * Set notes.
+	 * @param notes to set.
 	 */
-	public boolean areAllParsersUsed(int maxFactoryNumber) {
-		if (this.usedParser == null) {
-			return false;
-		} else {
-			final int usedParsersCount = this.usedParser.size();
-
-			return (usedParsersCount >= maxFactoryNumber) ? true : false;
-		}
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	/**
-	 * Flags fuer den Grab-Process.
-	 * 
-	 * @return -- true wenn die Aktie geholt ist
-	 */
-	public boolean getIsGeholt() {
-		return this.istGeholt;
-	}
-
-	/**
-	 * Flags fuer den Grab-Process.
-	 * 
-	 * @return -- true wenn die Aktie geparst ist
-	 */
-	public boolean getIsGeparsed() {
-		return this.istGeparsed;
-	}
-
-	/**
-	 * Flag ob schon der grabber Daten zu dieser Aktie geholt hat.
-	 * 
-	 * @author Daniel Wiese since 11.09.2005
-	 * @param istGeholt - true wenn geholt
-	 */
-	public void setIstGeholt(boolean istGeholt) {
-		this.istGeholt = istGeholt;
-	}
-
-	/**
-	 * Flag ob schon der parser Daten zu dieser Aktie geparst hat.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 11.09.2005
-	 * @param istGeparsed - true wenn geparsed
-	 */
-	public void setIstGeparsedr(boolean istGeparsed) {
-		this.istGeparsed = istGeparsed;
-	}
-
-	/**
-	 * Liefert den f1 wert.
-	 * @return Returns the f1.
-	 */
-	public double getF1() {
-		return f1;
-	}
-
-	/**
-	 * Setzt den f1 wert.
-	 * @param f1
-	 *            The f1 to set.
-	 */
-	public void setF1(double f1) {
-		this.f1 = f1;
-	}
-
-	/**
-	 * Liefer die Precision.
-	 * @return Returns the precission.
-	 */
-	public double getPrecission() {
-		return precission;
-	}
-
-	/**
-	 * Setzt die Precission.
-	 * @param precission
-	 *            The precission to set.
-	 */
-	public void setPrecission(double precission) {
-		this.precission = precission;
-	}
-
-	/**
-	 * Liefer den recall.
-	 * @return Returns the recall.
-	 */
-	public double getRecall() {
-		return recall;
-	}
-
-	/**
-	 * Setzt den recall.
-	 * @param recall
-	 *            The recall to set.
-	 */
-	public void setRecall(double recall) {
-		this.recall = recall;
-	}
-
-	/**
-	 * Liefert den result text.
-	 * @return Returns the resultText.
-	 */
-	public String getResultText() {
-		return resultText;
-	}
-
-	/**
-	 * Setzt den result text.
-	 * @param resultText
-	 *            The resultText to set.
-	 */
-	public void setResultText(String resultText) {
-		this.resultText = resultText;
-	}
-
-	/**
-	 * Equals.
-	 * @author Daniel Wiese
-	 * @since 11.09.2005
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	public boolean equals(Object other) {
 		if (other instanceof StockWKNBo) {
@@ -342,10 +193,7 @@ public class StockWKNBo implements Comparable, Serializable {
 	}
 
 	/**
-	 * HahCode.
-	 * @author Daniel Wiese
-	 * @since 11.09.2005
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		final HashCodeBuilder builder = new HashCodeBuilder();
@@ -373,7 +221,7 @@ public class StockWKNBo implements Comparable, Serializable {
 	}
 
 	/**
-	 * Return the value associated with the column: name.
+	 * The name of the stock.
 	 * 
 	 * @return - den aktienNamen
 	 */
@@ -382,7 +230,7 @@ public class StockWKNBo implements Comparable, Serializable {
 	}
 
 	/**
-	 * Set the value related to the column: name.
+	 * The name of the stock.
 	 * 
 	 * @param aktienName
 	 *            the name value

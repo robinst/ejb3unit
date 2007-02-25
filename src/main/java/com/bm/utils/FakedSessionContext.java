@@ -1,6 +1,5 @@
 package com.bm.utils;
 
-import java.security.Identity;
 import java.security.Principal;
 import java.util.Properties;
 
@@ -19,76 +18,145 @@ import javax.xml.rpc.handler.MessageContext;
  * @author Daniel Wiese
  *
  */
-public class FakedSessionContext implements SessionContext{
+public class FakedSessionContext implements SessionContext {
 
-	public Object getBusinessObject(Class arg0) throws IllegalStateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T getBusinessObject(Class<T> businessInterface) {
+		return null;
+	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EJBLocalObject getEJBLocalObject() {
 		return null;
 	}
 
-	public EJBLocalObject getEJBLocalObject() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public EJBObject getEJBObject()  {
 		return null;
 	}
 
-	public EJBObject getEJBObject() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */	
+	public Class getInvokedBusinessInterface()  {
 		return null;
 	}
 
-	public Object getInvokedBusinessInterface() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public MessageContext getMessageContext() {
 		return null;
 	}
 
-	public MessageContext getMessageContext() throws IllegalStateException {
-		return null;
-	}
 
-	@SuppressWarnings("deprecation")
-	public Identity getCallerIdentity() {
-		return null;
-	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Principal getCallerPrincipal() {
 		return null;
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public EJBHome getEJBHome() {
 		return null;
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public EJBLocalHome getEJBLocalHome() {
 		return null;
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public Properties getEnvironment() {
 		return null;
 	}
 
-	public boolean getRollbackOnly() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean getRollbackOnly()  {
 		return false;
 	}
 
-	public TimerService getTimerService() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public TimerService getTimerService()  {
 		return null;
 	}
 
-	public UserTransaction getUserTransaction() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public UserTransaction getUserTransaction()  {
 		return null;
 	}
 
+
+	/**
+	 * {@inheritDoc}
+	 */
 	@SuppressWarnings("deprecation")
-	public boolean isCallerInRole(Identity arg0) {
+	public boolean isCallerInRole(java.security.Identity role) {
 		return false;
 	}
 
-	public boolean isCallerInRole(String arg0) {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isCallerInRole(String roleName) {
 		return false;
 	}
 
-	public Object lookup(String arg0) {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object lookup(String name) {
 		return null;
 	}
 
-	public void setRollbackOnly() throws IllegalStateException {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRollbackOnly() {
 		
 	}
+
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("deprecation")
+	public java.security.Identity getCallerIdentity() {
+		return null;
+	}
+
 
 }

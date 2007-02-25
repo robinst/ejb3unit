@@ -66,10 +66,18 @@ public class MySessionBean implements IMySessionBean {
 	@SuppressWarnings("unchecked")
 	public List<StockWKNBo> getAllStocks() {
 		final Query query = this.manager
-				.createNamedQuery("StockWKNBo.alleAktien");
+				.createNamedQuery("StockWKNBo.allStocks");
 		List<StockWKNBo> loaded = Collections.checkedList(
 				query.getResultList(), StockWKNBo.class);
 		return loaded;
+	}
+
+	/**
+	 * Returns the ctx.
+	 * @return Returns the ctx.
+	 */
+	public SessionContext getCtx() {
+		return ctx;
 	}
 
 }

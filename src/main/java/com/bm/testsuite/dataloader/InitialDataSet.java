@@ -1,4 +1,4 @@
-package com.bm.testsuite.fixture;
+package com.bm.testsuite.dataloader;
 
 import javax.sql.DataSource;
 

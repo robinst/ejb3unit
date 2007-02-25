@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.bm.data.bo.MySessionBean;
 import com.bm.data.bo.StockWKNBo;
-import com.bm.testsuite.BaseSessionBeanTest;
-import com.bm.testsuite.fixture.CSVInitialDataSet;
-import com.bm.testsuite.fixture.EntityInitialDataSet;
+import com.bm.testsuite.BaseSessionBeanFixture;
+import com.bm.testsuite.dataloader.CSVInitialDataSet;
+import com.bm.testsuite.dataloader.EntityInitialDataSet;
 
 /**
  * The Session bean.
@@ -14,7 +14,7 @@ import com.bm.testsuite.fixture.EntityInitialDataSet;
  * @author Daniel Wiese
  * @since 08.11.2005
  */
-public class MySessionBeanTest extends BaseSessionBeanTest<MySessionBean> {
+public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 
 	private static final Class[] usedBeans = { StockWKNBo.class };
 
@@ -56,7 +56,7 @@ public class MySessionBeanTest extends BaseSessionBeanTest<MySessionBean> {
 		assertNotNull(toTest);
 		List<StockWKNBo> back = toTest.getAllStocks();
 		assertNotNull(back);
-		assertEquals(186 + 2, back.size());
+		assertEquals(188, back.size());
 		assertEquals(back.get(0), new StockWKNBo(1, "Das ist ein Name"));
 		assertEquals(back.get(1), new StockWKNBo(2, "Das ist ein andere Name"));
 	}
@@ -84,7 +84,7 @@ public class MySessionBeanTest extends BaseSessionBeanTest<MySessionBean> {
 		 * 
 		 * @author Daniel Wiese
 		 * @since 17.04.2006
-		 * @see com.bm.testsuite.fixture.InitialDataSet#create()
+		 * @see com.bm.testsuite.dataloader.InitialDataSet#create()
 		 */
 		public void create() {
 			this.add(new StockWKNBo(1, "Das ist ein Name"));

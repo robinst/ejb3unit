@@ -6,8 +6,8 @@ import javax.persistence.EntityTransaction;
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.SessionBeanFactory;
 import com.bm.introspectors.SessionBeanIntrospector;
-import com.bm.testsuite.fixture.EntityInitialDataSet;
-import com.bm.testsuite.fixture.InitialDataSet;
+import com.bm.testsuite.dataloader.EntityInitialDataSet;
+import com.bm.testsuite.dataloader.InitialDataSet;
 import com.bm.utils.BasicDataSource;
 
 /**
@@ -19,7 +19,7 @@ import com.bm.utils.BasicDataSource;
  *            the type of the session bean to test
  * @since 16.10.2005
  */
-public abstract class BaseSessionBeanTest<T> extends BaseTest {
+public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 
 	private final SessionBeanFactory<T> sbFactory;
 
@@ -37,7 +37,7 @@ public abstract class BaseSessionBeanTest<T> extends BaseTest {
 	 * @param usedEntityBeans -
 	 *            the used entity bens
 	 */
-	public BaseSessionBeanTest(Class<T> sessionBeanToTest,
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			Class[] usedEntityBeans) {
 		super();
 		SessionBeanIntrospector<T> intro = new SessionBeanIntrospector<T>(
@@ -57,7 +57,7 @@ public abstract class BaseSessionBeanTest<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	public BaseSessionBeanTest(Class<T> sessionBeanToTest,
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			Class[] usedEntityBeans, InitialDataSet... initialData) {
 		this(sessionBeanToTest, usedEntityBeans);
 		this.initalDataSet = initialData;
@@ -75,7 +75,7 @@ public abstract class BaseSessionBeanTest<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	protected BaseSessionBeanTest(Class<T> sessionBeanToTest,
+	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			SessionBeanIntrospector<T> intro, Class[] usedEntityBeans,
 			InitialDataSet... initialData) {
 		super();

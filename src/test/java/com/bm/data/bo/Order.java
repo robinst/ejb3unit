@@ -1,9 +1,3 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
 package com.bm.data.bo;
 
 import java.util.ArrayList;
@@ -21,7 +15,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * The purchase order.
+ * Test entity bean with annotated methods. Represents a purchase order.
  * 
  * @author Daniel Wiese
  * 
@@ -121,8 +115,7 @@ public class Order implements java.io.Serializable {
 	}
 
 	/**
-	 * Equals.
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object other) {
@@ -141,8 +134,7 @@ public class Order implements java.io.Serializable {
 	}
 
 	/**
-	 * HashCode.
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {

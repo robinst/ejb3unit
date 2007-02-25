@@ -1,9 +1,3 @@
-/*
- * JBoss, the OpenSource J2EE webOS
- *
- * Distributable under LGPL license.
- * See terms of license at gnu.org.
- */
 package com.bm.data.bo;
 
 import javax.persistence.Column;
@@ -17,7 +11,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Creates a line item.
+ * Test entity bean with method annotations
+ * Represents a line item of an order.
  * 
  * @author Daniel Wiese
  * 
@@ -130,8 +125,7 @@ public class LineItem implements java.io.Serializable {
 	}
 
 	/**
-	 * Equals.
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object other) {
@@ -151,10 +145,8 @@ public class LineItem implements java.io.Serializable {
 	}
 
 	/**
-	 * HashCode.
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
-	@Override
 	public int hashCode() {
 		final HashCodeBuilder builder = new HashCodeBuilder();
 		builder.append(this.subtotal);

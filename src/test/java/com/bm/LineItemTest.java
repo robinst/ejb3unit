@@ -5,7 +5,7 @@ import com.bm.data.bo.Order;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.GeneratorType;
 import com.bm.datagen.relation.SingleBeanGenerator;
-import com.bm.testsuite.BaseEntityTest;
+import com.bm.testsuite.BaseEntityFixture;
 
 /**
  * This test test a entity bean with property access and a N:1 releation.
@@ -13,7 +13,7 @@ import com.bm.testsuite.BaseEntityTest;
  * @author Daniel Wiese
  * 
  */
-public class LineItemTest extends BaseEntityTest<LineItem> {
+public class LineItemTest extends BaseEntityFixture<LineItem> {
 
 	private static final Generator[] SPECIAL_GENERATORS = { new MyOrderCreator() };
 

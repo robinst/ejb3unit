@@ -1,7 +1,7 @@
 package com.bm;
 
 import com.bm.data.bo.StockWKNBo;
-import com.bm.testsuite.BaseEntityTest;
+import com.bm.testsuite.BaseEntityFixture;
 
 /**
  * Test case for the Ejb3Unit framework.
@@ -9,7 +9,7 @@ import com.bm.testsuite.BaseEntityTest;
  * @author Daniel Wiese
  * @since 15.10.2005
  */
-public class StockWKNBoTest extends BaseEntityTest<StockWKNBo> {
+public class StockWKNBoTest extends BaseEntityFixture<StockWKNBo> {
 
 	/**
 	 * Constructor.

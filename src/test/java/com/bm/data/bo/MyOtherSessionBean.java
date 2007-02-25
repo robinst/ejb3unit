@@ -1,5 +1,7 @@
 package com.bm.data.bo;
 
+import java.sql.SQLException;
+
 import javax.annotation.EJB;
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -8,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 
 /**
- * Session bean impl.
+ * Example stateless session baen with a reference to a datasource.
  * 
  * @author Daniel Wiese
  * @since 08.11.2005
@@ -33,6 +35,7 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 	 * @author Daniel Wiese
 	 * @since 08.11.2005
 	 * @see IMyOtherSessionBean#getDs()
+	 * @return the DataSource
 	 */
 	public DataSource getDs() {
 		return this.ds;
@@ -44,15 +47,17 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 	 * @author Daniel Wiese
 	 * @since 08.11.2005
 	 * @see IMyOtherSessionBean#getEm()
+	 * @return the entity manager.
 	 */
 	public EntityManager getEm() {
 		return this.manager;
 	}
 
 	/**
-	 * Reference.
+	 * Reference to another session bean via dependency injection.
 	 * 
 	 * @see com.bm.data.bo.IMyOtherSessionBean#getSessionBean()
+	 * @return the injected session bean.
 	 */
 	public IMySessionBean getSessionBean() {
 		return this.mySessionBean;
@@ -63,7 +68,11 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 	 */
 	public void executeOperation() {
 		DataSource otherDS = this.mySessionBean.getDs();
-		
+		try {
+			otherDS.getConnection();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 
 	}
 

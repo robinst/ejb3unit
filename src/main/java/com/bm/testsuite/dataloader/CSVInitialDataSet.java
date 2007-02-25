@@ -1,4 +1,4 @@
-package com.bm.testsuite.fixture;
+package com.bm.testsuite.dataloader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -247,7 +247,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * 
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
-	 * @see com.bm.testsuite.fixture.InitialDataSet#create()
+	 * @see com.bm.testsuite.dataloader.InitialDataSet#create()
 	 */
 	public void create() {
 		BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg.getConfiguration());
@@ -302,7 +302,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 *            the datasource.
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
-	 * @see com.bm.testsuite.fixture.InitialDataSet#cleanup(javax.sql.DataSource)
+	 * @see com.bm.testsuite.dataloader.InitialDataSet#cleanup(javax.sql.DataSource)
 	 */
 	public void cleanup(DataSource ds) {
 		StringBuilder deleteSQL = new StringBuilder();

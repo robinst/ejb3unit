@@ -32,9 +32,9 @@ import com.bm.utils.UndoScriptGenerator;
  *            the type of the entity bean
  * @since 07.10.2005
  */
-public abstract class BaseEntityTest<T> extends BaseTest {
+public abstract class BaseEntityFixture<T> extends BaseTest {
 
-	private static final Logger log = Logger.getLogger(BaseEntityTest.class);
+	private static final Logger log = Logger.getLogger(BaseEntityFixture.class);
 
 	private static final int BEANS_TO_CREATE = 50;
 
@@ -59,7 +59,7 @@ public abstract class BaseEntityTest<T> extends BaseTest {
 	 * @param entityToTest -
 	 *            the entity to test
 	 */
-	public BaseEntityTest(Class<T> entityToTest) {
+	public BaseEntityFixture(Class<T> entityToTest) {
 		final List<Class<? extends Object>> entitiesToTest = new ArrayList<Class<? extends Object>>();
 		entitiesToTest.add(entityToTest);
 		this.initEntityManagerFactory(entitiesToTest);
@@ -76,7 +76,7 @@ public abstract class BaseEntityTest<T> extends BaseTest {
 	 * @param additionalGenerators
 	 *            -a dditional generators (plug in)
 	 */
-	public BaseEntityTest(Class<T> entityToTest,
+	public BaseEntityFixture(Class<T> entityToTest,
 			Generator[] additionalGenerators) {
 		final List<Class<? extends Object>> entitiesToTest = new ArrayList<Class<? extends Object>>();
 		// add the currenbt class

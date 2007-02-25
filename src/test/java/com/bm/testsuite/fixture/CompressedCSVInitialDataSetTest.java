@@ -1,6 +1,7 @@
 package com.bm.testsuite.fixture;
 
 import com.bm.data.bo.StockWKNBo;
+import com.bm.testsuite.dataloader.CSVInitialDataSet;
 
 import junit.framework.TestCase;
 

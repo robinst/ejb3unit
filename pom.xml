@@ -104,13 +104,7 @@
 			<artifactId>jmock</artifactId>
 			<version>1.0.1</version>
 		</dependency>
-		<!-- contains session context (change later to jboss-j2ee.jar) -->
-		<dependency>
-			<groupId>org.jboss</groupId>
-			<artifactId>jbossall-client</artifactId>
-			<version>4.0.4-CR2</version>
-			<scope>compile</scope>
-		</dependency>
+		
 		<dependency>
 		   <groupId>org.hibernate</groupId>
   			<artifactId>hibernate-entitymanager</artifactId>

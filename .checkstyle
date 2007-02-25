@@ -1,5 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><fileset-config file-format-version="1.1.0" simple-config="true">
-<fileset name="Alle" enabled="true" check-config-name="BM-Rules" type="external" location="F:\workspace\bm-build-tools\src\main\resources\bm-build-tools\rules-copy-eclipse.xml" description=""><file-match-pattern match-pattern="." include-pattern="true"/>
-</fileset>
-<filter name="NonSrcDirs" enabled="true"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.2.0" simple-config="false">
+    <fileset name="Alle" enabled="true" check-config-name="BM-Rules" local="false">
+        <file-match-pattern match-pattern="com.bm.*" include-pattern="true"/>
+        <file-match-pattern match-pattern="com.bm.utils.csv.*" include-pattern="false"/>
+    </fileset>
+    <filter name="FilesFromPackage" enabled="false">
+        <filter-data value="src/main/java/com/bm/utils/csv"/>
+    </filter>
+    <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>

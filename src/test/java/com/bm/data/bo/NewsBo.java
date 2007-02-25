@@ -6,7 +6,6 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -15,16 +14,14 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Repreasentitert eine Boersen-Nachricht die zu einer Aktie gehoert.
+ * Test entity bean with annotated fields. Represents market related news object.
  * 
  * @author Daniel Wiese
  * @since 18.09.2005
  */
 @Entity
-@Table(name = "sysnews")
-@NamedQueries(value = {
-		@NamedQuery(name = "NewsBo.allNewsallStocks", query = "from com.bm.data.bo.NewsBo"),
-		@NamedQuery(name = "NewsBo.allNews", query = "SELECT c FROM com.bm.data.bo.NewsBo c WHERE c.primaryKey.wkn = :wknParam and datum >= :beginParam and datum<=:endParam order by datum") })
+@Table(name = "news")
+@NamedQuery(name = "NewsBo.allNews", query = "from com.bm.data.bo.NewsBo")
 public class NewsBo implements Serializable {
 	@Transient
 	private static final long serialVersionUID = 1L;
@@ -41,9 +38,6 @@ public class NewsBo implements Serializable {
 
 	@Column(name = "tag", nullable = true)
 	private Integer tag;
-
-	@Column(name = "zusatzinfo", nullable = true)
-	private String zusatzinfo;
 
 	@Column(name = "aktienliste", nullable = true, length = 250)
 	private String aktienliste;
@@ -113,13 +107,8 @@ public class NewsBo implements Serializable {
 		this.setWkn(wkn);
 	}
 
-
 	/**
-	 * Die toString methode.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 18.09.2005
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
 	public final String toString() {
 		StringBuilder buf = new StringBuilder(200);
@@ -144,8 +133,7 @@ public class NewsBo implements Serializable {
 		buf.append(this.getDatumInMillis()).append(": ").append(
 				this.getUeberschrift()).append("\n");
 		buf.append("Agentur: ").append(this.getAgentur()).append(", Quelle: ")
-				.append(this.getQuellenID()).append(", Zusatzinformation: ")
-				.append(this.getZusatzinfo()).append("\n");
+				.append(this.getQuellenID()).append("\n");
 		buf.append(this.getText());
 
 		return buf.toString();
@@ -153,11 +141,7 @@ public class NewsBo implements Serializable {
 	}
 
 	/**
-	 * Liefert true wenn die Nachrichten identisch sind.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 18.09.2005
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	public boolean equals(Object other) {
 		if (other instanceof NewsBo) {
@@ -177,11 +161,7 @@ public class NewsBo implements Serializable {
 	}
 
 	/**
-	 * Liefer den hash code - gleich be gleichen nachrichten.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 18.09.2005
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	public int hashCode() {
 		HashCodeBuilder builder = new HashCodeBuilder(17, 37);
@@ -346,25 +326,6 @@ public class NewsBo implements Serializable {
 	}
 
 	/**
-	 * The info.
-	 * 
-	 * @return Returns the zusatzinfo.
-	 */
-	public String getZusatzinfo() {
-		return this.zusatzinfo;
-	}
-
-	/**
-	 * The inf.
-	 * 
-	 * @param zusatzinfo
-	 *            The zusatzinfo to set.
-	 */
-	public void setZusatzinfo(String zusatzinfo) {
-		this.zusatzinfo = zusatzinfo;
-	}
-
-	/**
 	 * The PK Class from News - wird benutzt, da es sich um einen
 	 * zusammengesetzten Key handelt.
 	 * 
@@ -452,9 +413,7 @@ public class NewsBo implements Serializable {
 		}
 
 		/**
-		 * Equals.
-		 * 
-		 * @see java.lang.Object#equals(java.lang.Object)
+		 * {@inheritDoc}
 		 */
 		@Override
 		public boolean equals(Object other) {
@@ -471,9 +430,7 @@ public class NewsBo implements Serializable {
 		}
 
 		/**
-		 * HashCode.
-		 * 
-		 * @see java.lang.Object#hashCode()
+		 * {@inheritDoc}
 		 */
 		@Override
 		public int hashCode() {

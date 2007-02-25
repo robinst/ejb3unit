@@ -1,13 +1,12 @@
 package com.bm.testsuite.mocked;
 
-import java.lang.reflect.Field;
 import java.util.Map;
 
 import org.jmock.Mock;
+
 import com.bm.inject.DependencyInjector;
 import com.bm.inject.Injection;
 import com.bm.inject.impl.JMockInjectionFactory;
-import com.bm.introspectors.Property;
 import com.bm.testsuite.BaseTest;
 
 /**
@@ -20,7 +19,7 @@ import com.bm.testsuite.BaseTest;
  * @param <T> -
  *            the type of the bena to test.
  */
-public class MockedSessionBeanTest<T> extends BaseTest {
+public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 
     private final Class<T> beanUnderTestClass;
 
@@ -34,7 +33,7 @@ public class MockedSessionBeanTest<T> extends BaseTest {
      * @param beanToTest -
      *            the bean to test.
      */
-    public MockedSessionBeanTest(Class<T> beanToTest) {
+    public MockedSessionBeanFixture(Class<T> beanToTest) {
         this.beanUnderTestClass = beanToTest;
     }
 

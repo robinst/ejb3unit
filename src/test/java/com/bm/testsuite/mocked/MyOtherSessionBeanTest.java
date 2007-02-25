@@ -17,7 +17,7 @@ import com.bm.data.bo.MyOtherSessionBean;
  * 
  */
 public class MyOtherSessionBeanTest extends
-		MockedSessionBeanTest<MyOtherSessionBean> {
+		MockedSessionBeanFixture<MyOtherSessionBean> {
 
 	/**
 	 * Constructor.
