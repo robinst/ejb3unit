@@ -148,7 +148,7 @@
 	<distributionManagement>
 		<site>
 			<id>ejb3unit-site</id>
-			<url>file://C:/mavenUpload/</url>
+			<url>scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/</url>
 		</site>
 		<repository>
 			<id>ejb3unit-repo</id>
@@ -158,7 +158,7 @@
 		<snapshotRepository>
 			<id>ejb3unit-repo-snap</id>
 			<name>EJB3unit-Repository</name>
-			<url>scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/maven2</url>
+			<url>scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/maven2-snap/</url>
 		</snapshotRepository>	
 	</distributionManagement>
 </project>
