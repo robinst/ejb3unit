@@ -1,0 +1,28 @@
+                                    ------
+                                    Welcome to Ejb3Unit
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+					
+
+
+Ejb3Unit - Out-of-Container EJB 3.0 Testing
+
+  The Ejb3Unit project will automate Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 conform J2EE projects. Benefits of EJB3Unit:
+
+  Test entity bean and session beans outside the EJB container without having to deploy the modules to the EJB container.
+
+* Entity-Beans:
+
+    * With EJB3Unit you can create and test entity beans outside the container.
+
+    * EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your eqals and hashCode implementations for your Entity beans.
+
+* Session Beans:
+
+    * With EJB3Unit you can create and test session beans outside the container. EJB3Unit will support EJB 3 dependency injection, life cycle methods (with annotations) and other EJB 3 features for statefull and stateless session beans.
+
+    * Download Ejb3Unit
+
+  Ejb3unit is released under the LGPL License. 

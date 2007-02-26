@@ -1,0 +1,95 @@
+                                    ------
+                                    Documentation to Ejb3Unit
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+					
+
+
+Documentation
+
+* Preface
+
+  The Ejb3Unit project will automate Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 standard conform J2EE projects. 
+
+*  Approach
+
+  EJb3Unit can be configured for an in memory database (default setting) or for a user defined target database (never use production databases). Ejb3Unit provides three different test categories:
+
+  [[1]]	<<Entity bean test:>> Fully automated test. Entity bens are randomly generated and written / read against the database (or in memory db). Equals and HashCode methods are checked automatically. Nullable fields are tested.
+
+  [[2]]	<<Mocked session bean test:>> A session bean class is created and for all Ejb3 dependency injection field’s mock objects are injected. This test allows testing of an Session bean in isolation.
+
+  [[3]]	<<Session bean test:>> The tested session bean and all referenced session beans are created (annotated with @EJB for dependency injection). Also DataSource and SessionContext are injected. The in memory database is initialized with predefined data using comma separated value files. Each .csv file represents data for one table (using the mapping definitions form the corresponding entity bean). This test is an integration test.
+
+* Configuration
+
+  Ejb3Unit use a single configuration file named ejb3unit.properties. This file has to be present in your class path. All necessary configuration is done here (like the database driver, connection, etc.) . This is an example for the in memory database:
+
+----
+### The ejb3unit configuration file ###
+ejb3unit.inMemoryTest=true
+ejb3unit.show_sql=false
+
+----
+
+  This is an example of a user defined database:
+
+----
+### The ejb3unit configuration file ###
+ejb3unit.connection.url=jdbc:protokoll:db://host:port/shema
+ejb3unit.connection.driver_class=my.jdbc.Driver
+ejb3unit.connection.username=ejb3unit
+ejb3unit.connection.password=ejb3unit
+ejb3unit.dialect=org.hibernate.dialect.SQLServerDialect
+ejb3unit.show_sql=true
+
+## values are create-drop, create, update ##
+ejb3unit.shema.update=create
+----
+
+* Entity-Bean test 
+
+  With EJB3Unit you can create and test entity beans outside the container. 
+EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your equals and hashCode implementations for your Entity beans. 
+
+** First simple example
+
+  How to write a simple Entity bean test?
+
+  We assume that a Book bean is an entity bean
+
+----
+@Entity
+@Table(name = "AUTOR")
+public class Author implements Serializable{
+    
+    @Id(generate = GeneratorType.NONE)
+    private int id;
+    
+    private String name;
+    
+    @Column(name="creation_timestamp", nullable=false)
+    private Date created;
+}
+----
+  
+  If we want to write a JUnit test for this entity bean we write the following piece of code:
+
+----
+public class Author Test 
+extends BaseEntityTest<Author> {
+
+	/**
+	 * Constructor.
+	 */
+	public StockWKNBoTest() {
+		super(Author.class);
+	}
+}
+----
+
+  <<That’s it!>>  It’s not that much code for y complete entity bean JUnit test!
+
+  But what will happen behind the facade? To read an answer to that question please download refer to {{{http://ejb3unit.sourceforge.net/doc/Ejb3Unit.doc}detailed ejb3unit documenation}}

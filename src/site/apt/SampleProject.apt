@@ -1,0 +1,24 @@
+  				    ------
+                                    Sample-Project for Ejb3Unit
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+					
+
+
+Sample-Project for Ejb3Unit 
+
+  To "get your hands" on ejb3unit there is a sample project based on maven2.  
+
+* HOW TO SETUP THIS EXAMPLE PROJECT
+    
+  * Download Eclipse 3.2 or newer (maybe older version is also working)
+  
+  * Install maven 2.0.x on your computer ({{{http://maven.apache.org/}http://maven.apache.org/}})
+  
+  * Download the maven eclipse pugin for your convinience (Help/Software Updates/Find and Install../search for new features to install...) add a new update site: http://m2eclipse.codehaus.org/
+  
+  * Import the {{{http://downloads.sourceforge.net/ejb3unit/Ejb3UnitSampleProject.zip?modtime=1172431465&big_mirror=0}SampleProject}} to your workspace
+  
+  * <<READY TO GO>>
