@@ -37,6 +37,23 @@
 			<timezone />
 		</developer>
 	</developers>
+        <licenses>
+            <license>
+              <name>ejb3unit: GNU Lesser General Public License (LGPL)</name>
+              <url>http://www.gnu.org/licenses/lgpl.html</url>
+			  <distribution>repo</distribution>
+            </license>
+			<license>
+              <name>junit</name>
+              <url>http://ejb3unit.sourceforge.net/licenses/junit-license.txt</url>
+			  <distribution>repo</distribution>
+            </license>
+			<license>
+              <name>log4j</name>
+              <url>http://ejb3unit.sourceforge.net/licenses/log4j-license.txt</url>
+			  <distribution>repo</distribution>
+            </license>
+        </licenses>
 	<scm>
 		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit</url>
 		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
@@ -76,6 +93,18 @@
 					</descriptors>
 				</configuration>
 			</plugin>
+			<plugin>
+		          <groupId>org.codehaus.mojo</groupId>
+		          <artifactId>cobertura-maven-plugin</artifactId>
+	    	          <executions>
+		            <execution>
+		              <goals>
+		                <goal>clean</goal>
+		              </goals>
+		            </execution>
+		          </executions>
+		        </plugin>
+
 		</plugins>
 		
 	</build>
@@ -144,7 +173,40 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+
+			
+
+			<plugin>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+			</plugin>
+	
+			<plugin>
+		          <groupId>org.codehaus.mojo</groupId>
+		          <artifactId>cobertura-maven-plugin</artifactId>
+			</plugin>
+				<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<minmemory>128m</minmemory>
+					<maxmemory>512m</maxmemory>
+				</configuration>
+			</plugin>
+				<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jxr-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+			</plugin>
+			
+			<plugin>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+			</plugin>
+			
 		</plugins>
+
 	</reporting>
 	<distributionManagement>
 		<site>

@@ -19,18 +19,15 @@
 	</skin>
 	<body>
 		<links>
-			<item name="Ejb3unit" href="http://ejb3unit.sourceforge.net"/>
+		    <item name="ejb3unit@sourceforge" href="https://sourceforge.net/projects/ejb3unit/"/>
+                    <item name="Home" href="http://ejb3unit.sourceforge.net"/>
 		</links>
 		
 		<menu name="Quick Links">
-			<item name="Continuum" href="http://ejb3unit.sourceforge.net"/>
-
+			<item name="Downloads" href="https://sourceforge.net/project/showfiles.php?group_id=150949"/>
+			<item name="Sample Project" href="SampleProject.html"/>
+			<item name="Documentation" href="Documentation.html"/>
 		</menu>
-		<!--
-		<menu name="Projekte">
-			<item name="ejb3unit" href="http://ejb3unit.sourceforge.net"/>
-		</menu>
-		-->
 
 		<menu ref="reports" />
 	</body>
