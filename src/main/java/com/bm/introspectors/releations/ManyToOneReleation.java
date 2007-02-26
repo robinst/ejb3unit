@@ -38,6 +38,7 @@ public class ManyToOneReleation extends AbstractReleation implements
 
 	/**
 	 * Returns the type of the relation.
+	 * @return the type of the relation.
 	 * @see com.bm.introspectors.releations.EntityReleationInfo#getReleationType()
 	 */
 	public RelationType getReleationType() {

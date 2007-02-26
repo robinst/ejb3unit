@@ -117,6 +117,7 @@ public class JField {
     }
 
     /**
+     * a hash code value for the object.
      * @return a hash code value for the object.
      */
     @Override
@@ -125,6 +126,7 @@ public class JField {
     }
 
     /**
+     * field's descriptor.
      * @return field's descriptor.
      */
     public String getDescriptor() {
@@ -132,6 +134,7 @@ public class JField {
     }
 
     /**
+     * field's value.
      * @return field's value.
      */
     public Object getValue() {
@@ -139,6 +142,7 @@ public class JField {
     }
 
     /**
+     * method name.
      * @return method name
      */
     public String getName() {
@@ -146,6 +150,7 @@ public class JField {
     }
 
     /**
+     * method signature.
      * @return method signature
      */
     public String getSignature() {
@@ -153,7 +158,7 @@ public class JField {
     }
 
     /**
-     * @return string representation
+     * {@inheritDoc}
      */
     @Override
     public String toString() {
@@ -191,6 +196,7 @@ public class JField {
     }
 
     /**
+     * the field's access flags.
      * @return the field's access flags
      */
     public int getAccess() {

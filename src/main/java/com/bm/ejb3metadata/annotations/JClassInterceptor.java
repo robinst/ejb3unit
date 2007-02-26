@@ -75,6 +75,7 @@ public class JClassInterceptor {
     }
 
     /**
+     * (internal name) where is the interceptor.
      * @return class (internal name) where is the interceptor.
      */
     public String getClassName() {
@@ -82,6 +83,7 @@ public class JClassInterceptor {
     }
 
     /**
+     * Method with &#64;{@link javax.interceptor.AroundInvoke} annotation.
      * @return Method with &#64;{@link javax.interceptor.AroundInvoke} annotation
      */
     public JMethod getJMethod() {
@@ -106,7 +108,7 @@ public class JClassInterceptor {
     }
 
     /**
-     * @return hashCode of the object.
+     * {@inheritDoc}
      */
     @Override
     public int hashCode() {

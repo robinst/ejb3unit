@@ -70,7 +70,8 @@ public class EjbJarAnnotationMetadata {
 	/**
 	 * Returns the name of the bean class by passing the rmote/ local interface
 	 * name.
-	 * 
+	 * @return the name of the bean class by passing the rmote/ local interface
+	 * name.
 	 * @param interfaceName -
 	 *            the name of the local / remote interface
 	 */
@@ -81,7 +82,8 @@ public class EjbJarAnnotationMetadata {
 	/**
 	 * Returns the name of the bean class by passing the rmote/ local interface
 	 * name.
-	 * 
+	 * @return the name of the bean class by passing the rmote/ local interface
+	 * name.
 	 * @param interfaceName -
 	 *            the name of the local / remote interface
 	 */

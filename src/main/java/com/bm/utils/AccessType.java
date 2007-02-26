@@ -7,10 +7,10 @@ package com.bm.utils;
  */
 public enum AccessType {
 	
-	/** accestype field **/
+	/** accestype field. **/
 	FIELD,
 	
-	/** accestype method **/
+	/** accestype method. **/
 	METHOD
 
 }

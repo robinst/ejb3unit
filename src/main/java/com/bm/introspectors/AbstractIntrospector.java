@@ -112,7 +112,10 @@ public abstract class AbstractIntrospector<T> implements Introspector<T> {
 	/**
 	 * This method returns informations about a peristent field.
 	 * 
+	 * @param toCheck
+	 *            the property for persistent db field
 	 * @see com.bm.introspectors.Introspector#getPresistentFieldInfo(Property)
+	 * @return persistent property info
 	 */
 	public PersistentPropertyInfo getPresistentFieldInfo(Property toCheck) {
 		if (this.fieldInfo.containsKey(toCheck)) {
@@ -126,7 +129,10 @@ public abstract class AbstractIntrospector<T> implements Introspector<T> {
 	/**
 	 * This method returns informations about a peristent field.
 	 * 
+	 * @param toCheck
+	 *            the property for primary key
 	 * @see com.bm.introspectors.Introspector#getPrimaryKeyInfo(Property)
+	 * @return pk info
 	 */
 	public PrimaryKeyInfo getPrimaryKeyInfo(Property toCheck) {
 		if (this.pkFieldInfo.containsKey(toCheck)) {
@@ -141,6 +147,7 @@ public abstract class AbstractIntrospector<T> implements Introspector<T> {
 	 * Returns the persistent fields.
 	 * 
 	 * @see com.bm.introspectors.Introspector#getPersitentFields()
+	 * @return the list of persistent fields
 	 */
 	public List<Property> getPersitentFields() {
 		return persitentFields;
@@ -150,6 +157,7 @@ public abstract class AbstractIntrospector<T> implements Introspector<T> {
 	 * Return the primary key fields.
 	 * 
 	 * @see com.bm.introspectors.Introspector#getPkFields()
+	 * @return the list of primary key fields
 	 */
 	public Set<Property> getPkFields() {
 		return pkFields;
@@ -257,20 +265,19 @@ public abstract class AbstractIntrospector<T> implements Introspector<T> {
 				this.extractGenerator(propertyAnnotations, info);
 				this.pkFieldInfo.put(aktProperty, info);
 			}
-			
-			if (a instanceof EmbeddedId){
+
+			if (a instanceof EmbeddedId) {
 				this.pkFields.add(aktProperty);
 				PrimaryKeyInfo info = new PrimaryKeyInfo(((EmbeddedId) a));
 				this.extractGenerator(propertyAnnotations, info);
 				this.pkFieldInfo.put(aktProperty, info);
 			}
-			
-			if (a instanceof EmbeddedId){
+
+			if (a instanceof EmbeddedId) {
 				this.pkFields.add(aktProperty);
 				PrimaryKeyInfo info = new PrimaryKeyInfo(((EmbeddedId) a));
 				this.pkFieldInfo.put(aktProperty, info);
 			}
-			
 
 			// releations
 			if (a instanceof OneToMany) {
@@ -329,11 +336,12 @@ public abstract class AbstractIntrospector<T> implements Introspector<T> {
 	public Class<T> getRepresentingClass() {
 		return this.representingClass;
 	}
-	
-	protected void extractGenerator(Annotation[] propertyAnnotations, PrimaryKeyInfo info){
-		for (Annotation current:propertyAnnotations){
-			if (current instanceof GeneratedValue){
-				info.setGenValue((GeneratedValue)current);
+
+	protected void extractGenerator(Annotation[] propertyAnnotations,
+			PrimaryKeyInfo info) {
+		for (Annotation current : propertyAnnotations) {
+			if (current instanceof GeneratedValue) {
+				info.setGenValue((GeneratedValue) current);
 				break;
 			}
 		}

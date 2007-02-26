@@ -23,7 +23,8 @@ public class ConstantLongGenerator implements Generator<Long> {
 	}
 
 	/**
-	 * .
+	 * The value.
+	 * @return the vaue
 	 * 
 	 * @see com.bm.datagen.Generator#getValue()
 	 */

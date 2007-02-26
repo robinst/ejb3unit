@@ -86,6 +86,7 @@ public class JMethod {
     }
 
     /**
+     * the access mode (see {@link org.ejb3unit.asm.Opcodes}).
      * @return the access mode (see {@link org.ejb3unit.asm.Opcodes})
      */
     public int getAccess() {
@@ -99,7 +100,7 @@ public class JMethod {
     public JMethod(final Method m) {
         this.name = m.getName();
         this.descriptor = Type.getMethodDescriptor(m);
-        // TODO: make this ok
+        // FIXME: make this ok
         // this.signature = Type.signature;
         // this.exceptions = exceptions;
     }
@@ -138,6 +139,7 @@ public class JMethod {
     }
 
     /**
+     * a hash code value for the object.
      * @return a hash code value for the object.
      */
     @Override
@@ -146,6 +148,7 @@ public class JMethod {
     }
 
     /**
+     * method descriptor.
      * @return method descriptor
      */
     public String getDescriptor() {
@@ -153,6 +156,7 @@ public class JMethod {
     }
 
     /**
+     * method exceptions.
      * @return method exceptions
      */
     public String[] getExceptions() {
@@ -160,6 +164,7 @@ public class JMethod {
     }
 
     /**
+     * method name.
      * @return method name
      */
     public String getName() {
@@ -167,6 +172,8 @@ public class JMethod {
     }
 
     /**
+     * method signature.
+     * method signature
      * @return method signature
      */
     public String getSignature() {
@@ -174,6 +181,7 @@ public class JMethod {
     }
 
     /**
+     * string representation.
      * @return string representation
      */
     @Override

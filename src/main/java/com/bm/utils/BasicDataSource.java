@@ -55,12 +55,7 @@ public class BasicDataSource implements DataSource {
 	}
 
 	/**
-	 * The connection.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 08.11.2005
-	 * @see javax.sql.DataSource#getConnection(java.lang.String,
-	 *      java.lang.String)
+	 * {@inheritDoc}
 	 */
 	public Connection getConnection(String username, String password)
 			throws SQLException {
@@ -85,47 +80,35 @@ public class BasicDataSource implements DataSource {
 		}
 	}
 
+
 	/**
-	 * The log writer.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 08.11.2005
-	 * @see javax.sql.DataSource#getLogWriter()
+	 * {@inheritDoc}
 	 */
 	public PrintWriter getLogWriter() throws SQLException {
 		return this.logger;
 	}
 
+
 	/**
-	 * The log writer.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 08.11.2005
-	 * @see javax.sql.DataSource#setLogWriter(java.io.PrintWriter)
+	 * {@inheritDoc}
 	 */
 	public void setLogWriter(PrintWriter logger) throws SQLException {
 		this.logger = logger;
 
 	}
 
+
 	/**
-	 * The timeout.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 08.11.2005
-	 * @see javax.sql.DataSource#setLoginTimeout(int)
+	 * {@inheritDoc}
 	 */
 	public void setLoginTimeout(int arg0) throws SQLException {
 		this.loginTimeout = arg0;
 
 	}
 
+
 	/**
-	 * The timeout.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 08.11.2005
-	 * @see javax.sql.DataSource#getLoginTimeout()
+	 * {@inheritDoc}
 	 */
 	public int getLoginTimeout() throws SQLException {
 		return this.loginTimeout;

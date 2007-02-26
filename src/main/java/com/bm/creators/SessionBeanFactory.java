@@ -22,7 +22,6 @@ import com.bm.introspectors.SessionBeanIntrospector;
 import com.bm.utils.BasicDataSource;
 import com.bm.utils.Ejb3Utils;
 import com.bm.utils.FakedSessionContext;
-import com.bm.utils.ImplementationDiscoverer;
 
 /**
  * This class will create session bean instances without an application server.
@@ -48,8 +47,6 @@ public final class SessionBeanFactory<T> {
 			.getLogger(SessionBeanFactory.class);
 
 	private final SessionBeanIntrospector<T> introspector;
-
-	private final ImplementationDiscoverer dicoverer = new ImplementationDiscoverer();
 
 	private final Ejb3UnitCfg configuration;
 
@@ -171,9 +168,9 @@ public final class SessionBeanFactory<T> {
 					if (akt.getType().equals(DataSource.class)) {
 						akt.setField(toCreate, new BasicDataSource(
 								this.configuration));
-					} else if (akt.getType().equals(SessionContext.class)){
+					} else if (akt.getType().equals(SessionContext.class)) {
 						akt.setField(toCreate, new FakedSessionContext());
-					}else {
+					} else {
 						throw new RuntimeException(
 								"Can´t inject a rossource of type: "
 										+ akt.getType());
@@ -191,11 +188,24 @@ public final class SessionBeanFactory<T> {
 						akt.setField(toCreate, alreadyConstructedBeansMap
 								.get(akt.getType()));
 					} else {
-						Class implementation = this.dicoverer
-								.findImplementation(akt.getType());
+						String implementationName = this.introspector
+								.getClassMetaData()
+								.getEjbJarAnnotationMetadata()
+								.getBeanImplementationForInterface(
+										akt.getType());
 						log.debug("Using: Local/Remote Interface ("
 								+ akt.getType() + ") -->Implemetation ("
-								+ implementation + ")");
+								+ implementationName + ")");
+						Class<?> implementation = null;
+						try {
+							implementation = Thread.currentThread()
+									.getContextClassLoader().loadClass(
+											implementationName
+													.replace('/', '.'));
+						} catch (ClassNotFoundException e) {
+							throw new RuntimeException("Class ("
+									+ implementationName + ") not found");
+						}
 						// get the right introspector
 						final SessionBeanIntrospector myIntro = this
 								.getRightIntrospector(implementation);

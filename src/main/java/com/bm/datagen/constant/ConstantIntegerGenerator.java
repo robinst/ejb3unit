@@ -22,8 +22,8 @@ public class ConstantIntegerGenerator implements Generator<Integer> {
 	}
 
 	/**
-	 * .
-	 * 
+	 * The value.
+	 * @return the vaue
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
 	public Integer getValue() {

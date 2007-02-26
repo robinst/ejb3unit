@@ -5,17 +5,21 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.EJB;
 import javax.annotation.Resource;
-import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
+import com.bm.ejb3metadata.ClassFinder;
+import com.bm.ejb3metadata.MetadataAnalyzer;
+import com.bm.ejb3metadata.annotations.exceptions.ResolverException;
+import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
 import com.bm.utils.Ejb3Utils;
 
 /**
@@ -40,8 +44,12 @@ public class SessionBeanIntrospector<T> {
 	/** we assume thet a injected field has only one annotation * */
 	private Map<Property, Annotation> annotationForField = new HashMap<Property, Annotation>();
 
-	/** becase the entity manager is often used wie store it extra * */
+	/** because the entity manager is often used so, we store it extra * */
 	private Property entityManagerField = null;
+
+	private static EjbJarAnnotationMetadata metadata = null;
+
+	private ClassAnnotationMetadata classMetaData = null;
 
 	/**
 	 * Constructor.
@@ -52,51 +60,44 @@ public class SessionBeanIntrospector<T> {
 	public SessionBeanIntrospector(Class<? extends T> toInspect) {
 		this.representingClass = toInspect;
 
-		Annotation[] classAnnotations = toInspect.getAnnotations();
 
 		boolean isSessionBean = accept(toInspect);
-
-		// display the right massage
-		for (Annotation a : classAnnotations) {
-			if (a instanceof Stateless) {
-				log.debug("The class " + toInspect.getCanonicalName()
-						+ " is a Stateless-Session-Bean");
-			} else if (a instanceof Stateful) {
-				log.debug("The class " + toInspect.getCanonicalName()
-						+ " is a Statefull-Session-Bean");
-			}
+		if (!isSessionBean) {
+			throw new RuntimeException("The class is not a session/service/mdb bean");
 		}
+		classMetaData = metadata.getClassAnnotationMetadata(toInspect.getName()
+				.replace('.', '/'));
+
+		//FIXME: distinguish between field and method based annotations
 		// analyse the fields
 		this.processAccessTypeField(toInspect);
 
-		if (!isSessionBean) {
-			throw new RuntimeException("The class is not a session bean");
+	}
+	
+	private static synchronized void initialize(Class<?> toInspect) {
+
+		if (metadata == null) {
+			final ClassFinder finder = new ClassFinder();
+			final List<String> classes = finder.getListOfClasses(toInspect);
+			try {
+				metadata = MetadataAnalyzer.analyze(Thread.currentThread()
+						.getContextClassLoader(), classes, null);
+			} catch (ResolverException e) {
+				throw new RuntimeException("Class (" + toInspect.getName()
+						+ ") can´t be resolved");
+			}
 		}
 	}
 
 	/**
-	 * Constructor. - Protected only used by sublcases
-	 * 
-	 * @param toInspect -
-	 *            the class to inspect
-	 * @param flagForProvateContructor -
-	 *            only to distinguisch between normal contructor.
-	 */
-	protected SessionBeanIntrospector(Class<? extends T> toInspect,
-			boolean flagForProvateContructor) {
-		this.representingClass = toInspect;
-		log.debug("Protected contructor called: " + flagForProvateContructor);
-
-	}
-
-	/**
-	 * If the access typeis field, we will extract all the neccessary meta
-	 * informations form the fields
+	 * If the access type is field, we will extract all the neccessary meta
+	 * informations from the fields.
 	 * 
 	 * @param toInspect -
 	 *            the class to inspect
 	 */
 	protected void processAccessTypeField(Class<? extends T> toInspect) {
+
 		// extract meta information
 		Field[] fields = Ejb3Utils.getAllFields(toInspect);
 		for (Field aktField : fields) {
@@ -204,6 +205,14 @@ public class SessionBeanIntrospector<T> {
 	}
 
 	/**
+	 * Returns the classMetaData.
+	 * @return Returns the classMetaData.
+	 */
+	public ClassAnnotationMetadata getClassMetaData() {
+		return classMetaData;
+	}
+	
+	/**
 	 * Check if the field is static
 	 * 
 	 * @param toCheck
@@ -223,18 +232,11 @@ public class SessionBeanIntrospector<T> {
 	 * @return true id the introspector will accept this class
 	 */
 	public static boolean accept(Class toCheck) {
-		Annotation[] classAnnotations = toCheck.getAnnotations();
-
-		// iterate over the annotations to locate the MaxLength constraint
-		// if it exists
-		boolean isSessionBean = false;
-		for (Annotation a : classAnnotations) {
-			if (a instanceof Stateless) {
-				isSessionBean = true;
-			}
-		}
-
-		return isSessionBean;
+		initialize(toCheck);
+		ClassAnnotationMetadata classMeta = metadata.getClassAnnotationMetadata(toCheck.getName()
+				.replace('.', '/'));
+		return classMeta.isBean();
 	}
+
 
 }

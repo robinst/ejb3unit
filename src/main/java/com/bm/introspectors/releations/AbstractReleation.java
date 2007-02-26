@@ -106,8 +106,7 @@ public abstract class AbstractReleation implements EntityReleationInfo {
 	}
 
 	/**
-	 * To String.
-	 * @see java.lang.Object#toString()
+	 *{@inheritDoc}
 	 */
 	@Override
 	public String toString() {

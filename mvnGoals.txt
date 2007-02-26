@@ -1,0 +1,2 @@
+mvn clean assembly:assembly
+mvn release:prepare release:perform -Dusername=fbauschulte -Dgoals=deploy

@@ -12,6 +12,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.log4j.Logger;
 
+import com.bm.ejb3metadata.annotations.metadata.FieldAnnotationMetadata;
 import com.bm.utils.Ejb3Utils;
 
 /**
@@ -52,6 +53,43 @@ public class Property {
 		this.fieldName = null;
 		this.accessTypeField = false;
 		this.declaringClass = declaringClass;
+	}
+
+	/**
+	 * Contructor using field access. Ejb3 metadata is passed directly.
+	 * 
+	 * @param metaData
+	 *            the ejb3 metadata information
+	 * 
+	 */
+	public Property(FieldAnnotationMetadata metaData) {
+		this.propertyName = metaData.getFieldName();
+		this.property = null;
+		this.accessTypeField = true;
+		try {
+			this.declaringClass = Thread.currentThread()
+					.getContextClassLoader().loadClass(
+							metaData.getClassAnnotationMetadata()
+									.getClassName().replace('/', '.'));
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("The class ("
+					+ metaData.getClassAnnotationMetadata().getClassName()
+					+ ") was not found");
+		}
+
+		try {
+			this.fieldName = this.declaringClass.getDeclaredField(this.propertyName);
+		} catch (SecurityException e) {
+			throw new RuntimeException("The field (" + this.propertyName
+					+ ") in Class  ("
+					+ metaData.getClassAnnotationMetadata().getClassName()
+					+ ") was not found");
+		} catch (NoSuchFieldException e) {
+			throw new RuntimeException("The field (" + this.propertyName
+					+ ") in Class  ("
+					+ metaData.getClassAnnotationMetadata().getClassName()
+					+ ") was not found");
+		}
 	}
 
 	/**

@@ -21,7 +21,7 @@ public class PrimaryKeyInfo {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param genType -
+	 * @param id -
 	 *            the generator type
 	 */
 	public PrimaryKeyInfo(Id id) {
@@ -32,7 +32,7 @@ public class PrimaryKeyInfo {
 	/**
 	 * Default constructor.
 	 * 
-	 * @param genType -
+	 * @param id -
 	 *            the generator type
 	 */
 	public PrimaryKeyInfo(EmbeddedId id) {

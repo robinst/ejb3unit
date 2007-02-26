@@ -296,6 +296,7 @@ public class ClassAnnotationMetadata extends CommonAnnotationMetadata implements
     }
 
     /**
+     * key of the map of fields annotations.
      * @param jField key of the map of fields annotations.
      * @return field annotation metadata of a given method.
      */

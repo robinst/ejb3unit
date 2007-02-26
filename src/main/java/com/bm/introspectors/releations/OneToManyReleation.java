@@ -32,6 +32,7 @@ public class OneToManyReleation extends AbstractReleation implements EntityRelea
 
 	/**
 	 * Returns the type of the relation.
+	 * @return the relation type
 	 * @see com.bm.introspectors.releations.EntityReleationInfo#getReleationType()
 	 */
 	public RelationType getReleationType() {

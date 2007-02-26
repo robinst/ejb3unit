@@ -18,8 +18,9 @@ public class JMockInjectionFactory implements DependencyInjectionFactory<Mock> {
 	/**
 	 * Gets called if the injector has identified a field or method for
 	 * dependency injection.
-	 * 
+	 * @param type the type to inject
 	 * @see com.bm.inject.DependencyInjectionFactory#create(java.lang.Class)
+	 * @return the specified injection - mock object
 	 */
 	public Injection<Mock> create(Class type) {
 		final String roleName = "mock" + Formatting.classShortName(type);
@@ -57,7 +58,7 @@ public class JMockInjectionFactory implements DependencyInjectionFactory<Mock> {
 
 		/**
 		 * Returns the created object.
-		 * 
+		 * @return the created object
 		 * @see com.bm.inject.Injection#getCratedObject()
 		 */
 		public Object getCratedObject() {
@@ -67,7 +68,7 @@ public class JMockInjectionFactory implements DependencyInjectionFactory<Mock> {
 		/**
 		 * Returns a handle for the previosly crated object. A handle can be any
 		 * object of type H. One use case if for example a Mock controll object.
-		 * 
+		 * @return the mock handle
 		 * @see com.bm.inject.Injection#getHandle()
 		 */
 		public Mock getHandle() {

@@ -22,7 +22,8 @@ public class ConstantStringGenerator implements Generator<String> {
 	}
 
 	/**
-	 * Returns the value.
+	 * The value.
+	 * @return the vaue
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
 	public String getValue() {

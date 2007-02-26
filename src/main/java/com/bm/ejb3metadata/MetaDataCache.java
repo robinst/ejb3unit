@@ -9,7 +9,7 @@ import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
  * @author Daniel Wiese
  * 
  */
-public class MetaDataCache {
+public final class MetaDataCache {
 
 	private static final AnnonatedClassFinder classFinder = new AnnonatedClassFinder();
 
