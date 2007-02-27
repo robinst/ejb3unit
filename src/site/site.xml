@@ -3,7 +3,7 @@
 <project name="Ejb3unit">
 	
 	<bannerLeft>
-		<src>http://ejb3unit.sourceforge.net/images/logo.png</src>
+		<src>ejb3unit_logo.jpg</src>
 		<href>http://ejb3unit.sourceforge.net</href>
 	</bannerLeft>
 	<!--
