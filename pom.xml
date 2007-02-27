@@ -43,16 +43,6 @@
               <url>http://www.gnu.org/licenses/lgpl.html</url>
 			  <distribution>repo</distribution>
             </license>
-			<license>
-              <name>junit</name>
-              <url>http://ejb3unit.sourceforge.net/licenses/junit-license.txt</url>
-			  <distribution>repo</distribution>
-            </license>
-			<license>
-              <name>log4j</name>
-              <url>http://ejb3unit.sourceforge.net/licenses/log4j-license.txt</url>
-			  <distribution>repo</distribution>
-            </license>
         </licenses>
 	<scm>
 		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit</url>
