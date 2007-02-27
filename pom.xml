@@ -206,7 +206,7 @@
 	<distributionManagement>
 		<site>
 			<id>ejb3unit-site</id>
-			<url>scpexe://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs</url>
+			<url>scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs</url>
 		</site>
 		<repository>
 			<id>ejb3unit-repo</id>
