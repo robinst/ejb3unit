@@ -13,9 +13,9 @@
 	-->
 	<publishDate format="EEEEE', 'dd.MM.yyyy HH:mm:ss"/>
 	<skin>
-		<groupId>org.apache.maven.skins</groupId>
-		<artifactId>maven-stylus-skin</artifactId>
-		<version>1.0</version>
+    <groupId>org.springframework.maven.skins</groupId>
+    <artifactId>maven-spring-skin</artifactId>
+    <version>1.0</version>
 	</skin>
 	<body>
 		<links>

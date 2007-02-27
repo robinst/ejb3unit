@@ -9,20 +9,31 @@
 
 Ejb3Unit - Out-of-Container EJB 3.0 Testing
 
-  The Ejb3Unit project will automate Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 conform J2EE projects. Benefits of EJB3Unit:
+  The Ejb3Unit project automates Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 conform J2EE projects. Benefits of EJB3Unit:
 
   Test entity bean and session beans outside the EJB container without having to deploy the modules to the EJB container.
+  
+*  Approach
+
+  EJb3Unit can be configured for an in memory database (default setting) or for a user defined target database (never use production databases). Ejb3Unit provides three different test categories:
+
+  [[1]]	<<Entity bean test:>> Fully automated test. Entity bens are randomly generated and written / read against the database (or in memory db). Equals and HashCode methods are checked automatically. Nullable fields are tested.
+
+  [[2]]	<<Mocked session bean test:>> A session bean class is created and for all Ejb3 dependency injection field’s mock objects are injected. This test allows testing of an Session bean in isolation.
+
+  [[3]]	<<Session bean test:>> The tested session bean and all referenced session beans are created (annotated with @EJB for dependency injection). Also DataSource and SessionContext are injected. The in memory database is initialized with predefined data using comma separated value files. Each .csv file represents data for one table (using the mapping definitions form the corresponding entity bean). This test is an integration test.
+
 
 * Entity-Beans:
 
     * With EJB3Unit you can create and test entity beans outside the container.
 
-    * EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your eqals and hashCode implementations for your Entity beans.
+    * EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against a in memory database (or against a database you may specify). During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your eqals and hashCode implementations for your Entity beans.
 
 * Session Beans:
 
-    * With EJB3Unit you can create and test session beans outside the container. EJB3Unit will support EJB 3 dependency injection, life cycle methods (with annotations) and other EJB 3 features for statefull and stateless session beans.
-
-    * Download Ejb3Unit
+    * With EJB3Unit you can create and test session beans outside the container. EJB3Unit supports EJB 3 dependency injection, life cycle methods (with annotations) and other EJB 3 features for statefull and stateless session beans.
+    
+    * A session bean class is created and for all Ejb3 dependency injection field’s mock objects are injected. This test allows testing of an Session bean in isolation.
 
   Ejb3unit is released under the LGPL License. 
