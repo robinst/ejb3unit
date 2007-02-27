@@ -92,7 +92,10 @@ extends BaseEntityTest<Author> {
 
 * Mocked session bean test
 
-  EJB3Unit is able to inject to annotated fields (using EJB 3 (JSR 220) annotations), mock objects. The MockedSessionBeanTest can be used to automate the dependency injection and execute easily test with mocked dependencies. The basic test can be configured by extending the MockedSessionBeanTest class. The next example shows ho to test a session bean class called MyOtherSessionBean:
+  EJB3Unit is able to inject to annotated fields (using EJB 3 (JSR 220) annotations), mock objects. 
+  The MockedSessionBeanTest can be used to automate the dependency injection and execute easily test 
+  with mocked dependencies. The basic test can be configured by extending the MockedSessionBeanTest class. 
+  The next example shows ho to test a session bean class called MyOtherSessionBean:
 
 ----
 public class MyOtherSessionBeanTest extends
@@ -111,7 +114,8 @@ public class MyOtherSessionBeanTest extends
 }
 ----
 
-  In the test method test_executeOperation() we can specify which operation on which JMock objects will be executed. We can specify this e.g.:
+  In the test method test_executeOperation() we can specify which operation on which JMock objects 
+  will be executed. We can specify this e.g.:
 
 ----
 public void test_executeOperation() {
@@ -127,14 +131,15 @@ public void test_executeOperation() {
 }
 ----
   
-  With the method getMockControl("propertyName") we can retrieve the Mock control object for every property in the session bean.
+  With the method getMockControl("propertyName") we can retrieve the Mock control object 
+  for every attribute or property in the session bean.
 
 *  Session bean test:
 
-  With EJB3Unit you can create and test session beans outside the container. Every will may be
-  setup with a predefined set of data. This data is loaded using predefined data sets (CSV files).
-  <<This means every test can rely on a well defined set of data loaded into the database.>> 
-  EJB3Unit will support EJB 3 dependency injection, life cycle methods and 
+  With EJB3Unit you can create and test session beans outside the container. Every test can may be
+  setup with a predefined set of data. This data is loaded using predefined data sets (CSV files) into the database.
+  <<This means every test can rely on a well defined set of data, loaded into the database, 
+  every time a test is executed.>> EJB3Unit supports EJB 3 dependency injection, life cycle methods and 
   other EJB 3 features for statefull and stateless session beans.
 
   Currently following dependeny injection attributes are supported:
@@ -164,7 +169,7 @@ public class MySessionBeanTest extends
 	 */
 	public MySessionBeanTest() {
 		super(MySessionBean.class, usedBeans,
-				new StockWKNEntityInitialDataSet(), CSV_SET);
+			CSV_SET);
 	}
 
 	/**
