@@ -96,6 +96,13 @@
 		        </plugin>
 		</plugins>
 	</build>
+	<repositories>
+		<repository>
+			<id>ejb3unit</id>
+			<name>Wicket repository</name>
+			<url>http://ejb3unit.sourceforge.net/maven2</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -191,7 +198,6 @@
 			</plugin>
 			
 		</plugins>
-
 	</reporting>
 	<distributionManagement>
 		<site>

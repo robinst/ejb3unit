@@ -9,19 +9,29 @@
 
 Ejb3Unit - Out-of-Container EJB 3.0 Testing
 
-  The Ejb3Unit project automates Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 conform J2EE projects. Benefits of EJB3Unit:
-
-  Test entity bean and session beans outside the EJB container without having to deploy the modules to the EJB container.
+  The Ejb3Unit project automates Entity and Session bean testing outside the container for the EJB 3.0 
+  specification. Ejb3Unit can execute automated standalone JUnit tests for all EJB 3.0 conform J2EE 
+  projects. The out of container test approach leads to short build-test-cycles, because no container 
+  deployment is necessary anymore.
   
 *  Approach
 
-  EJb3Unit can be configured for an in memory database (default setting) or for a user defined target database (never use production databases). Ejb3Unit provides three different test categories:
+  EJb3Unit uses an internal in memory database by default. Alternatively a user defined database can be specified. 
+  Ejb3Unit provides three different test categories:
 
-  [[1]]	<<Entity bean test:>> Fully automated test. Entity bens are randomly generated and written / read against the database (or in memory db). Equals and HashCode methods are checked automatically. Nullable fields are tested.
+  [[1]]	<<Entity bean test:>> Fully automated test. Entity beans are randomly generated and written / read against 
+  the database. Equals and HashCode methods are checked automatically. Nullable fields are tested.
 
-  [[2]]	<<Mocked session bean test:>> A session bean class is created and for all Ejb3 dependency injection field’s mock objects are injected. This test allows testing of an Session bean in isolation.
+  [[2]]	<<Mocked session bean test:>> A session bean class is created and for all dependencies resolver by 
+  injecting mock objects. A mock object is a substitute for a concrete implementation (please see {{{http://www.jmock.org/}JMock}} for details).
+  All EJB 3.0 dependency injection attributes are supported. This test allows testing of an Session bean 
+  in isolation.
 
-  [[3]]	<<Session bean test:>> The tested session bean and all referenced session beans are created (annotated with @EJB for dependency injection). Also DataSource and SessionContext are injected. The in memory database is initialized with predefined data using comma separated value files. Each .csv file represents data for one table (using the mapping definitions form the corresponding entity bean). This test is an integration test.
+  [[3]]	<<Session bean test:>> The session bean under test and all referenced session beans are created. 
+  Also a DataSource and a SessionContext are injected. 
+  The in memory database is initialized with predefined data using comma separated value files. 
+  Each .csv file represents data for one table (using the mapping definitions form the corresponding 
+  entity bean). This test represents an integration test, if you like to test arts of your system in collaboration.
 
 
 * Entity-Beans:

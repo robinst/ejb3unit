@@ -20,6 +20,12 @@ Sample-Project for Ejb3Unit
   
   * Download the maven eclipse pugin for your convinience (Help/Software Updates/Find and Install../search for new features to install...) add a new update site: http://m2eclipse.codehaus.org/
   
+  * Or [if you don't want to install the maven plugin] execute the eclipse maven command by hand, to let maven setup your eclipse classpath: 
+  
+----
+  mvn eclipse:eclipse
+----
+  
   * Import the {{{http://downloads.sourceforge.net/ejb3unit/Ejb3UnitSampleProject.zip?modtime=1172431465&big_mirror=0}SampleProject}} to your workspace
   
   * <<READY TO GO>>
