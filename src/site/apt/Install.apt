@@ -1,0 +1,84 @@
+  				    ------
+                                    Installation and configuration of ejb3unit
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+
+Installation 
+
+* Download (if you are not using Maven 2)
+
+  You have to download the latest version of ejb3unit. Please refer {{{https://sourceforge.net/project/showfiles.php?group_id=150949}here to download}}. 
+
+  There are to different kinds of versions:
+    
+    * <<ejb3unit-only>>: In case you are using ejb3unit-only can have to download the third party libaries yourself.   
+ 
+      *   {{{http://jakarta.apache.org/commons/beanutils}commons-beanutils}}
+   
+      *   {{{http://jakarta.apache.org/commons/lang}commons-lang}}
+
+      *   {{{http://logging.apache.org/log4j/docs}log4j}}
+
+      *   {{{http://junit.sourceforge.net}junit}}
+
+      *   {{{http://www.jmock.org}jmock}}
+
+      *   {{{http://hsqldb.org}hsqldb}}
+
+      *   {{{http://www.hibernate.org}hibernate-entitymanager}}
+
+    Please refer to the {{{dependencies.html}Project Dependencies}} for exact list and version numbers.
+
+    * <<ejb3unit-with-dependencies>>: This version includes all required libaries.
+
+* Download by Maven (Projects using Maven 2)
+
+  If you are using {{{http://maven.apache.org/}Maven 2}} to build your application maven will manage all your download for you. 
+  
+     * <<Add ejb3unit to your pom.xml>>
+
+----
+   <dependencies>
+	...
+	<dependency>
+	     <groupId>com.bm</groupId>
+	     <artifactId>ejb3unit</artifactId>
+	     <scope>test</scope>
+	</dependency> 
+	...
+   </dependencies>
+----
+
+    * <<Add the ejb3unit repository to your settings.xml or your pom.xml>>
+
+----
+<profiles>
+   <profile>
+	<activation>
+        <activeByDefault>true</activeByDefault>
+	</activation>
+	
+	<repositories>
+
+		<repository>
+			<snapshots>
+                                <enabled>false</enabled>
+                        </snapshots>
+			<id>ejb3unit</id>
+			<name>ejb3unit repository</name>
+			<url>http://ejb3unit.sourceforge.net/maven2</url>
+		</repository>
+ 	</repositories>
+   </profile>
+</profiles>
+----
+
+  
+
+
+    
+
+
+    
