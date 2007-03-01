@@ -23,11 +23,20 @@
                     <item name="Home" href="http://ejb3unit.sourceforge.net"/>
 		</links>
 
-		<menu name="Documentation">
-			<item name="Installation" href="Install.html"/>
-			<item name="Getting started" href="Documentation.html"/>
-			<item name="Sample Project" href="SampleProject.html"/>
+		<menu name="Howto">
+			<item name="Quick Overview" href="Documentation.html"/>
+			<item name="EntityBeans" href="Entity-Bean.html"/>
+			<item name="SessionBeans" href="Session-Bean.html"/>
+			<item name="SessionBeans (Mocked)" href="Mocked-Session-Bean.html"/>
+			<item name="JbossServices" href="Jboss-Service.html"/>
+			<item name="Full-Documentation" href="http://ejb3unit.sourceforge.net/doc/Ejb3Unit.doc"/>
 		</menu>
+
+		<menu name="Get your hands on ejb3unit">
+			<item name="Installation" href="Installation.html"/>
+			<item name="Configuration" href="Configuration.html"/>
+			<item name="Example Project" href="SampleProject.html"/>
+		</menu>		
 
 		<menu ref="reports" />
 	</body>
