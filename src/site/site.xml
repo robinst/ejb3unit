@@ -24,7 +24,7 @@
 		</links>
 
 		<menu name="Howto">
-			<item name="Quick Overview" href="Documentation.html"/>
+			<item name="Quick Overview" href="Overview.html"/>
 			<item name="EntityBeans" href="Entity-Bean.html"/>
 			<item name="SessionBeans" href="Session-Bean.html"/>
 			<item name="SessionBeans (Mocked)" href="Mocked-Session-Bean.html"/>
