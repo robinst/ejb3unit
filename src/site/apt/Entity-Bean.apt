@@ -1,0 +1,88 @@
+  				    ------
+                                    Entity-Bean test
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+
+Entity-Bean test 
+
+  With EJB3Unit you can create and test entity beans outside the container. 
+EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your equals and hashCode implementations for your Entity beans. 
+
+  <<How to write a simple Entity bean test?>>
+
+  We assume that a Book bean is an entity bean
+
+----
+@Entity
+@Table(name = "AUTOR")
+public class Author implements Serializable{
+    
+    @Id(generate = GeneratorType.NONE)
+    private int id;
+    
+    private String name;
+    
+    @Column(name="creation_timestamp", nullable=false)
+    private Date created;
+}
+----
+  
+  If we want to write a JUnit test for this entity bean we write the following piece of code:
+
+----
+public class Author Test 
+extends BaseEntityTest<Author> {
+
+	/**
+	 * Constructor.
+	 */
+	public StockWKNBoTest() {
+		super(Author.class);
+	}
+}
+----
+
+Testing entity beans with relations
+
+  In many cases the entity beans which are intended to test have relations. Possible relations are OneToMany, ManyToOne and OneToOne.
+
+  With Ejb3Unit it’s possible to Test this beans AND the relations (in a non transitive way!). 
+
+* Testing beans with OneToMany relations
+  
+  The first thing you have to write is a generator which generates <n> bans for the Collection filed (representing the n side)
+
+  In this example we ere going to create a Order. Typically a Order has relation to <n> LineItems. The LineItems are represented by the property “lineItems” which is of type Collection.
+
+  As the first step we must create a (inner) Class –a Generator, called MyLineItemCreator.
+
+----
+@GeneratorType(className = Collection.class,field="lineItems")
+class MyLineItemCreator extends    
+                          BeanCollectionGenerator<LineItem> {
+
+	private MyLineItemCreator() {
+		super(LineItem.class, 10);
+	}
+}
+----
+
+  We simple inherit form the BeanCollectionGenerator. In the constructor we have to pass the amount of line items generated for each Order.
+
+  Now we can create an EntityTest and add this generator to this entity test:
+
+----
+public class OrderTest extends BaseEntityTest<Order> {
+	
+	private static final Generator[] SPECIAL_GENERATORS = { 
+         new MyLineItemCreator() };
+
+	public OrderTest() {
+		super(Order.class, SPECIAL_GENERATORS);
+	}
+}
+----
+
+  That’s it! This test will always create Orders with 10 LineItem´s. Every LineItem will have an automatic back association to the Order (and vice versa)

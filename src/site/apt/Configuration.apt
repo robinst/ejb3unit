@@ -1,0 +1,32 @@
+                                    ------
+                                    Configuration to Ejb3Unit
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+
+Configuration
+
+  Ejb3Unit use a single configuration file named ejb3unit.properties. This file has to be present in your class path. All necessary configuration is done here (like the database driver, connection, etc.) . This is an example for the in memory database:
+
+----
+### The ejb3unit configuration file ###
+ejb3unit.inMemoryTest=true
+ejb3unit.show_sql=false
+
+----
+
+  This is an example of a user defined database:
+
+----
+### The ejb3unit configuration file ###
+ejb3unit.connection.url=jdbc:protokoll:db://host:port/shema
+ejb3unit.connection.driver_class=my.jdbc.Driver
+ejb3unit.connection.username=ejb3unit
+ejb3unit.connection.password=ejb3unit
+ejb3unit.dialect=org.hibernate.dialect.SQLServerDialect
+ejb3unit.show_sql=true
+
+## values are create-drop, create, update ##
+ejb3unit.shema.update=create
+----

@@ -1,0 +1,63 @@
+                                    ------
+                                    Session bean test
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+
+Session bean test
+
+  With EJB3Unit you can create and test session beans outside the container. Every test can may be
+  setup with a predefined set of data. This data is loaded using predefined data sets (CSV files) into the database.
+  <<This means every test can rely on a well defined set of data, loaded into the database, 
+  every time a test is executed.>> EJB3Unit supports EJB 3 dependency injection, life cycle methods and 
+  other EJB 3 features for statefull and stateless session beans.
+
+  Currently following dependeny injection attributes are supported:
+  
+ [[1]]	@EJB dependency injection of other Stateless/Statefull session beans. The Session bean implementation is discovered automatically at runtime
+
+ [[2]]  @Resource dependency injection is supported for following resources:
+ 
+ [[3]]	@DataSource : A data source implementation is Injected (conform to the Ejb3Unit) settings
+
+ [[4]]	@PersistenceContext EntityManager: A full function implementation of the EJB 3.0 EntityManager is injected automatically
+
+----
+public class MySessionBeanTest extends
+		BaseSessionBeanTest<SaleAccessService> {
+
+
+	private static final Class[] usedBeans = { StockWKNBo.class };
+
+	private static final CSVInitialDataSet CSV_SET = 
+		new CSVInitialDataSet<StockWKNBo>(
+			StockWKNBo.class, "germanStocks.csv", 
+			"wkn", "stockName", "isin");
+
+	/**
+	 * Constructor.
+	 */
+	public MySessionBeanTest() {
+		super(MySessionBean.class, usedBeans,
+			CSV_SET);
+	}
+
+	/**
+	 * Testmethod.
+	 */
+	public void testBaunWithPreloadedData() {
+		SaleAccessService toTest = this.getBeanToTest();
+	}
+}
+----
+
+   This test will load the in memory database, or a user defined database, with a data defined in the "germanStocks.csv".
+   This unit test tests the session bean against the configured database (default is the in memory database). In this example the test 
+   is using only a single entity bean named "StockWKNBo.class" and only one CSV data set. If a session bean is interacting
+   with multiple entity beans and multiple db tables, the test has to be adapted, by adding these entity beans und unsing multiple
+   CSV data loaders.
+
+
+
+

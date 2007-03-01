@@ -1,0 +1,25 @@
+  				    ------
+                                    JBoss Service Test
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+
+
+JBoss Service Test
+
+  With EJB3Unit you can create and test JBoss service classes outside the container. EJB3Unit will support EJB 3 dependency injection, life cycle methods (with annotations) and other EJB 3 features for JBoss service classes. 
+
+----
+public class SaleWindowCacheTest extends BaseJbossServiceTest<SaleWindowCache> {
+
+	private static final Class[] USED_ENTITY_BEANS = { SaleBo.class };
+
+	/**
+	 * Create the test case.
+	 */
+	public SaleWindowCacheTest() {
+		super(SaleWindowCache.class, USED_ENTITY_BEANS);
+	}
+}
+----

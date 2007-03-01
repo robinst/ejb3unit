@@ -1,0 +1,24 @@
+                                    ------
+                                    Overview to Ejb3Unit
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+					
+
+
+Overview
+
+* Preface
+
+  The Ejb3Unit project will automate Entity and Session bean testing outside the container for the EJB 3.0 specification. Ejb3Unit can execute automated standalone JUnit test for all EJB 3.0 standard conform J2EE projects. 
+
+*  Approach
+
+  EJb3Unit can be configured for an in memory database (default setting) or for a user defined target database (never use production databases). Ejb3Unit provides three different test categories:
+
+  [[1]]	<<Entity bean test:>> Fully automated test. Entity bens are randomly generated and written / read against the database (or in memory db). Equals and HashCode methods are checked automatically. Nullable fields are tested.
+
+  [[2]]	<<Mocked session bean test:>> A session bean class is created and for all Ejb3 dependency injection field’s mock objects are injected. This test allows testing of an Session bean in isolation.
+
+  [[3]]	<<Session bean test:>> The tested session bean and all referenced session beans are created (annotated with @EJB for dependency injection). Also DataSource and SessionContext are injected. The in memory database is initialized with predefined data using comma separated value files. Each .csv file represents data for one table (using the mapping definitions form the corresponding entity bean). This test is an integration test.
