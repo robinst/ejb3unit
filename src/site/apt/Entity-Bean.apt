@@ -7,8 +7,7 @@
 
 Entity-Bean test 
 
-  With EJB3Unit you can create and test entity beans outside the container. 
-EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your equals and hashCode implementations for your Entity beans. 
+  With EJB3Unit you can create and test entity beans outside the container. EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your equals and hashCode implementations for your Entity beans. 
 
   <<How to write a simple Entity bean test?>>
 
@@ -44,13 +43,37 @@ extends BaseEntityTest<Author> {
 }
 ----
 
-Testing entity beans with relations
+ <<But what will happen behind the facade?>>
+
+ Ejb3Unit will start to analyse the meta data information of the entity bean. This means: What are the persistent fields, what the primary key fields, which fields are transient and so on?
+
+ Using all this Meta-Information’s Ejb3Unit is able to generate random instances of the <Author> bean.
+
+ Now Ejb3Unit will make very useful tests automatically for you. The current Ejb3Unit Implementation will:
+
+ * Check if <n> randomly generated instances can be written to the database (this is only possible if the database schema is correct). The random bean generation consider following variations: 
+
+   * Try to write ban instances with max. length fields (e.g. a string with the length 255 chars - if the max length definition of this field is 255 characters)
+
+   * Try to write null values to nullable fields.
+
+ * Check if <n> randomly generated instances can be read from the database. The read operation will:
+
+   * Check if the read entity bean instance is equals to the generated instance (based on the persistent fields)
+   
+   * Check if the equals() implementation is correct. This mends that two entity beans representing the same database row are equal. And two beans representing different rows in the database are never equal.
+   
+   * Check if the hashCode() implementation is correct. This means that two beans which are equal must have the same hashCode. And <n> different beans should have a hashCode variation
+
+ Later we will see how to make a Parameterisation of the entity instance generation.
+
+* Testing entity beans with relations
 
   In many cases the entity beans which are intended to test have relations. Possible relations are OneToMany, ManyToOne and OneToOne.
 
   With Ejb3Unit it’s possible to Test this beans AND the relations (in a non transitive way!). 
 
-* Testing beans with OneToMany relations
+  <<Testing beans with OneToMany relations>>
   
   The first thing you have to write is a generator which generates <n> bans for the Collection filed (representing the n side)
 
@@ -86,3 +109,174 @@ public class OrderTest extends BaseEntityTest<Order> {
 ----
 
   That’s it! This test will always create Orders with 10 LineItem´s. Every LineItem will have an automatic back association to the Order (and vice versa)
+
+* Parameterisation of entity instance generation
+ 
+ In the previous test we generated only random entity beans instances. No we will show how the automatic generation of entity beans can be parameterized. 
+
+ In the default case, every persistent field of an entity bean will be filled with random data. <<This default behaviour can be overwritten by using an own Generator implementation.>>
+
+ Imagine you would like to test the following entity bean:
+
+----
+@Entity
+@Table(name = "ARTICLE")
+public class Article implements Serializable{
+
+    @Id (generate = GeneratorType.TABLE)
+    @Column (name = "id")
+    private int id;
+    
+    private String title;
+    
+    private int autorId;
+}
+----
+
+  We will assume that the autorId is a foreign key field to the Authors table (and we will ignore the fact, that such a realization of the entity bean is “strange” because we would normally use a relation to Author)
+
+  Now we would like to crate an entity bean test which will generate random data for the persistent fields id and title but the field autorId should have always the value 1 (because we know than in our database an Author with the primary key 1 exists).
+
+  To parameterize such an Ejb3Unit Test we need two things:
+
+    * A generator class for the field autorId which generates always “1” as value
+    
+    * A Ejb3Unit entity test, using this generator 
+
+  The generic generator interface is very simple:
+
+----
+public interface Generator<T> {
+	T getValue();
+}
+----
+
+
+  The getValue() method generates a value for a distinct type T for a specified field. The Introspector class contains information about the Meta data of the bean.
+
+  Every concrete generator must contain Meta data information (Java 5 annotations) describing for which case the generator should be used. For example we could use following annotation:
+
+----
+@GeneratorType(
+className = Integer.class, 
+field = "autorId", 
+fieldType = FieldType.ALL_TYPES)
+----
+
+  To describe that this generator should be used for all fields named “autorId” of type Integer.
+
+  With this knowledge we are now able to develop our custom generator:
+
+----
+@GeneratorType(className = Integer.class, field = "autorId", fieldType = FieldType.ALL_TYPES)
+public class ConstantIntegerGenerator implements Generator<Integer> {
+
+	private final int constant;
+
+	public ConstantIntegerGenerator(int constant) {
+		this.constant = constant;
+	}
+
+	
+	public Integer getValue() {
+		return this.constant;
+	}
+}
+----
+
+  That’s it. Now we have to register our custom generator to our Ejb3Unit entity test:
+
+----
+public class ArticleTest extends BaseEntityTest<Article> {
+
+    private static final Generator[] SPECIAL_GENERATORS = { 
+            new  ConstantIntegerGenerator(1) };
+
+	
+	public ArticleTest () {
+		super(Article.class, SPECIAL_GENERATORS);
+	}
+}
+----
+
+  That’s it. Now all generated Articles will have the autorId=1 value and the bean can be persisted in the database.
+
+  <<But how Ejb3Unit knows which generator should be used for a concrete persistent field?>> 
+
+  The answer is: Ejb3Unit use a well defined hierarchy of generators. Always the generator with the <<highest specialization>> will be used.
+
+  In our example the <ConstantIntegerGenerator> has a higher specialization as the build in <RandomIntegerGenerator>! This is the reason why our implementation is used.
+
+  The hierarchy is a follows:
+
+[images/specialization.png] Specialization
+
+  As you see a linear hierarchy definition is used. Every concrete generator has a clear hierarchy level.
+
+* Writing own Generator
+
+  As explained before, every generator must implement the generator Interface
+
+  The generic generator interface is very simple:
+
+----
+public interface Generator<T> {
+	T getValue();
+}
+----
+
+  If a generator needs different kinds of references, for the generation of the next value, annotations for dependency injection can be used.
+
+  Following annotations for dependency injection are possible inside the generator class:
+
+    *	@ ForInstance: If a generator need a reference to the entity bean instance where this generator is used for
+
+    *	@ ForProperty: If a generator need a reference to the property of  a entity bean instance where this generator is used for
+
+    *	@ UsedIntrospector: If a generator need a reference to the introspector associated with the entity bean, where this generator is used for
+
+  Sometimes a generator need to prepare some things before a JunitTest is executedt and cleanup later his stuff when the JUnit test is completed. For this Ejb3Unit provides two annotations for life cycle methods:
+
+    *	@PrepareGenerator: Every method with this annotation gets called before the JUnit test is executed
+
+    * 	@CleanupGenerator: Every method with this annotation gets called after the JUnit test is executed
+
+  Example: The following snippet demonstrated the usage of such Annotation:
+
+----
+@PrepareGenerator
+public void preCreate() {
+
+if (emf==null){
+		this.initEntityManagerFactory();
+}
+}
+----
+  
+  The next code snippet shows a custom generator for Date generation. 
+
+----
+@GeneratorType(className = Date.class, fieldType = FieldType.ALL_TYPES)
+public class RandomDateGenerator extends BaseUniqueValueGenerator<Date>
+		implements Generator<Date> {
+	
+	@ForProperty private Property forProperty;
+	@UsedIntrospector private Introspector introspector;
+
+	public Date getValue() {
+		return this.getUniqueValueForEachPkField(forProperty, 
+                                          introspector);
+	}
+
+	@Override
+	protected Date generateCadidate() {
+		return BaseRandomDataGenerator.getValueDate();
+	}
+
+}
+----
+
+
+
+
+
