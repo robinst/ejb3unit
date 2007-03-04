@@ -4,7 +4,7 @@
 	
 	<bannerLeft>
 		<src>ejb3unit_logo.jpg</src>
-		<href>http://ejb3unit.sourceforge.net</href>
+		<href>http://ejb3unit.sourceforge.net/index.html</href>
 	</bannerLeft>
 	<!--
 	<bannerRight>
@@ -20,7 +20,7 @@
 	<body>
 		<links>
 		    <item name="ejb3unit@sourceforge" href="https://sourceforge.net/projects/ejb3unit/"/>
-                    <item name="Home" href="http://ejb3unit.sourceforge.net"/>
+                    <item name="Home" href="http://ejb3unit.sourceforge.net/index.html"/>
 		</links>
 
 		<menu name="Howto">
