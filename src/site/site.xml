@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="Ejb3unit">
+<project name="Ejb3unit - Ejb3 out of container testing ">
 	
 	<bannerLeft>
 		<src>ejb3unit_logo.jpg</src>

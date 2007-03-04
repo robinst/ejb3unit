@@ -1,5 +1,5 @@
                                     ------
-                                    Welcome to Ejb3Unit
+                                    J2EE 5, Ejb3, Junit testing
                                     ------
 				    Fabian Bauschulte, Daniel Wiese
                                     ------
@@ -7,7 +7,7 @@
 					
 
 
-Ejb3Unit - Out-of-Container EJB 3.0 Testing
+Ejb3Unit - out of container EJB 3.0 testing
 
   The Ejb3Unit project automates Entity and Session bean testing outside the container for the EJB 3.0 specification. 
 
@@ -17,7 +17,8 @@ Ejb3Unit - Out-of-Container EJB 3.0 Testing
 
    * The out of container test approach leads to short build-test-cycles, because no container deployment is necessary anymore.
  
-   * EJb3Unit uses an internal in memory database by default. Alternatively a user defined database can be specified.  
+   * EJb3Unit uses an internal in memory database by default. Alternatively a user defined database can be specified. An example configuration 
+   can be found {{{Configuration.html}here}}.
 
    * Ejb3unit is released under the LGPL License. 
   
@@ -59,7 +60,7 @@ Ejb3Unit - Out-of-Container EJB 3.0 Testing
 
 **  3. <<{{{Mocked-Session-Bean.html}Mocked session bean test}}>>
    
-  A session bean class is created and for all dependencies resolver by injecting mock objects. This <test allows testing of an Session bean in isolation>.
+  A session bean class is created and for all dependencies mock objects are injected. This <test allows testing of an Session bean in isolation>.
 
     * A mock object is a substitute for a concrete implementation (please see {{{http://www.jmock.org/}JMock}} for details). 
 
