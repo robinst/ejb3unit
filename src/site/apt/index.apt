@@ -1,5 +1,5 @@
                                     ------
-                                    JEE 5, Ejb3, Junit testing
+                                    JEE 5, Ejb3 testing, Junit testing
                                     ------
 				    Fabian Bauschulte, Daniel Wiese
                                     ------
@@ -7,7 +7,7 @@
 					
 
 
-Ejb3Unit - out of container EJB 3.0 testing
+Ejb3Unit - out of container EJB 3.0 testing - Automate your ejb3 testing NOW!
 
   The Ejb3Unit project automates Entity and Session bean testing outside the container for the EJB 3.0 specification. 
 
@@ -24,11 +24,11 @@ Ejb3Unit - out of container EJB 3.0 testing
   
   <<Quick Overview>>
   
-  Ejb3Unit provides three different test categories: Entity bean test, Session bean test and Mocked session bean test.
+  Ejb3Unit provides three different test categories for ejb3: Entity bean test, Session bean test and Mocked session bean test.
 
 **  1. <<{{{Entity-Bean.html}Entity bean test}}>>
    
-  You can create and test entity beans outside the container.
+  You can create and test entity beans outside a JEE 5, EJB3 container.
     
     * Fully automated test
       
