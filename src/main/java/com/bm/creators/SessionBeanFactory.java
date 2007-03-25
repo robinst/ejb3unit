@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.JbossServiceIntrospector;
+import com.bm.introspectors.MDBIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.introspectors.SessionBeanIntrospector;
 import com.bm.utils.BasicDataSource;
@@ -251,6 +252,8 @@ public final class SessionBeanFactory<T> {
 			return new SessionBeanIntrospector(forClass);
 		} else if (JbossServiceIntrospector.accept(forClass)) {
 			return new JbossServiceIntrospector(forClass);
+		} else if (MDBIntrospector.accept(forClass)) {
+			return new MDBIntrospector(forClass);
 		} else {
 			throw new RuntimeException("No introspector fond for class: "
 					+ forClass);

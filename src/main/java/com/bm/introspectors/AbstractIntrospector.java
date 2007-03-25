@@ -217,7 +217,7 @@ public abstract class AbstractIntrospector<T> {
 	 * @return Returns the classMetaData.
 	 */
 	public ClassAnnotationMetadata getClassMetaData() {
-		return classMetaData;
+		return getMetaData(this.representingClass);
 	}
 
 	/**

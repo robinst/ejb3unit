@@ -62,7 +62,7 @@ public class EjbJarAnnotationMetadata {
 		if (classesAnnotationMetadata.containsKey(key)) {
 			String msg = "EjbJarAnnotationMetadata.addClassAnnotationMetadata.alreadyPresent";
 			logger.debug(msg);
-			//throw new IllegalStateException(msg);
+			// throw new IllegalStateException(msg);
 		}
 		classesAnnotationMetadata.put(key, classAnnotationMetadata);
 	}
@@ -70,25 +70,27 @@ public class EjbJarAnnotationMetadata {
 	/**
 	 * Returns the name of the bean class by passing the rmote/ local interface
 	 * name.
+	 * 
 	 * @return the name of the bean class by passing the rmote/ local interface
-	 * name.
+	 *         name.
 	 * @param interfaceName -
 	 *            the name of the local / remote interface
 	 */
 	public String getBeanImplementationForInterface(String interfaceName) {
 		return this.interface2implemantation.get(interfaceName);
 	}
-	
+
 	/**
 	 * Returns the name of the bean class by passing the rmote/ local interface
 	 * name.
+	 * 
 	 * @return the name of the bean class by passing the rmote/ local interface
-	 * name.
+	 *         name.
 	 * @param interfaceName -
 	 *            the name of the local / remote interface
 	 */
 	public String getBeanImplementationForInterface(Class interfaceName) {
-		final String name=interfaceName.getName();
+		final String name = interfaceName.getName();
 		return this.interface2implemantation.get(name.replace('.', '/'));
 	}
 
@@ -99,8 +101,11 @@ public class EjbJarAnnotationMetadata {
 		for (ClassAnnotationMetadata current : this
 				.getClassAnnotationMetadataCollection()) {
 			for (String interfaze : current.getInterfaces()) {
-				this.interface2implemantation.put(interfaze, current
-						.getClassName());
+				//build no implementation map for anonymus classes and inner classes
+				if (current.getClassName().indexOf('$') < 0) {
+					this.interface2implemantation.put(interfaze, current
+							.getClassName());
+				}
 			}
 		}
 	}
