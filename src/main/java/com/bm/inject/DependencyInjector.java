@@ -7,6 +7,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.bm.introspectors.JbossServiceIntrospector;
+import com.bm.introspectors.MDBIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.introspectors.SessionBeanIntrospector;
 
@@ -65,8 +66,12 @@ public class DependencyInjector<H> {
 				fieldsToInject = intro.getFieldsToInject();
 			} else if (JbossServiceIntrospector.accept(toInject.getClass())) {
 				// its a jboss service
-				// its a stateless session bean
 				final JbossServiceIntrospector<Object> intro = new JbossServiceIntrospector<Object>(
+						toInject.getClass());
+				fieldsToInject = intro.getFieldsToInject();
+			} else if (MDBIntrospector.accept(toInject.getClass())) {
+				// its a mdb (supports jboss mdb type)
+				final MDBIntrospector<Object> intro = new MDBIntrospector<Object>(
 						toInject.getClass());
 				fieldsToInject = intro.getFieldsToInject();
 			}

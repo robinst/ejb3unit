@@ -102,15 +102,21 @@ public class SimpleGetterSetterTest extends Assert {
 									+ ") but not (" + value[0] + ")", value[0],
 									result);
 						} catch (IllegalArgumentException e) {
-							fail("Can´t invoke the setter of property ("
+							log.error("WrongArgument-Can't invoke the setter of property ("
+									+ current.getName() + ")", e);
+							fail("WrongArgument-Can't invoke the setter of property ("
 									+ current.getName() + ")");
 							throw new IllegalArgumentException(e);
 						} catch (IllegalAccessException e) {
-							fail("Can´t invoke the setter of property ("
+							log.error("WrongArgument-Can't invoke the setter of property ("
+									+ current.getName() + ")", e);
+							fail("WrongArgument-Can't invoke the setter of property ("
 									+ current.getName() + ")");
 							throw new IllegalArgumentException(e);
 						} catch (InvocationTargetException e) {
-							fail("Can´t invoke the setter of property ("
+							log.error("Can't invoke the setter of property ("
+									+ current.getName() + ")", e);
+							fail("Can't invoke the setter of property ("
 									+ current.getName() + ")");
 							throw new IllegalArgumentException(e);
 						}

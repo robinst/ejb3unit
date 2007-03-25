@@ -3,7 +3,6 @@ package com.bm.datagen.random.primitive;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.FieldType;
 import com.bm.datagen.annotations.GeneratorType;
-import com.bm.datagen.utils.BaseRandomDataGenerator;
 
 /**
  * Generates random Long values - distinguish between PK and non PK fields.
@@ -21,7 +20,7 @@ public class PrimitiveRandomLongGenerator implements Generator<Long> {
 	 * @see com.bm.datagen.Generator#getValue()
 	 */
 	public Long getValue() {
-		return BaseRandomDataGenerator.getValueLong();
+		return System.currentTimeMillis();
 	}
 
 }

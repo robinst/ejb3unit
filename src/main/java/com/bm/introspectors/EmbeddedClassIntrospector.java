@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  *            the type of the embedded class
  * @since 07.10.2005
  */
-public class EmbeddedClassIntrospector<T> extends AbstractIntrospector<T>
+public class EmbeddedClassIntrospector<T> extends AbstractPersistentClassIntrospector<T>
 		implements Introspector<T> {
 
 	private static final Logger log = Logger

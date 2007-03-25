@@ -1,31 +1,28 @@
 package com.bm.introspectors;
 
+import org.jboss.annotation.ejb.Consumer;
+
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 
 /**
- * SessionBeanIntrospector.
- * 
+ * Introspector for MDB (supports also jboss mdb.
  * @author Daniel Wiese
- * @param <T> -
- *            the type of the session bean
- * @since 08.11.2005
+ * @since 24.03.2007
+ * @param <T> the type
  */
-public class SessionBeanIntrospector<T> extends AbstractIntrospector<T> {
-
+public class MDBIntrospector<T> extends AbstractIntrospector<T> {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param toInspect -
-	 *            the sesion bean to inspect
+	 * @param toInspect the class to inspect
 	 */
-	public SessionBeanIntrospector(Class<? extends T> toInspect) {
+	public MDBIntrospector(Class<? extends T> toInspect) {
 		super(toInspect);
-
+		
 		boolean isSessionBean = accept(toInspect);
 		if (!isSessionBean) {
 			throw new RuntimeException(
-					"The class is not a session/service/mdb bean");
+					"The class is not a mdb bean");
 		}
 
 		// FIXME: distinguish between field and method based annotations
@@ -41,10 +38,10 @@ public class SessionBeanIntrospector<T> extends AbstractIntrospector<T> {
 	 *            to check
 	 * @return true id the introspector will accept this class
 	 */
+	@SuppressWarnings("unchecked")
 	public static boolean accept(Class toCheck) {
 		ClassAnnotationMetadata classMeta = getMetaData(toCheck);
-		return classMeta.isBean();
+		return classMeta.isMdb()
+				|| (toCheck.getAnnotation(Consumer.class) != null);
 	}
-
-
 }

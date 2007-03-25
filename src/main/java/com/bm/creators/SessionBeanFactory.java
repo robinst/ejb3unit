@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.JbossServiceIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.introspectors.SessionBeanIntrospector;
@@ -46,7 +47,7 @@ public final class SessionBeanFactory<T> {
 	private static final Logger log = Logger
 			.getLogger(SessionBeanFactory.class);
 
-	private final SessionBeanIntrospector<T> introspector;
+	private final AbstractIntrospector<T> introspector;
 
 	private final Ejb3UnitCfg configuration;
 
@@ -61,7 +62,7 @@ public final class SessionBeanFactory<T> {
 	 * @param usedEntityBeans -
 	 *            the used entity beans for this test
 	 */
-	public SessionBeanFactory(SessionBeanIntrospector<T> intro,
+	public SessionBeanFactory(AbstractIntrospector<T> intro,
 			Class[] usedEntityBeans) {
 		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
 		this.usedEntityBeans = usedEntityBeans;
@@ -207,7 +208,7 @@ public final class SessionBeanFactory<T> {
 									+ implementationName + ") not found");
 						}
 						// get the right introspector
-						final SessionBeanIntrospector myIntro = this
+						final AbstractIntrospector<T> myIntro = this
 								.getRightIntrospector(implementation);
 						final SessionBeanFactory mySbFac = new SessionBeanFactory(
 								myIntro, this.usedEntityBeans);
@@ -245,7 +246,7 @@ public final class SessionBeanFactory<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private SessionBeanIntrospector getRightIntrospector(Class forClass) {
+	private AbstractIntrospector<T> getRightIntrospector(Class forClass) {
 		if (SessionBeanIntrospector.accept(forClass)) {
 			return new SessionBeanIntrospector(forClass);
 		} else if (JbossServiceIntrospector.accept(forClass)) {

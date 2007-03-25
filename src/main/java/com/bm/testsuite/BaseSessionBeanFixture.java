@@ -5,6 +5,7 @@ import javax.persistence.EntityTransaction;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.SessionBeanFactory;
+import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.SessionBeanIntrospector;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
@@ -40,7 +41,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			Class[] usedEntityBeans) {
 		super();
-		SessionBeanIntrospector<T> intro = new SessionBeanIntrospector<T>(
+		AbstractIntrospector<T> intro = new SessionBeanIntrospector<T>(
 				sessionBeanToTest);
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
@@ -76,7 +77,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 *            the inital data to create in the db
 	 */
 	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest,
-			SessionBeanIntrospector<T> intro, Class[] usedEntityBeans,
+			AbstractIntrospector<T> intro, Class[] usedEntityBeans,
 			InitialDataSet... initialData) {
 		super();
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);

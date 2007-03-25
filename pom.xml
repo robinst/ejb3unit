@@ -3,7 +3,7 @@
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.1.0-RC2-SNAPSHOT</version>
+	<version>1.1.0-RC1-SNAPSHOT</version>
 	<description>Out of Container Testing of EJB 3.0</description>
 	<url>http://ejb3unit.sourceforge.net/</url>
 	<ciManagement>
@@ -99,7 +99,7 @@
 	<repositories>
 		<repository>
 			<id>ejb3unit</id>
-			<name>Wicket repository</name>
+			<name>Ejb3UnitRepo</name>
 			<url>http://ejb3unit.sourceforge.net/maven2</url>
 		</repository>
 	</repositories>

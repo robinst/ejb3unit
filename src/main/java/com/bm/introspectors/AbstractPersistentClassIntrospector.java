@@ -34,7 +34,7 @@ import com.bm.introspectors.releations.RelationPropertyResolver;
  *            the type of the class to inspect
  * @since 07.10.2005
  */
-public abstract class AbstractIntrospector<T> implements Introspector<T> {
+public abstract class AbstractPersistentClassIntrospector<T> implements Introspector<T> {
 
 	// private final static Logger log =
 	// Logger.getLogger(AbstractIntrospector.class);

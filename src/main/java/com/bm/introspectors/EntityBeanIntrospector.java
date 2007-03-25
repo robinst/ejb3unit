@@ -21,7 +21,7 @@ import com.bm.utils.AccessTypeFinder;
  *            the type of the class to inspect
  * @since 07.10.2005
  */
-public class EntityBeanIntrospector<T> extends AbstractIntrospector<T>
+public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospector<T>
 		implements Introspector<T> {
 
 	static final Logger log = Logger.getLogger(EntityBeanIntrospector.class);
@@ -92,7 +92,7 @@ public class EntityBeanIntrospector<T> extends AbstractIntrospector<T>
 	 * 
 	 * @author Daniel Wiese
 	 * @since 15.10.2005
-	 * @see com.bm.introspectors.AbstractIntrospector#processAccessTypeField(java.lang.Class)
+	 * @see com.bm.introspectors.AbstractPersistentClassIntrospector#processAccessTypeField(java.lang.Class)
 	 */
 	@Override
 	protected void processAccessTypeField(Class<T> toInspect) {

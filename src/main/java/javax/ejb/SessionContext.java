@@ -1,7 +1,5 @@
 package javax.ejb;
 
-import java.util.*;
-import java.security.Identity;
 import javax.xml.rpc.handler.MessageContext;
 
 /**
