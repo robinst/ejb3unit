@@ -1,10 +1,9 @@
-<entity-manager>
-  <name>mssql-server</name>
-  <jta-data-source>java:/MSSqlDS</jta-data-source>
-  <properties>
-    <property name="hibernate.hbm2ddl.auto" value="update"/>
-	<property name="hibernate.dialect" value="org.hibernate.dialect.SQLServerDialect"/>
-	<property name="hibernate.use_sql_comments" value="true"/>
-	<property name="hibernate.show_sql" value="true"/>
-  </properties>
-</entity-manager>
+<persistence>
+	<persistence-unit name="uns">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/PostgresqlDS</jta-data-source>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+		</properties>
+	</persistence-unit>
+</persistence>

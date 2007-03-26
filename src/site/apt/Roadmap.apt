@@ -1,0 +1,21 @@
+    ------
+                                    Entity-Bean test
+                                    ------
+				    Fabian Bauschulte, Daniel Wiese
+                                    ------
+                                    2007
+
+Roadmap for Ejb3Unit
+
+  With EJB3Unit you can create and test entity beans outside the container. We are always trying to improve the framwork. Here is the current roadmap.
+
+  <<Feature list for next 1.2.0 Version>>
+  
+  * Major features
+      
+      * Support for Transactions.
+
+      * Support for out of container testing for J2EE (EJB 2.x) Specification
+      
+      * Automated N:M entity bean testing
+    

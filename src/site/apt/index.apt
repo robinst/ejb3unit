@@ -50,7 +50,7 @@ Ejb3Unit - out of container EJB 3.0 testing - Automate your ejb3 testing NOW!
 
 **  2. <<{{{Session-Bean.html}Session bean test}}>>
 
-   This test represents an integration test, if you like to <test arts of your system in collaboration>.
+   This test represents an integration test, if you like to <test parts of your system in collaboration>.
     
     * The session bean under test and all referenced session beans are created. 
     
