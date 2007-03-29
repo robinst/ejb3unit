@@ -46,11 +46,22 @@ public class NewsBo implements Serializable {
 	private Integer quellenID;
 
 	/**
-	 * Default constructor Constructor.
+	 * Default constructor Constructor. (chapter 2.1 page 17), "The entity class must have a no-arg
+	 * constructor. The entity class may have other constructors as well. The
+	 * no-arg constructor must be public or protected."
 	 */
-	public NewsBo() {
+	protected NewsBo() {
 
 	}
+	
+	/**
+	 * Constructor.
+	 * @param tag the day
+	 */
+	public NewsBo(Integer tag){
+		this.tag = tag;
+	}
+	
 
 	/**
 	 * Constructor for primary key.

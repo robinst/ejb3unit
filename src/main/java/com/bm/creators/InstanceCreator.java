@@ -2,8 +2,6 @@ package com.bm.creators;
 
 import java.util.List;
 
-import javax.persistence.GeneratedValue;
-
 import org.apache.log4j.Logger;
 
 import com.bm.datagen.DataGenerator;
@@ -12,6 +10,7 @@ import com.bm.introspectors.Introspector;
 import com.bm.introspectors.PersistentPropertyInfo;
 import com.bm.introspectors.PrimaryKeyInfo;
 import com.bm.introspectors.Property;
+import com.bm.utils.Ejb3Utils;
 
 /**
  * This class creates instances of different classes with random data, like
@@ -78,7 +77,7 @@ public class InstanceCreator<T> {
 		// for error messages
 		String aktFieldName = "unknown";
 		try {
-			final T back = this.toCreate.newInstance();
+			final T back = Ejb3Utils.getNewInstance(this.toCreate);
 			// iterate over all fields
 			for (Property aktProperty : this.intro.getPersitentFields()) {
 				aktFieldName = aktProperty.getName();
@@ -96,15 +95,19 @@ public class InstanceCreator<T> {
 			}
 
 			return back;
-		} catch (InstantiationException e) {
-			log.error("Can´t create the entity bean", e);
-			throw new RuntimeException("Can´t create the entity bean", e);
 		} catch (IllegalAccessException e) {
 			log.error("Can´t set the value to the NON TANSIENT field: "
 					+ aktFieldName + "\n(Class: " + toCreate.getName()
 					+ ") Perhaps it´s not marked as @Tansient!");
 			log.error("Can´t create the entity bean", e);
 			throw new RuntimeException("Can´t create the entity bean", e);
+		} catch (IllegalArgumentException e) {
+			log.error("Can´t create the entity bean", e);
+			throw new RuntimeException("Can´t create the entity bean", e);
+		} catch (SecurityException e) {
+			throw new RuntimeException(
+					"Insufficient access rights to create the entity bean ("
+							+ this.toCreate.getName() + ")");
 		}
 
 	}
@@ -134,8 +137,9 @@ public class InstanceCreator<T> {
 			final PrimaryKeyInfo info = intro.getPrimaryKeyInfo(toCheck);
 			if (info != null) {
 				// is a pk field
-				// Only pk wher he @GeneratedValue tag is present will not be generatet
-				if (info.getGenValue()!=null){
+				// Only pk wher he @GeneratedValue tag is present will not be
+				// generatet
+				if (info.getGenValue() != null) {
 					back = false;
 				}
 			}

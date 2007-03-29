@@ -16,7 +16,6 @@ public class NewsBoTest extends BaseEntityFixture<NewsBo> {
 			870737) };
 
 	/**
-	 * 
 	 * Constructor.
 	 */
 	public NewsBoTest() {

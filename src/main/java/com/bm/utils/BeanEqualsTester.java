@@ -20,6 +20,12 @@ import com.bm.introspectors.Property;
  */
 public final class BeanEqualsTester extends Assert {
 
+	private static final String EQUALS_WRONG = "The implementation of the equals is might incorrect, "
+			+ "two Entity-Beans representing the same row should be equal";
+
+	private static final String HASHCODE_WRONG = "The implementation of the hashCode is might incorrect, "
+			+ "two Entity-Beans representing the same row should have the same hashCode";
+
 	private static final Logger log = Logger.getLogger(BeanEqualsTester.class);
 
 	private BeanEqualsTester() {
@@ -199,7 +205,7 @@ public final class BeanEqualsTester extends Assert {
 				log.error("The implementation of the equals Method is wrong");
 				log.error("Two Entity-Beans (" + origB.getClass().getName()
 						+ ") representing the same row should be equal");
-				fail("The implementation of the eqals method is wrong");
+				fail(EQUALS_WRONG);
 			}
 			// test the hash code
 			if (origB.hashCode() != readB.hashCode()) {
@@ -209,7 +215,7 @@ public final class BeanEqualsTester extends Assert {
 						.error("Two Entity-Beans ("
 								+ origB.getClass().getName()
 								+ ") representing the same row should have the same hash-code");
-				fail("The implementation of the hash-code method is wrong");
+				fail(HASHCODE_WRONG);
 
 			}
 
@@ -225,7 +231,7 @@ public final class BeanEqualsTester extends Assert {
 							.error("Two Entity-Beans ("
 									+ origB.getClass().getName()
 									+ ") representing the different row should NEVER be equal");
-					fail("The implementation of the eqals method is wrong");
+					fail(EQUALS_WRONG);
 				}
 			}
 

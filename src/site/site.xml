@@ -48,7 +48,7 @@
 		
 		<menu name="Upcomming">
 			<item name="Roadmap" href="Roadmap.html"/>
-			<item name="Ejb3Unit@Sourcefoge" href="https://sourceforge.net/projects/ejb3unit/"/>
+			<item name="Ejb3Unit@Sourceforge" href="https://sourceforge.net/projects/ejb3unit/"/>
 		</menu>	
 
 		<menu ref="reports" />

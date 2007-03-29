@@ -89,33 +89,26 @@ public final class SessionBeanFactory<T> {
 	 * @return - the created session bean class for local usage
 	 */
 	public T createSessionBean(Class<T> toCreate) {
-		try {
-			final T back = toCreate.newInstance();
+		final T back = Ejb3Utils.getNewInstance(toCreate);
 
-			// to avoid circular dependencies register this bean
-			// as already constructed
-			final List<Class> businessInterfaces = Ejb3Utils
-					.getLocalRemoteInterfaces(toCreate);
-			for (Class interf : businessInterfaces) {
-				Map<Class, Object> map = alreadyConstructedBeans.get();
-				if (map != null) {
-					map.put(interf, back);
-				} else {
-					map = new HashMap<Class, Object>();
-					map.put(interf, back);
-					alreadyConstructedBeans.set(map);
-				}
+		// to avoid circular dependencies register this bean
+		// as already constructed
+		final List<Class> businessInterfaces = Ejb3Utils
+				.getLocalRemoteInterfaces(toCreate);
+		for (Class interf : businessInterfaces) {
+			Map<Class, Object> map = alreadyConstructedBeans.get();
+			if (map != null) {
+				map.put(interf, back);
+			} else {
+				map = new HashMap<Class, Object>();
+				map.put(interf, back);
+				alreadyConstructedBeans.set(map);
 			}
-
-			// now inject other instances
-			this.injectFields(back);
-			return back;
-		} catch (InstantiationException e) {
-			log.error("InstantiationException", e);
-		} catch (IllegalAccessException e) {
-			log.error("IllegalAccessException", e);
 		}
-		throw new RuntimeException("Could not create the session bean");
+
+		// now inject other instances
+		this.injectFields(back);
+		return back;
 	}
 
 	/**

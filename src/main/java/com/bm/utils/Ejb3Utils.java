@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -33,6 +35,9 @@ import com.bm.introspectors.Property;
  * @author Daniel Wiese
  */
 public final class Ejb3Utils {
+
+	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+			.getLogger(Ejb3Utils.class);
 
 	/**
 	 * This field is used to OSTYPE_WINDOWS.
@@ -101,6 +106,67 @@ public final class Ejb3Utils {
 			urlSt = "/" + urlSt;
 		}
 		return urlSt;
+	}
+
+	/**
+	 * Creates a new instance of a bean, even if it's protected constructor.
+	 * (chapter 2.1 page 17), "The entity class must have a no-arg constructor.
+	 * The entity class may have other constructors as well. The no-arg
+	 * constructor must be public or protected."
+	 * 
+	 * @author Daniel Wiese
+	 * @since 28.03.2007
+	 * @param <T>
+	 * @param forClass
+	 *            for which class
+	 * @return the instrance
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T getNewInstance(Class<T> forClass) {
+		Constructor<T>[] parameterlessConstructors = forClass
+				.getDeclaredConstructors();
+		if (parameterlessConstructors == null) {
+			throw new RuntimeException("The session/entity bean ("
+					+ forClass.getName()
+					+ ") has no public/protected parameterles constructor");
+		}
+
+		for (Constructor<T> current : parameterlessConstructors) {
+			final Class[] params = current.getParameterTypes();
+			if (params == null || params.length == 0) {
+				current.setAccessible(true);
+				T back = null;
+				try {
+					back = current.newInstance((Object[]) null);
+				} catch (InstantiationException e) {
+					log.error("Can´t create the session/entity bean", e);
+					throw new RuntimeException(
+							"Can´t create the session/entity bean", e);
+
+				} catch (IllegalArgumentException e) {
+					log.error("Can´t create the entity bean", e);
+					throw new RuntimeException(
+							"Can´t create the session/entity bean", e);
+				} catch (InvocationTargetException e) {
+					log.error("Can´t create the entity bean", e);
+					throw new RuntimeException(
+							"Can´t create the session/entity bean", e);
+				} catch (SecurityException e) {
+					throw new RuntimeException(
+							"Insufficient access rights to create the session/entity bean ("
+									+ forClass.getName() + ")");
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(
+							"Insufficient access rights to create the session/entity bean ("
+									+ forClass.getName() + ")");
+				}
+				return back;
+			}
+		}
+
+		throw new RuntimeException("The session/entity bean ("
+				+ forClass.getName()
+				+ ") has no public/protected parameterles constructor");
 	}
 
 	/**
