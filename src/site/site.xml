@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<project name="Ejb3unit - Ejb3 out of container testing ">
+<project name="Ejb3unit - JUnit Ejb3 out of container testing">
 	
 	<bannerLeft>
 		<src>ejb3unit_logo.jpg</src>
@@ -44,6 +44,7 @@
 			<item name="Installation" href="Installation.html"/>
 			<item name="Configuration" href="Configuration.html"/>
 			<item name="Example Project" href="SampleProject.html"/>
+			<item name="Junit relation" href="Junit.html"/>
 		</menu>	
 		
 		<menu name="Upcomming">

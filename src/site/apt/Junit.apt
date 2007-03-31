@@ -1,0 +1,16 @@
+  ------
+                                    JUnit, EJB3Unit, EJB3 Test, Junit testing
+                                    ------
+				    		Daniel Wiese, Fabian Bauschulte
+                                    ------
+                                    2007
+					
+
+
+Ejb3Unit - how is the relation to JUnit?
+
+  JUnit is a unit testing framework for the Java programming language. Created by Kent Beck and Erich Gamma, 
+  JUnit is one of, and arguably the most successful of, the xUnit family of frameworks that originated 
+  with Kent Beck's SUnit. JUnit has spawned its own ecosystem of JUnit extensions.
+  
+  Ejb3Unit is JUnit extention for out of container testing. All Ejb3Unit test are beased on the JUnit framework.
