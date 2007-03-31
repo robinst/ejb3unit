@@ -11,7 +11,7 @@ import com.bm.utils.Ejb3Utils;
  * 
  * @author Daniel Wiese
  */
-public abstract class AbstractReleation implements EntityReleationInfo {
+public abstract class AbstractRelation implements EntityReleationInfo {
 
 	private final Class sourceClass;
 
@@ -22,6 +22,8 @@ public abstract class AbstractReleation implements EntityReleationInfo {
 	private final Property targetProperty;
 
 	private final FetchType fetchType;
+    
+    private final boolean isUnidirectional;
 
 	private final CascadeType[] cascadeType;
 
@@ -42,7 +44,7 @@ public abstract class AbstractReleation implements EntityReleationInfo {
 	 *            cascade type
 	 * 
 	 */
-	public AbstractReleation(Class sourceClass, Class targetClass,
+	public AbstractRelation(Class sourceClass, Class targetClass,
 			Property sourceProperty, Property targetProperty,
 			FetchType fetchType, CascadeType[] cascadeType) {
 		this.sourceClass = sourceClass;
@@ -51,6 +53,7 @@ public abstract class AbstractReleation implements EntityReleationInfo {
 		this.sourceProperty = sourceProperty;
 		this.fetchType = fetchType;
 		this.cascadeType = cascadeType;
+        this.isUnidirectional = (targetProperty==null);
 	}
 
 	/**
@@ -104,8 +107,16 @@ public abstract class AbstractReleation implements EntityReleationInfo {
 	public Property getTargetProperty() {
 		return this.targetProperty;
 	}
-
+    
 	/**
+     * If the preperty is unidirectional.
+     * @return the isUnidirectional
+     */
+    public boolean isUnidirectional() {
+        return isUnidirectional;
+    }
+
+    /**
 	 *{@inheritDoc}
 	 */
 	@Override
@@ -122,5 +133,23 @@ public abstract class AbstractReleation implements EntityReleationInfo {
 		sb.append("Target attrib: ").append(this.targetProperty.getName());
 		return sb.toString();
 	}
+    
+    /**
+     * True wenn the delete operatio is cascading.
+     * @return when the delete operation is cascading
+     */
+    public boolean isCascadeOnDelete() {
+        boolean back=false;
+        if (this.cascadeType!=null) {
+            for (CascadeType current: this.cascadeType) {
+                if ((current.equals(CascadeType.ALL))|| (current.equals(CascadeType.REMOVE))){
+                    back=true;
+                    break;
+                }
+            }
+        }
+        
+        return back;
+    }
 
 }

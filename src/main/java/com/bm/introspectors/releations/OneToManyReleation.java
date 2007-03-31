@@ -9,7 +9,7 @@ import com.bm.introspectors.Property;
  * @author Daniel Wiese
  *
  */
-public class OneToManyReleation extends AbstractReleation implements EntityReleationInfo {
+public class OneToManyReleation extends AbstractRelation implements EntityReleationInfo {
 
 	
 

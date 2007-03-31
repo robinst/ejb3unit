@@ -78,7 +78,7 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 		PreparedStatement ps = null;
 		try {
 			con = ds.getConnection();
-			ps = con.prepareStatement(undo.getDeleteAllStatement());
+			ps = con.prepareStatement(undo.getOneDeleteAllStatement());
 			ps.execute();
 		} catch (SQLException e) {
 			log.error("Cant claenup", e);

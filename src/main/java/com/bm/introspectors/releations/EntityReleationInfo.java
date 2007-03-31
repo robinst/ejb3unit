@@ -14,5 +14,17 @@ public interface EntityReleationInfo {
 	 * @return the type of the relation
 	 */
 	RelationType getReleationType();
+    
+    /**
+     * If the preperty is unidirectional.
+     * @return the isUnidirectional
+     */
+    boolean isUnidirectional();
+    
+    /**
+     * True wenn the delete operatio is cascading.
+     * @return when the delete operation is cascading
+     */
+    public boolean isCascadeOnDelete();
 
 }
