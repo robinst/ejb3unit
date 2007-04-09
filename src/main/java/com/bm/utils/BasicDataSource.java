@@ -129,4 +129,20 @@ public class BasicDataSource implements DataSource {
 		}
 	}
 
+	/**
+	 * Does not wrap anything.
+	 * @param forInterface for which interface
+	 * @return always false
+	 */
+	public boolean isWrapperFor(Class<?> forInterface) throws SQLException {
+		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public <T> T unwrap(Class<T> arg0) throws SQLException {
+		return null;
+	}
+
 }

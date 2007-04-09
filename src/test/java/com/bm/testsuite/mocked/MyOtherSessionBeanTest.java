@@ -59,8 +59,15 @@ public class MyOtherSessionBeanTest extends
 			}
 
 			public int getLoginTimeout() throws SQLException {
-				// TODO Auto-generated method stub
 				return 0;
+			}
+
+			public boolean isWrapperFor(Class<?> arg0) throws SQLException {
+				return false;
+			}
+
+			public <T> T unwrap(Class<T> arg0) throws SQLException {
+				return null;
 			}
 
 		};
