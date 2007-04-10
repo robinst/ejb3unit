@@ -142,10 +142,10 @@ public final class Ejb3UnitCfg {
 				}
 			}
 			// fix later for now it´s working
-			singelton.entityManagerFactory = cfg.createEntityManagerFactory();
+			this.entityManagerFactory = cfg.createEntityManagerFactory();
 		}
 
-		return singelton.entityManagerFactory;
+		return this.entityManagerFactory;
 	}
 
 	/**
