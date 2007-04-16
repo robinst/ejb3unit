@@ -2,8 +2,8 @@ package com.bm.data.bo;
 
 import java.sql.SQLException;
 
-import javax.annotation.EJB;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

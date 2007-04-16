@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.annotation.EJB;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
