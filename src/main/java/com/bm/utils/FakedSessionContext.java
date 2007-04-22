@@ -1,6 +1,7 @@
 package com.bm.utils;
 
 import java.security.Principal;
+import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.ejb.EJBHome;
@@ -9,8 +10,13 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 import javax.ejb.SessionContext;
 import javax.ejb.TimerService;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.transaction.UserTransaction;
 import javax.xml.rpc.handler.MessageContext;
+
+import com.bm.jndi.MemoryContextFactory;
 
 /**
  * Represnts a dummy implementation for a session context. Later we can implements more
@@ -19,6 +25,19 @@ import javax.xml.rpc.handler.MessageContext;
  *
  */
 public class FakedSessionContext implements SessionContext {
+	
+	private final InitialContext ctx;
+	
+	public FakedSessionContext(){
+		Hashtable<String, String> env = new Hashtable<String, String>();
+		env.put(Context.INITIAL_CONTEXT_FACTORY, MemoryContextFactory.class
+				.getName());
+		try {
+			ctx = new InitialContext(env);
+		} catch (NamingException e) {
+			throw new RuntimeException("Can't setup JNDI context for testing");
+		}
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -138,7 +157,11 @@ public class FakedSessionContext implements SessionContext {
 	 * {@inheritDoc}
 	 */
 	public Object lookup(String name) {
-		return null;
+		try {
+			return ctx.lookup(name);
+		} catch (NamingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

@@ -11,7 +11,7 @@ Session bean test
   setup with a predefined set of data. This data is loaded using predefined data sets (CSV files) into the database.
   <<This means every test can rely on a well defined set of data, loaded into the database, 
   every time a test is executed.>> EJB3Unit supports EJB 3 dependency injection, life cycle methods and 
-  other EJB 3 features for statefull and stateless session beans.
+  other EJB 3 features for statefull and stateless session beans. Jndi lookup is also supported!
 
   Currently following dependeny injection attributes are supported:
   
@@ -57,6 +57,28 @@ public class MySessionBeanTest extends
    is using only a single entity bean named "StockWKNBo.class" and only one CSV data set. If a session bean is interacting
    with multiple entity beans and multiple db tables, the test has to be adapted, by adding these entity beans und unsing multiple
    CSV data loaders.
+   
+JNDI lookup
+
+  Every Session bean test will start a in memory JNDI server and load add Session bean or 
+  POJO's to the local JNDI tree. To use this fature you have to add following lines of code 
+  to your config
+  
+----  
+#What to bind to the JNDI Context
+ejb3unit_jndi.1.isSessionBean=true
+ejb3unit_jndi.1.jndiName=ejb/MySessionBean
+ejb3unit_jndi.1.className=com.bm.data.bo.MySessionBean
+----
+
+  This will bind the class MySessionBean under the JNDI name "ejb/MySessionBean". You can make the Lookup 
+  as usual in your application. Please add the following line to your jndi.properties
+  
+---- 
+java.naming.factory.initial=com.bm.jndi.MemoryContextFactory
+----  
+  
+  
 
 
 

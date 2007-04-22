@@ -2,8 +2,10 @@ package com.bm.data.bo;
 
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +30,16 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 
 	@EJB
 	private IMySessionBean mySessionBean;
+	
+	private IMySessionBean mySessionBeanJndi;
+	
+	@Resource
+	private SessionContext sc;
+	
+	@PostConstruct
+	void setup() {
+		this.mySessionBeanJndi= (IMySessionBean)sc.lookup("ejb/MySessionBean");
+	}
 
 	/**
 	 * Returns the DataSource.
@@ -61,6 +73,16 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 	 */
 	public IMySessionBean getSessionBean() {
 		return this.mySessionBean;
+	}
+	
+	/**
+	 * Reference to another session bean via jndi lookup.
+	 * 
+	 * @see com.bm.data.bo.IMyOtherSessionBean#getSessionBean()
+	 * @return the injected session bean.
+	 */
+	public IMySessionBean getSessionBeanOverJndi() {
+		return this.mySessionBeanJndi;
 	}
 
 	/**

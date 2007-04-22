@@ -1,5 +1,6 @@
 package com.bm.creators;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 import org.apache.log4j.Logger;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
 import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.JbossServiceIntrospector;
 import com.bm.introspectors.MDBIntrospector;
@@ -108,7 +110,32 @@ public final class SessionBeanFactory<T> {
 
 		// now inject other instances
 		this.injectFields(back);
+		this.executeLifeCycleCreateMethods(back);
 		return back;
+	}
+
+	private void executeLifeCycleCreateMethods(T back) {
+		final Set<MethodAnnotationMetadata> lifeCycleMethods = this.introspector
+				.getLifecycleMethods();
+		for (MethodAnnotationMetadata current : lifeCycleMethods) {
+			if (current.isPostConstruct() || current.isPostActivate()) {
+				if (current.getJMethod().getSignature() != null) {
+					throw new IllegalArgumentException(
+							"The life cycle method (" + current.getJMethod()
+									+ ") has arguments");
+				}
+				Method toInvoke = Ejb3Utils.getParameterlessMethodByName(
+						current.getMethodName(), back.getClass());
+				toInvoke.setAccessible(true);
+				try {
+					toInvoke.invoke(back, (Object[]) null);
+				} catch (Exception e) {
+					throw new IllegalArgumentException("Can't invoke method ("
+							+ current.getJMethod() + ")", e);
+				}
+			}
+		}
+
 	}
 
 	/**

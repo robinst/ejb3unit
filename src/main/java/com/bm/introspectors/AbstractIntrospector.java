@@ -3,6 +3,7 @@ package com.bm.introspectors;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import com.bm.ejb3metadata.MetadataAnalyzer;
 import com.bm.ejb3metadata.annotations.exceptions.ResolverException;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
 import com.bm.utils.Ejb3Utils;
 
 /**
@@ -187,6 +189,23 @@ public abstract class AbstractIntrospector<T> {
 	 */
 	public Set<Property> getFieldsToInject() {
 		return this.fieldsToInject;
+	}
+	
+	/**
+	 * Returns the lifecycle methods.
+	 * 
+	 * @return Returns the lofe cycle methods.
+	 */
+	public Set<MethodAnnotationMetadata> getLifecycleMethods() {
+		final Set<MethodAnnotationMetadata> back=new HashSet<MethodAnnotationMetadata>();
+		final Collection<MethodAnnotationMetadata> methods= this.getClassMetaData().getMethodAnnotationMetadataCollection();
+		for (MethodAnnotationMetadata current: methods){
+			if (current.isLifeCycleMethod()){
+				back.add(current);
+			}
+		}
+			
+		return back;
 	}
 
 	/**

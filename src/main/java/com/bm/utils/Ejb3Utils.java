@@ -493,6 +493,24 @@ public final class Ejb3Utils {
 	}
 
 	/**
+	 * Returns a parameterless method.
+	 * @param name the name of the method
+	 * @param inClass in which class
+	 * @return the method if found or IllegalArgument exception
+	 */
+	public static Method getParameterlessMethodByName(String name, Class inClass) {
+		final Method[] all = getAllMethods(inClass);
+		for (Method current : all) {
+			if (current.getName().equals(name)) {
+				return current;
+			}
+		}
+
+		throw new IllegalArgumentException("Method (" + name
+				+ ") with name not fould in class (" + inClass.getName() + ")");
+	}
+
+	/**
 	 * Returns all fields (including fields from all superclasses) of a class.
 	 * 
 	 * @param forClass -

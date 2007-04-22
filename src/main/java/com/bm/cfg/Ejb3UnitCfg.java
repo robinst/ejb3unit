@@ -3,10 +3,9 @@ package com.bm.cfg;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
-
 import javax.persistence.EntityManagerFactory;
-
 import org.hibernate.ejb.Ejb3Configuration;
 
 /**
@@ -20,36 +19,39 @@ public final class Ejb3UnitCfg {
 	public static final String EJB3UNIT_PROPERTIES_NAME = "ejb3unit.properties";
 
 	/** Konfiguration key. * */
-	public static final String KEY_CONNECTION_URL = "ejb3unit.connection.url";
+	public static final String KEY_AUTOMATIC_SHEMA_UPDATE = "ejb3unit.shema.update";
 
 	/** Konfiguration key. * */
 	public static final String KEY_CONNECTION_DRIVER_CLASS = "ejb3unit.connection.driver_class";
 
 	/** Konfiguration key. * */
-	public static final String KEY_CONNECTION_USERNAME = "ejb3unit.connection.username";
-
-	/** Konfiguration key. * */
 	public static final String KEY_CONNECTION_PASSWORD = "ejb3unit.connection.password";
 
 	/** Konfiguration key. * */
-	public static final String KEY_SQL_DIALECT = "ejb3unit.dialect";
+	public static final String KEY_CONNECTION_URL = "ejb3unit.connection.url";
+
+	/** Konfiguration key. * */
+	public static final String KEY_CONNECTION_USERNAME = "ejb3unit.connection.username";
+
+	public static final String KEY_IN_MEMORY_TEST = "ejb3unit.inMemoryTest";
 
 	/** Konfiguration key. * */
 	public static final String KEY_SHOW_SQL = "ejb3unit.show_sql";
 
 	/** Konfiguration key. * */
-	public static final String KEY_AUTOMATIC_SHEMA_UPDATE = "ejb3unit.shema.update";
+	public static final String KEY_SQL_DIALECT = "ejb3unit.dialect";
 
-	public static final String KEY_IN_MEMORY_TEST = "ejb3unit.inMemoryTest";
+	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+			.getLogger(Ejb3UnitCfg.class);
 
 	/** Konfiguration key. * */
 	private static Ejb3UnitCfg singelton = null;
 
 	private final Properties config;
 
-	private EntityManagerFactory entityManagerFactory = null;
-
 	private Collection<Class<? extends Object>> currentEntytiesToTest;
+
+	private EntityManagerFactory entityManagerFactory = null;
 
 	private boolean inMemory = true;
 
@@ -71,81 +73,6 @@ public final class Ejb3UnitCfg {
 			// propagete the exception
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Add entities to test to the configuration.
-	 * 
-	 * @param entytiesToTest -
-	 *            the used entity beans
-	 */
-	public static synchronized void addEntytiesToTest(
-			Collection<Class<? extends Object>> entytiesToTest) {
-		// init only if the entits for the test change or not initialized at all
-		if (singelton == null) {
-			singelton = new Ejb3UnitCfg();
-		}
-
-		singelton.currentEntytiesToTest.addAll(entytiesToTest);
-		// reset the factory (if already created) because we have new beans
-		singelton.entityManagerFactory = null;
-	}
-
-	/**
-	 * Creates / returns a singelton instance of the configuration.
-	 * 
-	 * @return - a singelton instance
-	 */
-	public static synchronized Ejb3UnitCfg getConfiguration() {
-		if (singelton == null) {
-			singelton = new Ejb3UnitCfg();
-		}
-
-		return singelton;
-	}
-
-	/**
-	 * Checks if the configuration was initialized.
-	 * 
-	 * @return - a singelton instance
-	 */
-	public static boolean isInitialized() {
-		return (singelton != null);
-	}
-
-	/**
-	 * Retruns a value of a config key.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 08.11.2005
-	 * @param key -
-	 *            the key
-	 * @return - a value of an config key
-	 */
-	public String getValue(String key) {
-		return this.config.getProperty(key);
-	}
-
-	/**
-	 * Returns the entityManagerFactory.
-	 * 
-	 * @return Returns the entityManagerFactory.
-	 */
-	public EntityManagerFactory getEntityManagerFactory() {
-		// lazy initialization
-		if (this.entityManagerFactory == null) {
-			final Ejb3Configuration cfg = this.getEJB3Configuration();
-			// add anotated entity beans (to test)
-			if (this.currentEntytiesToTest != null) {
-				for (Class<? extends Object> entityToTest : this.currentEntytiesToTest) {
-					cfg.addAnnotatedClass(entityToTest);
-				}
-			}
-			// fix later for now it´s working
-			this.entityManagerFactory = cfg.createEntityManagerFactory();
-		}
-
-		return this.entityManagerFactory;
 	}
 
 	/**
@@ -199,6 +126,50 @@ public final class Ejb3UnitCfg {
 	}
 
 	/**
+	 * Returns the entityManagerFactory.
+	 * 
+	 * @return Returns the entityManagerFactory.
+	 */
+	public EntityManagerFactory getEntityManagerFactory() {
+		// lazy initialization
+		if (this.entityManagerFactory == null) {
+			final Ejb3Configuration cfg = this.getEJB3Configuration();
+			// add anotated entity beans (to test)
+			if (this.currentEntytiesToTest != null) {
+				for (Class<? extends Object> entityToTest : this.currentEntytiesToTest) {
+					cfg.addAnnotatedClass(entityToTest);
+				}
+			}
+			// fix later for now it´s working
+			this.entityManagerFactory = cfg.createEntityManagerFactory();
+		}
+
+		return this.entityManagerFactory;
+	}
+
+	/**
+	 * Retruns a value of a config key.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 08.11.2005
+	 * @param key -
+	 *            the key
+	 * @return - a value of an config key
+	 */
+	public String getValue(String key) {
+		return this.config.getProperty(key);
+	}
+
+	/**
+	 * Returns the inMemory.
+	 * 
+	 * @return Returns the inMemory.
+	 */
+	public boolean isInMemory() {
+		return inMemory;
+	}
+
+	/**
 	 * This helper method will ignore null properties (keys or values)
 	 * 
 	 * @param prop -
@@ -215,12 +186,112 @@ public final class Ejb3UnitCfg {
 	}
 
 	/**
-	 * Returns the inMemory.
+	 * Add entities to test to the configuration.
 	 * 
-	 * @return Returns the inMemory.
+	 * @param entytiesToTest -
+	 *            the used entity beans
 	 */
-	public boolean isInMemory() {
-		return inMemory;
+	public static synchronized void addEntytiesToTest(
+			Collection<Class<? extends Object>> entytiesToTest) {
+		// init only if the entits for the test change or not initialized at all
+		if (singelton == null) {
+			singelton = new Ejb3UnitCfg();
+		}
+
+		singelton.currentEntytiesToTest.addAll(entytiesToTest);
+		// reset the factory (if already created) because we have new beans
+		singelton.entityManagerFactory = null;
+	}
+
+	/**
+	 * Creates / returns a singelton instance of the configuration.
+	 * 
+	 * @return - a singelton instance
+	 */
+	public static synchronized Ejb3UnitCfg getConfiguration() {
+		if (singelton == null) {
+			singelton = new Ejb3UnitCfg();
+		}
+
+		return singelton;
+	}
+
+	/**
+	 * Liefert die properties der Jndi rules.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 06.07.2006
+	 * @param key -
+	 *            der key
+	 * @return - die sell rules
+	 */
+	public static List<JndiProperty> getJndiBindings() {
+		return getNestedProperty("ejb3unit_jndi", JndiProperty.class);
+	}
+
+	/**
+	 * Checks if the configuration was initialized.
+	 * 
+	 * @return - a singelton instance
+	 */
+	public static boolean isInitialized() {
+		return (singelton != null);
+	}
+
+	/**
+	 * Liest ein NestedProperty Objekte ein.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 04.12.2005
+	 * @param key -
+	 *            ConfigKeys - die keys um im Property-File einen Wert
+	 *            auszulesen
+	 * @param toRead -
+	 *            die klasse die eingelesen werden soll
+	 * @return - eine Liste mit gelesenen NestedProperty Objekten.
+	 */
+	private static <T extends NestedProperty> List<T> getNestedProperty(
+			String key, Class<T> toRead) {
+		try {
+			final List<T> back = new ArrayList<T>();
+			boolean continueRead = true;
+			int counter = 0;
+			StringBuilder sb = null;
+			while (continueRead) {
+				T currentInstance = toRead.newInstance();
+
+				counter++;
+				sb = new StringBuilder();
+				sb.append(key).append(".").append(counter);
+
+				for (String currentInnerValue : currentInstance.innerValues()) {
+					StringBuilder innerValue = new StringBuilder(sb);
+					innerValue.append(".").append(currentInnerValue);
+					final String value = getConfiguration().getValue(
+							innerValue.toString());
+					if (value != null) {
+						currentInstance.setValue(currentInnerValue, value);
+					} else {
+						continueRead = false;
+						break;
+					}
+				}
+
+				if (continueRead) {
+					back.add(currentInstance);
+				}
+			}
+
+			return back;
+		} catch (InstantiationException e) {
+			log.error("Can´t instantiate class: " + toRead);
+			throw new IllegalArgumentException("Can´t instantiate class: "
+					+ toRead);
+		} catch (IllegalAccessException e) {
+			log.error("Can´t instantiate class: " + toRead);
+			throw new IllegalArgumentException("Can´t instantiate class: "
+					+ toRead);
+		}
 	}
 
 }

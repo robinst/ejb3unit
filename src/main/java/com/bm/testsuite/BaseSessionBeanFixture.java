@@ -7,6 +7,7 @@ import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.SessionBeanFactory;
 import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.SessionBeanIntrospector;
+import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
 import com.bm.utils.BasicDataSource;
@@ -23,6 +24,8 @@ import com.bm.utils.BasicDataSource;
 public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 
 	private final SessionBeanFactory<T> sbFactory;
+
+	private final Ejb3UnitJndiBinder jndiBinder;
 
 	private final Class<T> beanClass;
 
@@ -45,6 +48,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 				sessionBeanToTest);
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
+		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
 
 	}
 
@@ -83,6 +87,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
 		this.initalDataSet = initialData;
+		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
 	}
 
 	/**
@@ -93,6 +98,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		this.jndiBinder.bind();
 		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
 
 		if (this.initalDataSet != null) {

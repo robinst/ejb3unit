@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head></head>
+
+<body bgcolor="white">
+This library contains an implementation of a JNDI 1.1 naming provider. JNDI is 
+normally used to configure J2EE application. With this library you can use JNDI 
+to configure any application. The <code>MemoryContext</code> class is a naming 
+provider and implements the <code>javax.naming.Context</code> interface. A 
+<code>MemoryContext</code> instance resides completely in memory. A 
+<code>MemoryContext</code> is capable of storing any type of Java object 
+including references and reference factories.<p>
+
+<h2>Installation and Use</h2>
+Installation consists of placing a copy of the memory context classes in your
+classpath. A version of Apache commons logging classes and some java helper 
+classes are also required. All jar files required to build, test, and deploy are 
+supplied in the lib directory of the distribution. Just place a copy of jndi.jar, 
+commons-logging.jar, and util.jar in your classpath.<p>
+
+Once installed, a <code>MemoryContext</code> is used just like any JNDI context. 
+First you create an initial context. Using the initial context you can lookup 
+any stored object by it's name.<p>
+
+<code>
+Context ctx = new InitialContext();<br>
+Object ABC = ctx.lookup("ABC")
+</code><p>
+
+A new initial context will create a <code>MemoryContext</code> when the classes
+in this library are on the classpath. If necessary, <code>InitialContext</code> 
+can be forced to create a memory context by setting the INITIAL_CONTEXT_FACTORY 
+property prior to calling the <code>InitialContext</code> constructor.<p>
+
+<code>
+env.put(Context.INITIAL_CONTEXT_FACTORY, "jndi.naming.provider.MemoryContextFactory");<br>
+Context ctx = new InitialContext(env);
+</code><p>
+
+The name format supported is the standard Java format with name parts separated
+by "/" characters. Objects in the current context will always have names without 
+any "/". A name with a "/" indicates that it resides in a naming context that is 
+a a sub-context of the current context.<p>
+
+<h2>Configuration</h2>
+A <code>MemoryContext</code> is easily configured from an xml document. To 
+configure <code>MemoryContext</code> a JAXP Sax parser must exist in the 
+classpath. Unless a different file name is specified the file, "jndi.xml", will 
+be used to configure the naming provider. The configuration file is loaded from 
+the classpath of your application.<p>
+
+A differnet file name can be specified as the value of a property named 
+<i>jndi.naming.provider.xml</i>. This property can be set as either a global
+system property or as a property in the environment <code>Hashtable</code> 
+passed to the constructor of <code>InitialContext</code>. Since the configuration 
+file is loaded from the classpath of your application, only the file name should
+be given.<p>
+
+<code>
+env.put(MemoryContextFactory.CONFIG_FILE, "example.xml");<br>
+Context ctx = new InitialContext(env);
+</code><p>
+
+See {@link jndi.config.XMLConfigurator XMLConfigurator} for details of the xml 
+configuration file format.<p>  
+
+<h2>Requirements</h2>
+Requires Java 1.4 or higher.
+
+<h2>License</h2>
+This software is copyright 2005 by Richard Hansen. All rights reserved.<p>
+
+This is free software; you can redistribute it and/or modify it under the
+terms of the GNU Lesser General Public License as published by the Free
+Software Foundation; either version 2.1 of the License, or (at your option)
+any later version.<p>
+ 
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+details.<p>
+ 
+You should have received a copy of the GNU Lesser General Public License 
+along with this software; if not, write to the:<p>
+
+Free Software Foundation, Inc.<br>
+59 Temple Place, Suite 330<br>
+Boston, MA 02111-1307<br>
+USA<p>
+
+UML diagrams created with <a href="http://www.umlet.com">UMLet</a><p>
+
+</body>
+</html>
