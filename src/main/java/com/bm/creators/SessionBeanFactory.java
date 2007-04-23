@@ -113,8 +113,38 @@ public final class SessionBeanFactory<T> {
 		this.executeLifeCycleCreateMethods(back);
 		return back;
 	}
+	
+	/**
+	 * Factory method to create stateless session beans with no dependencies.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 18.09.2005
+	 * @param toCreate -
+	 *            the class to create
+	 * @return - the created session bean class for local usage
+	 */
+	public T createSessionBeanNoDependencies(Class<T> toCreate) {
+		final T back = Ejb3Utils.getNewInstance(toCreate);
 
-	private void executeLifeCycleCreateMethods(T back) {
+		// to avoid circular dependencies register this bean
+		// as already constructed
+		final List<Class> businessInterfaces = Ejb3Utils
+				.getLocalRemoteInterfaces(toCreate);
+		for (Class interf : businessInterfaces) {
+			Map<Class, Object> map = alreadyConstructedBeans.get();
+			if (map != null) {
+				map.put(interf, back);
+			} else {
+				map = new HashMap<Class, Object>();
+				map.put(interf, back);
+				alreadyConstructedBeans.set(map);
+			}
+		}
+
+		return back;
+	}
+
+	public void executeLifeCycleCreateMethods(T back) {
 		final Set<MethodAnnotationMetadata> lifeCycleMethods = this.introspector
 				.getLifecycleMethods();
 		for (MethodAnnotationMetadata current : lifeCycleMethods) {
@@ -175,7 +205,7 @@ public final class SessionBeanFactory<T> {
 	 *            the new session bean
 	 */
 	@SuppressWarnings("unchecked")
-	private void injectFields(T toCreate) {
+	public void injectFields(T toCreate) {
 
 		final Set<Property> toInject = this.introspector.getFieldsToInject();
 
