@@ -11,7 +11,7 @@ import com.bm.testsuite.dataloader.InitialDataSet;
  *            the type of the service
  * @since 12.11.2005
  */
-public class BaseJbossServiceFixture<T> extends BaseSessionBeanFixture<T> {
+public abstract class BaseJbossServiceFixture<T> extends BaseSessionBeanFixture<T> {
 
 	/**
 	 * Constructor.
