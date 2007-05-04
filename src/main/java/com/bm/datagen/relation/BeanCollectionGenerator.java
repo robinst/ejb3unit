@@ -18,6 +18,7 @@ import com.bm.introspectors.Property;
 import com.bm.introspectors.releations.EntityReleationInfo;
 import com.bm.introspectors.releations.OneToManyReleation;
 import com.bm.introspectors.releations.RelationType;
+import com.bm.utils.Ejb3Utils;
 
 /**
  * Generates <code>N</code> entity beans (using own configurator settings) to enable ben creation for beans
@@ -93,8 +94,9 @@ public class BeanCollectionGenerator<T> implements Generator<Collection<T>>, Ent
      * @return the vaue
      * @see com.bm.datagen.Generator#getValue()
      */
-    public Collection<T> getValue() {
-        final List<T> back = new ArrayList<T>();
+    @SuppressWarnings("unchecked")
+	public Collection<T> getValue() {
+        final Collection<T> back = Ejb3Utils.getRightCollectionType(forProperty);
         final PersistentPropertyInfo pi = introspector.getPresistentFieldInfo(forProperty);
         for (int i = 0; i < this.beansToCreate; i++) {
             T created = this.creator.createBeanInstance();
