@@ -23,11 +23,16 @@ import com.bm.utils.BasicDataSource;
  */
 public abstract class PoJoFixture extends BaseTest {
 
+	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+			.getLogger(PoJoFixture.class);
+
 	private final Ejb3UnitJndiBinder jndiBinder;
 
 	private InitialDataSet[] initalDataSet = null;
 
 	private final Ejb3UnitCfg configuration;
+
+	private EntityManager entityManager;
 
 	/**
 	 * Constructor.
@@ -39,11 +44,10 @@ public abstract class PoJoFixture extends BaseTest {
 		super();
 		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
 		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
-		
 
-			for (Class<? extends Object> akt : usedEntityBeans) {
-				usedEntityBeansC.add(akt);
-			}
+		for (Class<? extends Object> akt : usedEntityBeans) {
+			usedEntityBeansC.add(akt);
+		}
 		Ejb3UnitCfg.addEntytiesToTest(usedEntityBeansC);
 		this.configuration = Ejb3UnitCfg.getConfiguration();
 
@@ -71,6 +75,9 @@ public abstract class PoJoFixture extends BaseTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.jndiBinder.bind();
+		log.info("Creating entity manager instance for POJO test");
+		entityManager = this.configuration.getEntityManagerFactory()
+				.createEntityManager();
 
 		if (this.initalDataSet != null) {
 			EntityManager em = this.getEntityManager();
@@ -108,6 +115,7 @@ public abstract class PoJoFixture extends BaseTest {
 				current.cleanup(ds);
 			}
 		}
+		this.entityManager = null;
 
 	}
 
@@ -128,8 +136,7 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @return - a instance of an entity manager
 	 */
 	public EntityManager getEntityManager() {
-		return this.configuration.getEntityManagerFactory()
-				.createEntityManager();
+		return this.entityManager;
 	}
 
 }
