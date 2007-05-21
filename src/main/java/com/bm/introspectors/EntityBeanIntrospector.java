@@ -17,6 +17,7 @@ import com.bm.utils.AccessTypeFinder;
  * information.
  * 
  * @author Daniel Wiese
+ * @author Istvan Devai
  * @param <T> -
  *            the type of the class to inspect
  * @since 07.10.2005
@@ -47,7 +48,8 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		boolean isSessionBean = false;
 		boolean isTableNameSpecified = false;
 		boolean isAccessTypeField = false;
-
+                Entity entityAnnotation = null;
+                
 		// iterate over the annotations
 		for (Annotation a : classAnnotations) {
 			if (a instanceof Entity) {
@@ -58,6 +60,9 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 						AccessType.FIELD)) {
 					isAccessTypeField = true;
 				}
+                                
+                                entityAnnotation = (Entity) a;
+                                
 			} else if (a instanceof Table) {
 				this.tableName = ((Table) a).name();
 				isTableNameSpecified = true;
@@ -71,7 +76,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		}
 
 		if (!isTableNameSpecified) {
-			this.tableName = this.generateDefautTableName(toInspect);
+			this.tableName = this.generateDefautTableName(toInspect, entityAnnotation);
 			log.debug("The class " + toInspect.getSimpleName()
 					+ " doas not specify a table name! Uning default Name: "
 					+ this.tableName);
@@ -192,7 +197,13 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 *            the clss name
 	 * @return - the JSR 220 default table name
 	 */
-	private String generateDefautTableName(Class clazz) {
+	private String generateDefautTableName(Class clazz, Entity entityAnnotation) {
+            
+                if (entityAnnotation != null && !entityAnnotation.name().equals(""))
+                {
+                    return entityAnnotation.name().toUpperCase();
+                }
+            
 		String back = clazz.getName();
 		if (back.lastIndexOf(".") > 0
 				&& back.lastIndexOf(".") + 1 < back.length()) {
