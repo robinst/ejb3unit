@@ -37,7 +37,7 @@ public class StockWKNBo implements Comparable, Serializable {
     @Column(name = "name", nullable = false, length = 255)
     private String aktienName;
 
-    @Column(name = "isin", nullable = true, length = 50)
+    @Column(nullable = true, length = 50)
     private String isin;
 
     @Column(name = "symbol", nullable = true, length = 50)

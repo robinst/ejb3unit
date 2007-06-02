@@ -172,7 +172,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			final PersistentPropertyInfo info = this
 					.getPersistentFieldInfo(stringProperty);
 
-			insertSQL.append(info.getDbName());
+			insertSQL.append((info.getDbName().length() == 0) ? property
+					.getName() : info.getDbName());
 			questionMarks.append("?");
 			counter++;
 			// store the property
