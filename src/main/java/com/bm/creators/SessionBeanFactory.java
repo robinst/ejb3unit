@@ -30,7 +30,7 @@ import com.bm.utils.FakedSessionContext;
 /**
  * This class will create session bean instances without an application server.
  * The dependency injection is done here
- * 
+ *
  * @param <T> -
  *            the type of the session bean to create (class name)
  * @author Daniel Wiese
@@ -58,10 +58,10 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * Default constructor.
-	 * 
+	 *
 	 * @param intro -
 	 *            the introspector
-	 * 
+	 *
 	 * @param usedEntityBeans -
 	 *            the used entity beans for this test
 	 */
@@ -83,7 +83,7 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * Factory method to create stateless session beans.
-	 * 
+	 *
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @param toCreate -
@@ -113,10 +113,10 @@ public final class SessionBeanFactory<T> {
 		this.executeLifeCycleCreateMethods(back);
 		return back;
 	}
-	
+
 	/**
 	 * Factory method to create stateless session beans with no dependencies.
-	 * 
+	 *
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @param toCreate -
@@ -170,7 +170,7 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * Factory method to close the entity manager in stateless session beans.
-	 * 
+	 *
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @param toClose -
@@ -198,7 +198,7 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * This method injects all relevant dependencies
-	 * 
+	 *
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @param toCreate -
@@ -240,25 +240,9 @@ public final class SessionBeanFactory<T> {
 						akt.setField(toCreate, alreadyConstructedBeansMap
 								.get(akt.getType()));
 					} else {
-						String implementationName = this.introspector
-								.getClassMetaData()
-								.getEjbJarAnnotationMetadata()
-								.getBeanImplementationForInterface(
-										akt.getType());
-						log.debug("Using: Local/Remote Interface ("
-								+ akt.getType() + ") -->Implemetation ("
-								+ implementationName + ")");
-						Class<?> implementation = null;
-						try {
-							implementation = Thread.currentThread()
-									.getContextClassLoader().loadClass(
-											implementationName
-													.replace('/', '.'));
-						} catch (ClassNotFoundException e) {
-							throw new RuntimeException("Class ("
-									+ implementationName + ") not found");
-						}
-						// get the right introspector
+					    // get the implemenation for this interface
+					    Class<?> implementation = this.introspector.getImplementationForInterface(akt.getType());
+					    // get the right introspector
 						final AbstractIntrospector<T> myIntro = this
 								.getRightIntrospector(implementation);
 						final SessionBeanFactory mySbFac = new SessionBeanFactory(
@@ -281,7 +265,7 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * Creates an instance of the entity manager.
-	 * 
+	 *
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @return - the entity manager

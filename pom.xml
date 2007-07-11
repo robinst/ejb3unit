@@ -131,6 +131,12 @@
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.3</version>
+		</dependency> 
+		<!-- for guice -->
+		<dependency>
+			<groupId>aopalliance</groupId>
+			<artifactId>aopalliance</artifactId>
+			<version>1.0</version>
 		</dependency>
 		<!-- for mock testing -->
 		<dependency>

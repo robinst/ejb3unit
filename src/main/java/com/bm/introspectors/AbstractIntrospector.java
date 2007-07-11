@@ -26,9 +26,11 @@ import com.bm.utils.Ejb3Utils;
 
 /**
  * Abstract instrospector fur Session, MDBs und JBoss services.
+ * 
  * @author Daniel Wiese
  * @since 24.03.2007
- * @param <T> the type
+ * @param <T>
+ *            the type
  */
 public abstract class AbstractIntrospector<T> {
 	private static final Logger log = Logger
@@ -49,10 +51,12 @@ public abstract class AbstractIntrospector<T> {
 	private static EjbJarAnnotationMetadata metadata = null;
 
 	protected ClassAnnotationMetadata classMetaData = null;
-	
+
 	/**
 	 * Constructor.
-	 * @param toInspect - the class to inspect.
+	 * 
+	 * @param toInspect -
+	 *            the class to inspect.
 	 */
 	public AbstractIntrospector(Class<? extends T> toInspect) {
 		this.representingClass = toInspect;
@@ -77,6 +81,25 @@ public abstract class AbstractIntrospector<T> {
 	private static synchronized void reinitialize(Class<?> toInspect) {
 		metadata = null;
 		initialize(toInspect);
+	}
+
+	private static synchronized void updateMetadata(Class<?> newClassToInspect) {
+
+		final ClassFinder finder = new ClassFinder();
+		final List<String> classes = finder.getListOfClasses(newClassToInspect);
+		try {
+			// get the metadata corresponding to the parameter class
+			EjbJarAnnotationMetadata newMetadata = MetadataAnalyzer.analyze(
+					Thread.currentThread().getContextClassLoader(), classes,
+					null);
+			// add the discovered ClassAnnotationMetadata objects to the root
+			// metadata
+			metadata.addClassAnnotationMetadata(newMetadata);
+
+		} catch (ResolverException e) {
+			throw new RuntimeException("Class (" + newClassToInspect.getName()
+					+ ") can´t be resolved");
+		}
 
 	}
 
@@ -190,21 +213,22 @@ public abstract class AbstractIntrospector<T> {
 	public Set<Property> getFieldsToInject() {
 		return this.fieldsToInject;
 	}
-	
+
 	/**
 	 * Returns the lifecycle methods.
 	 * 
 	 * @return Returns the lofe cycle methods.
 	 */
 	public Set<MethodAnnotationMetadata> getLifecycleMethods() {
-		final Set<MethodAnnotationMetadata> back=new HashSet<MethodAnnotationMetadata>();
-		final Collection<MethodAnnotationMetadata> methods= this.getClassMetaData().getMethodAnnotationMetadataCollection();
-		for (MethodAnnotationMetadata current: methods){
-			if (current.isLifeCycleMethod()){
+		final Set<MethodAnnotationMetadata> back = new HashSet<MethodAnnotationMetadata>();
+		final Collection<MethodAnnotationMetadata> methods = this
+				.getClassMetaData().getMethodAnnotationMetadataCollection();
+		for (MethodAnnotationMetadata current : methods) {
+			if (current.isLifeCycleMethod()) {
 				back.add(current);
 			}
 		}
-			
+
 		return back;
 	}
 
@@ -249,6 +273,50 @@ public abstract class AbstractIntrospector<T> {
 	private boolean isStatic(Field toCheck) {
 		return Modifier.isStatic(toCheck.getModifiers());
 
+	}
+
+	/**
+	 * Get the implemenation name for the interface.
+	 * 
+	 * 
+	 * @param toInspect
+	 *            interface to whoes implementation to look for
+	 * @return the implementation of the parameter interface
+	 */
+	public Class<?> getImplementationForInterface(Class<?> toInspect) {
+
+		// try to get the implemenation name for the interface
+		String implementationName = metadata
+				.getBeanImplementationForInterface(toInspect);
+
+		// not found ?
+		if (implementationName == null) {
+			// this interface comes from an external jar or folder
+			// update the metadata by adding the (interface,implementation)
+			// pairs found in the external jar or folder
+			updateMetadata(toInspect);
+		}
+
+		// retry getting the implementation, this should do it
+		implementationName = metadata
+				.getBeanImplementationForInterface(toInspect);
+
+		log.debug("Using: Local/Remote Interface (" + toInspect
+				+ ") --> Implemetation (" + implementationName + ")");
+
+		Class<?> implementation = null;
+		try {
+			// log.debug("ClassLoaders are the same: " +
+			// toInspect.getClassLoader().equals(Thread.currentThread().getContextClassLoader()));
+			implementation = Thread.currentThread().getContextClassLoader()
+					.loadClass(implementationName.replace('/', '.'));
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Class (" + implementationName
+					+ ") was not found as an implementation for interface ("
+					+ toInspect.getName() + ")");
+		}
+
+		return implementation;
 	}
 
 }
