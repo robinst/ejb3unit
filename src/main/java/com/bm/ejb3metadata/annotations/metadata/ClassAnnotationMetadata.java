@@ -113,12 +113,6 @@ public class ClassAnnotationMetadata extends CommonAnnotationMetadata implements
 	 */
 	private JInterceptors annotationInterceptors = null;
 
-	/**
-	 * EasyBeans global interceptors.<br>
-	 * These interceptors correspond to a list of interceptors that need to be
-	 * present first on all methods.
-	 */
-	private List<JClassInterceptor> globalEasyBeansInterceptors = null;
 
 	/**
 	 * User interceptors. These interceptors correspond to a list of Interceptor
@@ -128,14 +122,6 @@ public class ClassAnnotationMetadata extends CommonAnnotationMetadata implements
 	 * interceptor&gt;
 	 */
 	private Map<InterceptorType, List<JClassInterceptor>> externalUserInterceptors = null;
-
-	/**
-	 * User interceptors. These interceptors correspond to a list of Interceptor
-	 * that user has specified in the bean class. It is not defined in separated
-	 * classes. Map&lt;interceptor type &lt;--&gt; List of methods/class
-	 * corresponding to the interceptor&gt;
-	 */
-	private Map<InterceptorType, List<JClassInterceptor>> internalUserInterceptors = null;
 
 	/**
 	 * Transaction management type (default = container).
@@ -722,48 +708,6 @@ public class ClassAnnotationMetadata extends CommonAnnotationMetadata implements
 		this.externalUserInterceptors = externalUserInterceptors;
 	}
 
-	/**
-	 * Map&lt;interceptor type &lt;--&gt; List of methods/class
-	 *         corresponding to the interceptor&gt; (bean classes) of user
-	 *         interceptors that enhancer will use.
-	 * @return Map&lt;interceptor type &lt;--&gt; List of methods/class
-	 *         corresponding to the interceptor&gt; (bean classes) of user
-	 *         interceptors that enhancer will use.
-	 */
-	public Map<InterceptorType, List<JClassInterceptor>> getInternalUserEasyBeansInterceptors() {
-		return internalUserInterceptors;
-	}
-
-	/**
-	 * Sets the list of user interceptors that enhancers will use.<br>
-	 * These interceptors are defined in bean class.
-	 * 
-	 * @param internalUserInterceptors
-	 *            list of interceptors that enhancer will use.
-	 */
-	public void setInternalUserInterceptors(
-			final Map<InterceptorType, List<JClassInterceptor>> internalUserInterceptors) {
-		this.internalUserInterceptors = internalUserInterceptors;
-	}
-
-	/**
-	 * list of global interceptors that enhancer will use.
-	 * @return list of global interceptors that enhancer will use. (ie : ENC)
-	 */
-	public List<JClassInterceptor> getGlobalEasyBeansInterceptors() {
-		return globalEasyBeansInterceptors;
-	}
-
-	/**
-	 * Sets the list of global interceptors that enhancers will use.
-	 * 
-	 * @param globalEasyBeansInterceptors
-	 *            list of interceptors that enhancer will use.
-	 */
-	public void setGlobalEasyBeansInterceptors(
-			final List<JClassInterceptor> globalEasyBeansInterceptors) {
-		this.globalEasyBeansInterceptors = globalEasyBeansInterceptors;
-	}
 
 	/**
 	 * the method metadata with annotation &#64;{@link javax.interceptor.AroundInvoke}.

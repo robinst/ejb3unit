@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,9 +15,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
-import com.bm.ejb3metadata.ClassFinder;
 import com.bm.ejb3metadata.MetadataAnalyzer;
-import com.bm.ejb3metadata.annotations.exceptions.ResolverException;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
@@ -66,15 +63,7 @@ public abstract class AbstractIntrospector<T> {
 	private static synchronized void initialize(Class<?> toInspect) {
 
 		if (metadata == null) {
-			final ClassFinder finder = new ClassFinder();
-			final List<String> classes = finder.getListOfClasses(toInspect);
-			try {
-				metadata = MetadataAnalyzer.analyze(Thread.currentThread()
-						.getContextClassLoader(), classes, null);
-			} catch (ResolverException e) {
-				throw new RuntimeException("Class (" + toInspect.getName()
-						+ ") can´t be resolved");
-			}
+			metadata = MetadataAnalyzer.initialize(toInspect);
 		}
 	}
 
@@ -84,22 +73,12 @@ public abstract class AbstractIntrospector<T> {
 	}
 
 	private static synchronized void updateMetadata(Class<?> newClassToInspect) {
-
-		final ClassFinder finder = new ClassFinder();
-		final List<String> classes = finder.getListOfClasses(newClassToInspect);
-		try {
-			// get the metadata corresponding to the parameter class
-			EjbJarAnnotationMetadata newMetadata = MetadataAnalyzer.analyze(
-					Thread.currentThread().getContextClassLoader(), classes,
-					null);
-			// add the discovered ClassAnnotationMetadata objects to the root
-			// metadata
-			metadata.addClassAnnotationMetadata(newMetadata);
-
-		} catch (ResolverException e) {
-			throw new RuntimeException("Class (" + newClassToInspect.getName()
-					+ ") can´t be resolved");
-		}
+		// get the metadata corresponding to the parameter class
+		EjbJarAnnotationMetadata newMetadata = MetadataAnalyzer
+				.initialize(newClassToInspect);
+		// add the discovered ClassAnnotationMetadata objects to the root
+		// metadata
+		metadata.addClassAnnotationMetadata(newMetadata);
 
 	}
 

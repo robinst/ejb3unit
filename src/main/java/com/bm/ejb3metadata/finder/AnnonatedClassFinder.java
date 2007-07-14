@@ -1,4 +1,4 @@
-package com.bm.ejb3metadata;
+package com.bm.ejb3metadata.finder;
 
 import java.io.File;
 import java.net.URL;

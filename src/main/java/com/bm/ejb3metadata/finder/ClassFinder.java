@@ -1,4 +1,4 @@
-package com.bm.ejb3metadata;
+package com.bm.ejb3metadata.finder;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import com.bm.ejb3metadata.utils.MetadataUtils;
 
 /**
- * This class discoverimplementations for interfaces. The current implementation
+ * This class discover implementations for interfaces. The current implementation
  * takes "is happy" with one possible impelmentation. If a interface has two
  * implementations it´s currently not defined which one if going to be returned
  * 

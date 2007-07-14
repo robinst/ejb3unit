@@ -42,7 +42,7 @@ public class BasicDataSource implements DataSource {
      * @return connection
 	 * @see javax.sql.DataSource#getConnection()
 	 */
-	public Connection getConnection() throws SQLException {
+	public synchronized Connection getConnection() throws SQLException {
 		if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
 			return this.getConnection("sa", "");
 		} else {
@@ -57,7 +57,7 @@ public class BasicDataSource implements DataSource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Connection getConnection(String username, String password)
+	public synchronized Connection getConnection(String username, String password)
 			throws SQLException {
 		try {
 			if (Ejb3UnitCfg.getConfiguration().isInMemory()) {

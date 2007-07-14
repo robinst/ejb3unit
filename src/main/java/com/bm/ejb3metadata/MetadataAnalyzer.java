@@ -5,13 +5,18 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+
 import org.ejb3unit.asm.ClassReader;
 
+import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3metadata.annotations.analyzer.ScanClassVisitor;
 import com.bm.ejb3metadata.annotations.exceptions.ResolverException;
 import com.bm.ejb3metadata.annotations.helper.ResolverHelper;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
+import com.bm.ejb3metadata.finder.ClassFinder;
 
 /**
  * Analyse the matadate for ejb 3.
@@ -19,9 +24,6 @@ import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
  * @author Daniel Wiese
  */
 public final class MetadataAnalyzer {
-
-	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
-			.getLogger(MetadataAnalyzer.class);
 
 	/**
 	 * Defines java.lang.Object class.
@@ -41,6 +43,34 @@ public final class MetadataAnalyzer {
 	private MetadataAnalyzer() {
 
 	}
+	
+	/**
+	 * Returns the Module with all bindings for the jar/project where toInspect is in.
+	 * @param toInspect the hint which ja/project should be scanned
+	 * @param configuration the configuration
+	 * @param manager the entity manager instance which should be used for the binding
+	 * @return the configuration the current ejb3unit configuration
+	 */
+	public static synchronized Module getGuiceBindingModule(Class<?> toInspect, Ejb3UnitCfg configuration, EntityManager manager){
+		 EjbJarAnnotationMetadata metadata = initialize(toInspect);
+		 return metadata.getDynamicModuleCreator(configuration, manager);
+	}
+
+	
+	public static synchronized EjbJarAnnotationMetadata initialize(
+			Class<?> toInspect) {
+		EjbJarAnnotationMetadata toReturn = null;
+		final ClassFinder finder = new ClassFinder();
+		final List<String> classes = finder.getListOfClasses(toInspect);
+		try {
+			toReturn = MetadataAnalyzer.analyze(Thread.currentThread()
+					.getContextClassLoader(), classes, null);
+		} catch (ResolverException e) {
+			throw new RuntimeException("Class (" + toInspect.getName()
+					+ ") can´t be resolved");
+		}
+		return toReturn;
+	}
 
 	/**
 	 * Allow to analyze a given set of classes.
@@ -48,14 +78,14 @@ public final class MetadataAnalyzer {
 	 * @param loader
 	 *            the classloader that will be used to load the classes.
 	 * @param classesToAnalyze
-	 *            the set of classes to analyze
+	 *            the set of classes to analyze.
 	 * @param map
 	 *            a map allowing to give some objects to the enhancer.
 	 * @return die metadaten
 	 * @throws ResolverException
 	 *             in error case
 	 */
-	public static EjbJarAnnotationMetadata analyze(final ClassLoader loader,
+	private static EjbJarAnnotationMetadata analyze(final ClassLoader loader,
 			final List<String> classesToAnalyze, final Map<String, Object> map)
 			throws ResolverException {
 		EjbJarAnnotationMetadata ejbJarAnnotationMetadata = new EjbJarAnnotationMetadata();

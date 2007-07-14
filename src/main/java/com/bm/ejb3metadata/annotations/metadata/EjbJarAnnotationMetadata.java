@@ -5,13 +5,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.ApplicationException;
+import javax.persistence.EntityManager;
 
+import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.creators.DynamicDIModuleCreator;
+import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3metadata.xml.struct.EJB3;
 
 /**
  * This class represents the annotation metadata of all classes of an EjbJar
  * file. From this class, we can get metadata of all beans.
- *
+ * 
  * @author Daniel Wiese
  */
 public class EjbJarAnnotationMetadata {
@@ -51,7 +55,7 @@ public class EjbJarAnnotationMetadata {
 
 	/**
 	 * Add annotation metadata for a given class.
-	 *
+	 * 
 	 * @param classAnnotationMetadata
 	 *            annotation metadata of a class.
 	 */
@@ -67,29 +71,31 @@ public class EjbJarAnnotationMetadata {
 		classesAnnotationMetadata.put(key, classAnnotationMetadata);
 	}
 
-    /**
-     * Update classesAnnotationMetadata map with the values from the parameters collection of ClassAnnotationMetadata objects.
-     *
-     * @param metadata
-     *              the metadata that usually comes from depenedent jar files
-     */
+	/**
+	 * Update classesAnnotationMetadata map with the values from the parameters
+	 * collection of ClassAnnotationMetadata objects.
+	 * 
+	 * @param metadata
+	 *            the metadata that usually comes from depenedent jar files
+	 */
 	public void addClassAnnotationMetadata(
-	        final EjbJarAnnotationMetadata metadata) {
-         for (ClassAnnotationMetadata classAnnotationMetadata : metadata.getClassAnnotationMetadataCollection()) {
-             this.addClassAnnotationMetadata(classAnnotationMetadata);
-         }
-         this.buildInterfaceImplementationMap();
-    }
+			final EjbJarAnnotationMetadata metadata) {
+		for (ClassAnnotationMetadata classAnnotationMetadata : metadata
+				.getClassAnnotationMetadataCollection()) {
+			this.addClassAnnotationMetadata(classAnnotationMetadata);
+		}
+		this.buildInterfaceImplementationMap();
+	}
 
 	/**
-     * Returns the name of the bean class by passing the rmote/ local interface
-     * name.
-     *
-     * @return the name of the bean class by passing the rmote/ local interface
-     *         name.
-     * @param interfaceName -
-     *            the name of the local / remote interface
-     */
+	 * Returns the name of the bean class by passing the rmote/ local interface
+	 * name.
+	 * 
+	 * @return the name of the bean class by passing the rmote/ local interface
+	 *         name.
+	 * @param interfaceName -
+	 *            the name of the local / remote interface
+	 */
 	public String getBeanImplementationForInterface(String interfaceName) {
 		return this.interface2implemantation.get(interfaceName);
 	}
@@ -97,7 +103,7 @@ public class EjbJarAnnotationMetadata {
 	/**
 	 * Returns the name of the bean class by passing the rmote/ local interface
 	 * name.
-	 *
+	 * 
 	 * @return the name of the bean class by passing the rmote/ local interface
 	 *         name.
 	 * @param interfaceName -
@@ -109,16 +115,44 @@ public class EjbJarAnnotationMetadata {
 	}
 
 	/**
+	 * Returns the Module {@link Module} for guice dependency injection with
+	 * valid ejb3mapping definition.
+	 * 
+	 * @param conf
+	 *            the configuration
+	 * @param manager the entity manager instance which should be used for the binding
+	 * @return the module creator.
+	 */
+	public DynamicDIModuleCreator getDynamicModuleCreator(Ejb3UnitCfg conf, EntityManager manager) {
+		return new DynamicDIModuleCreator(interface2implemantation, conf, manager);
+	}
+
+	/**
 	 * Builds a map of Local/Remote interfaces and it´s implementations.
 	 */
 	public void buildInterfaceImplementationMap() {
 		for (ClassAnnotationMetadata current : this
 				.getClassAnnotationMetadataCollection()) {
-			for (String interfaze : current.getInterfaces()) {
-				//build no implementation map for anonymus classes and inner classes
-				if (current.getClassName().indexOf('$') < 0) {
-					this.interface2implemantation.put(interfaze, current
-							.getClassName());
+			if (current.getLocalInterfaces() != null) {
+				for (String interfaze : current.getLocalInterfaces()
+						.getInterfaces()) {
+					// build no implementation map for anonymus classes and
+					// inner classes
+					if (current.getClassName().indexOf('$') < 0) {
+						this.interface2implemantation.put(interfaze, current
+								.getClassName());
+					}
+				}
+			}
+			if (current.getRemoteInterfaces() != null) {
+				for (String interfaze : current.getRemoteInterfaces()
+						.getInterfaces()) {
+					// build no implementation map for anonymus classes and
+					// inner classes
+					if (current.getClassName().indexOf('$') < 0) {
+						this.interface2implemantation.put(interfaze, current
+								.getClassName());
+					}
 				}
 			}
 		}
@@ -126,7 +160,7 @@ public class EjbJarAnnotationMetadata {
 
 	/**
 	 * Get class annotation metadata.
-	 *
+	 * 
 	 * @param className
 	 *            key of the map of annotations bean.
 	 * @return Bean annotation metadata of a given name.
@@ -138,7 +172,7 @@ public class EjbJarAnnotationMetadata {
 
 	/**
 	 * Get collections of bean annotation metadata.
-	 *
+	 * 
 	 * @return collections of bean annotation metadata.
 	 */
 	public Collection<ClassAnnotationMetadata> getClassAnnotationMetadataCollection() {
@@ -154,7 +188,7 @@ public class EjbJarAnnotationMetadata {
 
 	/**
 	 * Sets the ejb3 deployment descriptor object.
-	 *
+	 * 
 	 * @param ejb3
 	 *            the ejb3 deployment descriptor object.
 	 */
@@ -164,7 +198,7 @@ public class EjbJarAnnotationMetadata {
 
 	/**
 	 * Gets the list of application exceptions defined on this ejb jar metadata.
-	 *
+	 * 
 	 * @return the list of application exceptions defined on this ejb jar
 	 *         metadata.
 	 */

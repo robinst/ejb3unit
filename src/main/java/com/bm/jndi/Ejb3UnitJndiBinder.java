@@ -85,10 +85,8 @@ public class Ejb3UnitJndiBinder {
 				intro, usedEntityBeans);
 		try {
 			Object createdSessionBean = sf
-								.createSessionBeanNoDependencies(sessionBean);
+								.createSessionBean(sessionBean);
 			this.ctx.bind(current.getJndiName(), createdSessionBean);
-			sf.injectFields(createdSessionBean);
-			sf.executeLifeCycleCreateMethods(createdSessionBean);
 		} catch (NamingException e) {
 			throw new IllegalArgumentException(e);
 		}

@@ -2,47 +2,38 @@ package com.bm.creators;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.ejb.SessionContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3guice.inject.Ejb3Guice;
+import com.bm.ejb3guice.inject.Injector;
+import com.bm.ejb3guice.inject.Module;
+import com.bm.ejb3guice.inject.Stage;
+import com.bm.ejb3metadata.MetadataAnalyzer;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
 import com.bm.introspectors.AbstractIntrospector;
-import com.bm.introspectors.JbossServiceIntrospector;
-import com.bm.introspectors.MDBIntrospector;
 import com.bm.introspectors.Property;
-import com.bm.introspectors.SessionBeanIntrospector;
-import com.bm.utils.BasicDataSource;
 import com.bm.utils.Ejb3Utils;
-import com.bm.utils.FakedSessionContext;
 
 /**
  * This class will create session bean instances without an application server.
  * The dependency injection is done here
- *
+ * 
  * @param <T> -
  *            the type of the session bean to create (class name)
  * @author Daniel Wiese
  * @since 18.09.2005
  */
 public final class SessionBeanFactory<T> {
-
-	/**
-	 * use a Thread-Global map for already constructed beans (interface,
-	 * object).
-	 */
-	public static final ThreadLocal<Map<Class, Object>> alreadyConstructedBeans = new ThreadLocal<Map<Class, Object>>();
 
 	/** remember the current entity manager * */
 	private EntityManager manager = null;
@@ -54,21 +45,18 @@ public final class SessionBeanFactory<T> {
 
 	private final Ejb3UnitCfg configuration;
 
-	private final Class[] usedEntityBeans;
-
 	/**
 	 * Default constructor.
-	 *
+	 * 
 	 * @param intro -
 	 *            the introspector
-	 *
+	 * 
 	 * @param usedEntityBeans -
 	 *            the used entity beans for this test
 	 */
 	public SessionBeanFactory(AbstractIntrospector<T> intro,
 			Class[] usedEntityBeans) {
 		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
-		this.usedEntityBeans = usedEntityBeans;
 		if (usedEntityBeans != null) {
 
 			for (Class<? extends Object> akt : usedEntityBeans) {
@@ -83,68 +71,37 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * Factory method to create stateless session beans.
-	 *
+	 * 
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @param toCreate -
 	 *            the class to create
 	 * @return - the created session bean class for local usage
 	 */
+	@SuppressWarnings("unchecked")
 	public T createSessionBean(Class<T> toCreate) {
-		final T back = Ejb3Utils.getNewInstance(toCreate);
+		Module module =  MetadataAnalyzer.getGuiceBindingModule(toCreate, configuration, this.createEntityManager());
+		
+		//final T back = Ejb3Utils.getNewInstance(toCreate);
+		Module[] mods = { module };
+		BeanCreationListener createdbeans=new BeanCreationListener();
+		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays
+				.asList(mods), Ejb3Guice.markerToArray(EJB.class,
+				Resource.class, PersistenceContext.class), createdbeans);
+		final T instance = injector.getInstance(toCreate);
 
-		// to avoid circular dependencies register this bean
-		// as already constructed
-		final List<Class> businessInterfaces = Ejb3Utils
-				.getLocalRemoteInterfaces(toCreate);
-		for (Class interf : businessInterfaces) {
-			Map<Class, Object> map = alreadyConstructedBeans.get();
-			if (map != null) {
-				map.put(interf, back);
-			} else {
-				map = new HashMap<Class, Object>();
-				map.put(interf, back);
-				alreadyConstructedBeans.set(map);
-			}
-		}
 
 		// now inject other instances
-		this.injectFields(back);
-		this.executeLifeCycleCreateMethods(back);
-		return back;
-	}
-
-	/**
-	 * Factory method to create stateless session beans with no dependencies.
-	 *
-	 * @author Daniel Wiese
-	 * @since 18.09.2005
-	 * @param toCreate -
-	 *            the class to create
-	 * @return - the created session bean class for local usage
-	 */
-	public T createSessionBeanNoDependencies(Class<T> toCreate) {
-		final T back = Ejb3Utils.getNewInstance(toCreate);
-
-		// to avoid circular dependencies register this bean
-		// as already constructed
-		final List<Class> businessInterfaces = Ejb3Utils
-				.getLocalRemoteInterfaces(toCreate);
-		for (Class interf : businessInterfaces) {
-			Map<Class, Object> map = alreadyConstructedBeans.get();
-			if (map != null) {
-				map.put(interf, back);
-			} else {
-				map = new HashMap<Class, Object>();
-				map.put(interf, back);
-				alreadyConstructedBeans.set(map);
-			}
+		//FIXME: invoke the lifecycle in the created beans
+		for (Object created: createdbeans.getCreatedBeans()){
+			
 		}
-
-		return back;
+		this.executeLifeCycleCreateMethods(instance);
+		return instance;
 	}
 
 	public void executeLifeCycleCreateMethods(T back) {
+		
 		final Set<MethodAnnotationMetadata> lifeCycleMethods = this.introspector
 				.getLifecycleMethods();
 		for (MethodAnnotationMetadata current : lifeCycleMethods) {
@@ -170,7 +127,7 @@ public final class SessionBeanFactory<T> {
 
 	/**
 	 * Factory method to close the entity manager in stateless session beans.
-	 *
+	 * 
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @param toClose -
@@ -196,76 +153,10 @@ public final class SessionBeanFactory<T> {
 		}
 	}
 
-	/**
-	 * This method injects all relevant dependencies
-	 *
-	 * @author Daniel Wiese
-	 * @since 18.09.2005
-	 * @param toCreate -
-	 *            the new session bean
-	 */
-	@SuppressWarnings("unchecked")
-	public void injectFields(T toCreate) {
-
-		final Set<Property> toInject = this.introspector.getFieldsToInject();
-
-		try {
-			for (Property akt : toInject) {
-				if (this.introspector.getAnnotationForField(akt) instanceof PersistenceContext) {
-					// remember the injected manager
-					manager = this.createEntityManager();
-					akt.setField(toCreate, manager);
-				} else if (this.introspector.getAnnotationForField(akt) instanceof Resource) {
-					// analyse different ressource types
-					if (akt.getType().equals(DataSource.class)) {
-						akt.setField(toCreate, new BasicDataSource(
-								this.configuration));
-					} else if (akt.getType().equals(SessionContext.class)) {
-						akt.setField(toCreate, new FakedSessionContext());
-					} else {
-						throw new RuntimeException(
-								"Can´t inject a rossource of type: "
-										+ akt.getType());
-					}
-				} else if (this.introspector.getAnnotationForField(akt) instanceof EJB) {
-					// inject other EJB beans --> avoid circular dependencies
-					// using a thread-global map (one map for every thread)
-					Map<Class, Object> alreadyConstructedBeansMap = alreadyConstructedBeans
-							.get();
-					if (alreadyConstructedBeansMap == null) {
-						alreadyConstructedBeansMap = new HashMap<Class, Object>();
-						alreadyConstructedBeans.set(alreadyConstructedBeansMap);
-					}
-					if (alreadyConstructedBeansMap.containsKey(akt.getType())) {
-						akt.setField(toCreate, alreadyConstructedBeansMap
-								.get(akt.getType()));
-					} else {
-					    // get the implemenation for this interface
-					    Class<?> implementation = this.introspector.getImplementationForInterface(akt.getType());
-					    // get the right introspector
-						final AbstractIntrospector<T> myIntro = this
-								.getRightIntrospector(implementation);
-						final SessionBeanFactory mySbFac = new SessionBeanFactory(
-								myIntro, this.usedEntityBeans);
-						final Object createdSessionBean = mySbFac
-								.createSessionBean(implementation);
-						alreadyConstructedBeansMap.put(implementation,
-								createdSessionBean);
-						akt.setField(toCreate, createdSessionBean);
-
-					}
-
-				}
-			}
-		} catch (IllegalAccessException e) {
-			log.error("Can´t create session bean", e);
-			throw new RuntimeException("Can´t create session bean", e);
-		}
-	}
 
 	/**
 	 * Creates an instance of the entity manager.
-	 *
+	 * 
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @return - the entity manager
@@ -277,20 +168,6 @@ public final class SessionBeanFactory<T> {
 			EntityManager manager = this.configuration
 					.getEntityManagerFactory().createEntityManager();
 			return manager;
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private AbstractIntrospector<T> getRightIntrospector(Class forClass) {
-		if (SessionBeanIntrospector.accept(forClass)) {
-			return new SessionBeanIntrospector(forClass);
-		} else if (JbossServiceIntrospector.accept(forClass)) {
-			return new JbossServiceIntrospector(forClass);
-		} else if (MDBIntrospector.accept(forClass)) {
-			return new MDBIntrospector(forClass);
-		} else {
-			throw new RuntimeException("No introspector fond for class: "
-					+ forClass);
 		}
 	}
 

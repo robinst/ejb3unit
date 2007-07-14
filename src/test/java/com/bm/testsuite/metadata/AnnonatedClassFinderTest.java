@@ -2,10 +2,10 @@ package com.bm.testsuite.metadata;
 
 import junit.framework.TestCase;
 
-import com.bm.ejb3metadata.AnnonatedClassFinder;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.FieldAnnotationMetadata;
+import com.bm.ejb3metadata.finder.AnnonatedClassFinder;
 
 /**
  * Junit test.
