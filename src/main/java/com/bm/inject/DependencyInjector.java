@@ -6,10 +6,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import com.bm.introspectors.JbossServiceIntrospector;
-import com.bm.introspectors.MDBIntrospector;
+import com.bm.introspectors.AbstractIntrospector;
+import com.bm.introspectors.IntrospectorFactory;
 import com.bm.introspectors.Property;
-import com.bm.introspectors.SessionBeanIntrospector;
 
 /**
  * Injects objects specified by JSR 220 (EJB 3 specification). This class can be
@@ -56,25 +55,12 @@ public class DependencyInjector<H> {
 	 *         H - the type of the handle
 	 */
 	public Map<String, Injection<H>> injectDependecies(Object toInject) {
+		//TODOs: change to use guice
 		final Map<String, Injection<H>> back = new HashMap<String, Injection<H>>();
 		if (toInject != null) {
 			Set<Property> fieldsToInject = null;
-			if (SessionBeanIntrospector.accept(toInject.getClass())) {
-				// its a stateless session bean
-				final SessionBeanIntrospector<Object> intro = new SessionBeanIntrospector<Object>(
-						toInject.getClass());
-				fieldsToInject = intro.getFieldsToInject();
-			} else if (JbossServiceIntrospector.accept(toInject.getClass())) {
-				// its a jboss service
-				final JbossServiceIntrospector<Object> intro = new JbossServiceIntrospector<Object>(
-						toInject.getClass());
-				fieldsToInject = intro.getFieldsToInject();
-			} else if (MDBIntrospector.accept(toInject.getClass())) {
-				// its a mdb (supports jboss mdb type)
-				final MDBIntrospector<Object> intro = new MDBIntrospector<Object>(
-						toInject.getClass());
-				fieldsToInject = intro.getFieldsToInject();
-			}
+			AbstractIntrospector<?> introspector = IntrospectorFactory.createIntrospector(toInject.getClass());
+			fieldsToInject = introspector.getFieldsToInject();
 
 			if (fieldsToInject != null) {
 				// there are fields to inject
