@@ -67,9 +67,6 @@ public class AnnonatedClassFinder {
 			logger.error("Error: ", e);
 			throw new RuntimeException(e);
 		}
-
-		annotationDeploymentAnalyzer.getEjbJarAnnotationMetadata()
-				.buildInterfaceImplementationMap();
 		this.isInitailized = true;
 	}
 

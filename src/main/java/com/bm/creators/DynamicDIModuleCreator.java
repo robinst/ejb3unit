@@ -1,6 +1,8 @@
 package com.bm.creators;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.SessionContext;
 import javax.persistence.EntityManager;
@@ -23,21 +25,29 @@ public class DynamicDIModuleCreator implements Module {
 	/**
 	 * Constructor.
 	 * 
-	 * @param interface2implemantation
-	 *            the set of interfact/imlementation pairs for the current jar
-	 *            file Known limitation: Sassion beans can depend only on
-	 *            session beans in the same jar file, maybe update always this
-	 *            map it a interface is not found!
 	 * @param manager
 	 *            the entity manager instance which should be used for the
 	 *            binding
 	 */
-	public DynamicDIModuleCreator(Map<String, String> interface2implemantation,
-			Ejb3UnitCfg conf, EntityManager manager) {
-		this.interface2implemantation = interface2implemantation;
-		// TODO Auto-generated constructor stub
+	public DynamicDIModuleCreator(Ejb3UnitCfg conf, EntityManager manager) {
+		this.interface2implemantation = new HashMap<String, String>();
 		this.conf = conf;
 		this.manager = manager;
+	}
+
+	/**
+	 * Adds a map with interface impl. to the structure.
+	 * 
+	 * @author Daniel Wiese
+	 * @since Jul 19, 2007
+	 * @param toAdd
+	 *            the map to add
+	 */
+	public void addInteface2ImplMap(Map<String, String> toAdd) {
+		final Set<String> keySet = toAdd.keySet();
+		for (String interfaze : keySet) {
+			this.interface2implemantation.put(interfaze, toAdd.get(interfaze));
+		}
 	}
 
 	@SuppressWarnings("unchecked")

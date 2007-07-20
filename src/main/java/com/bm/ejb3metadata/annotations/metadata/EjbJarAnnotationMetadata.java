@@ -5,11 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.ejb.ApplicationException;
-import javax.persistence.EntityManager;
 
-import com.bm.cfg.Ejb3UnitCfg;
-import com.bm.creators.DynamicDIModuleCreator;
-import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3metadata.xml.struct.EJB3;
 
 /**
@@ -50,7 +46,6 @@ public class EjbJarAnnotationMetadata {
 	 */
 	public EjbJarAnnotationMetadata() {
 		classesAnnotationMetadata = new HashMap<String, ClassAnnotationMetadata>();
-		interface2implemantation = new HashMap<String, String>();
 	}
 
 	/**
@@ -69,22 +64,6 @@ public class EjbJarAnnotationMetadata {
 			// throw new IllegalStateException(msg);
 		}
 		classesAnnotationMetadata.put(key, classAnnotationMetadata);
-	}
-
-	/**
-	 * Update classesAnnotationMetadata map with the values from the parameters
-	 * collection of ClassAnnotationMetadata objects.
-	 * 
-	 * @param metadata
-	 *            the metadata that usually comes from depenedent jar files
-	 */
-	public void addClassAnnotationMetadata(
-			final EjbJarAnnotationMetadata metadata) {
-		for (ClassAnnotationMetadata classAnnotationMetadata : metadata
-				.getClassAnnotationMetadataCollection()) {
-			this.addClassAnnotationMetadata(classAnnotationMetadata);
-		}
-		this.buildInterfaceImplementationMap();
 	}
 
 	/**
@@ -111,26 +90,17 @@ public class EjbJarAnnotationMetadata {
 	 */
 	public String getBeanImplementationForInterface(Class interfaceName) {
 		final String name = interfaceName.getName();
+		if (interface2implemantation == null) {
+			buildInterfaceImplementationMap();
+		}
 		return this.interface2implemantation.get(name.replace('.', '/'));
-	}
-
-	/**
-	 * Returns the Module {@link Module} for guice dependency injection with
-	 * valid ejb3mapping definition.
-	 * 
-	 * @param conf
-	 *            the configuration
-	 * @param manager the entity manager instance which should be used for the binding
-	 * @return the module creator.
-	 */
-	public DynamicDIModuleCreator getDynamicModuleCreator(Ejb3UnitCfg conf, EntityManager manager) {
-		return new DynamicDIModuleCreator(interface2implemantation, conf, manager);
 	}
 
 	/**
 	 * Builds a map of Local/Remote interfaces and it´s implementations.
 	 */
-	public void buildInterfaceImplementationMap() {
+	private void buildInterfaceImplementationMap() {
+		interface2implemantation = new HashMap<String, String>();
 		for (ClassAnnotationMetadata current : this
 				.getClassAnnotationMetadataCollection()) {
 			if (current.getLocalInterfaces() != null) {
@@ -221,6 +191,18 @@ public class EjbJarAnnotationMetadata {
 			}
 		}
 		return applicationExceptions;
+	}
+
+	/**
+	 * Returns the interface2implemantation.
+	 * 
+	 * @return Returns the interface2implemantation.
+	 */
+	public Map<String, String> getInterface2implemantation() {
+		if (interface2implemantation == null) {
+			buildInterfaceImplementationMap();
+		}
+		return interface2implemantation;
 	}
 
 }

@@ -15,9 +15,7 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
-import com.bm.ejb3metadata.MetadataAnalyzer;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
-import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
 import com.bm.utils.Ejb3Utils;
 
@@ -28,6 +26,8 @@ import com.bm.utils.Ejb3Utils;
  * @since 24.03.2007
  * @param <T>
  *            the type
+ * 
+ * TODO: why is it not implementing the interface interospector?
  */
 public abstract class AbstractIntrospector<T> {
 	private static final Logger log = Logger
@@ -45,8 +45,6 @@ public abstract class AbstractIntrospector<T> {
 	/** because the entity manager is often used so, we store it extra * */
 	private Property entityManagerField = null;
 
-	private static EjbJarAnnotationMetadata metadata = null;
-
 	protected ClassAnnotationMetadata classMetaData = null;
 
 	/**
@@ -57,47 +55,7 @@ public abstract class AbstractIntrospector<T> {
 	 */
 	public AbstractIntrospector(Class<? extends T> toInspect) {
 		this.representingClass = toInspect;
-		classMetaData = getMetaData(toInspect);
-	}
-
-	private static synchronized void initialize(Class<?> toInspect) {
-
-		if (metadata == null) {
-			metadata = MetadataAnalyzer.initialize(toInspect);
-		}
-	}
-
-	private static synchronized void reinitialize(Class<?> toInspect) {
-		metadata = null;
-		initialize(toInspect);
-	}
-
-	private static synchronized void updateMetadata(Class<?> newClassToInspect) {
-		// get the metadata corresponding to the parameter class
-		EjbJarAnnotationMetadata newMetadata = MetadataAnalyzer
-				.initialize(newClassToInspect);
-		// add the discovered ClassAnnotationMetadata objects to the root
-		// metadata
-		metadata.addClassAnnotationMetadata(newMetadata);
-
-	}
-
-	protected static ClassAnnotationMetadata getMetaData(Class toCheck) {
-		initialize(toCheck);
-		ClassAnnotationMetadata classMeta = metadata
-				.getClassAnnotationMetadata(toCheck.getName().replace('.', '/'));
-		// try to reinitialize, bacause no metadata was found
-		if (classMeta == null) {
-			reinitialize(toCheck);
-			classMeta = metadata.getClassAnnotationMetadata(toCheck.getName()
-					.replace('.', '/'));
-		}
-		if (classMeta == null) {
-			throw new IllegalArgumentException(
-					"Can't find any meta data information for the class ("
-							+ toCheck.getName() + ")");
-		}
-		return classMeta;
+		classMetaData = MetaDataCache.getMetaData(toInspect);
 	}
 
 	/**
@@ -239,7 +197,7 @@ public abstract class AbstractIntrospector<T> {
 	 * @return Returns the classMetaData.
 	 */
 	public ClassAnnotationMetadata getClassMetaData() {
-		return getMetaData(this.representingClass);
+		return this.classMetaData;
 	}
 
 	/**
@@ -265,19 +223,7 @@ public abstract class AbstractIntrospector<T> {
 	public Class<?> getImplementationForInterface(Class<?> toInspect) {
 
 		// try to get the implemenation name for the interface
-		String implementationName = metadata
-				.getBeanImplementationForInterface(toInspect);
-
-		// not found ?
-		if (implementationName == null) {
-			// this interface comes from an external jar or folder
-			// update the metadata by adding the (interface,implementation)
-			// pairs found in the external jar or folder
-			updateMetadata(toInspect);
-		}
-
-		// retry getting the implementation, this should do it
-		implementationName = metadata
+		String implementationName = MetaDataCache
 				.getBeanImplementationForInterface(toInspect);
 
 		log.debug("Using: Local/Remote Interface (" + toInspect
@@ -285,8 +231,6 @@ public abstract class AbstractIntrospector<T> {
 
 		Class<?> implementation = null;
 		try {
-			// log.debug("ClassLoaders are the same: " +
-			// toInspect.getClassLoader().equals(Thread.currentThread().getContextClassLoader()));
 			implementation = Thread.currentThread().getContextClassLoader()
 					.loadClass(implementationName.replace('/', '.'));
 		} catch (ClassNotFoundException e) {

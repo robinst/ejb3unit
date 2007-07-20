@@ -12,7 +12,6 @@ import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
  */
 public class SessionBeanIntrospector<T> extends AbstractIntrospector<T> {
 
-
 	/**
 	 * Constructor.
 	 * 
@@ -42,9 +41,8 @@ public class SessionBeanIntrospector<T> extends AbstractIntrospector<T> {
 	 * @return true id the introspector will accept this class
 	 */
 	public static boolean accept(Class toCheck) {
-		ClassAnnotationMetadata classMeta = getMetaData(toCheck);
+		ClassAnnotationMetadata classMeta = MetaDataCache.getMetaData(toCheck);
 		return classMeta.isBean();
 	}
-
 
 }

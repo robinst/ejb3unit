@@ -40,7 +40,7 @@ public class MDBIntrospector<T> extends AbstractIntrospector<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static boolean accept(Class toCheck) {
-		ClassAnnotationMetadata classMeta = getMetaData(toCheck);
+		ClassAnnotationMetadata classMeta = MetaDataCache.getMetaData(toCheck);
 		return classMeta.isMdb()
 				|| (toCheck.getAnnotation(Consumer.class) != null);
 	}

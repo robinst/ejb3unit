@@ -5,12 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-
 import org.ejb3unit.asm.ClassReader;
 
-import com.bm.cfg.Ejb3UnitCfg;
-import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3metadata.annotations.analyzer.ScanClassVisitor;
 import com.bm.ejb3metadata.annotations.exceptions.ResolverException;
 import com.bm.ejb3metadata.annotations.helper.ResolverHelper;
@@ -42,18 +38,6 @@ public final class MetadataAnalyzer {
 	 */
 	private MetadataAnalyzer() {
 
-	}
-	
-	/**
-	 * Returns the Module with all bindings for the jar/project where toInspect is in.
-	 * @param toInspect the hint which ja/project should be scanned
-	 * @param configuration the configuration
-	 * @param manager the entity manager instance which should be used for the binding
-	 * @return the configuration the current ejb3unit configuration
-	 */
-	public static synchronized Module getGuiceBindingModule(Class<?> toInspect, Ejb3UnitCfg configuration, EntityManager manager){
-		 EjbJarAnnotationMetadata metadata = initialize(toInspect);
-		 return metadata.getDynamicModuleCreator(configuration, manager);
 	}
 
 	
@@ -97,8 +81,6 @@ public final class MetadataAnalyzer {
 		}
 
 		ResolverHelper.resolve(ejbJarAnnotationMetadata);
-		ejbJarAnnotationMetadata.buildInterfaceImplementationMap();
-
 		return ejbJarAnnotationMetadata;
 
 	}
