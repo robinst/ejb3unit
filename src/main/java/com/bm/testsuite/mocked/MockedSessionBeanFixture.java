@@ -6,7 +6,6 @@ import org.jmock.Mock;
 
 import com.bm.inject.DependencyInjector;
 import com.bm.inject.Injection;
-import com.bm.inject.impl.JMockInjectionFactory;
 import com.bm.testsuite.BaseTest;
 
 /**

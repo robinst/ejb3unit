@@ -1,4 +1,4 @@
-package com.bm.inject.impl;
+package com.bm.testsuite.mocked;
 
 import org.jmock.Mock;
 import org.jmock.core.CoreMock;

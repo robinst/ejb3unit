@@ -5,7 +5,7 @@ import java.util.Map;
 import org.jmock.Mock;
 
 import com.bm.data.bo.MyOtherSessionBean;
-import com.bm.inject.impl.JMockInjectionFactory;
+import com.bm.testsuite.mocked.JMockInjectionFactory;
 
 import junit.framework.TestCase;
 
