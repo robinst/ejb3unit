@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.DynamicDIModuleCreator;
+import com.bm.creators.MockedDIModuleCreator;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3metadata.MetadataAnalyzer;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
@@ -52,6 +53,26 @@ public final class MetaDataCache {
 					.getInterface2implemantation());
 		}
 		return dynamicDIModuleCreator;
+	}
+	
+	/**
+	 * Returns the Module {@link Module} for guice dependency injection with
+	 * valid ejb3mapping definition. Will inject mock controlls.
+	 * 
+	 * @param conf
+	 *            the configuration
+	 * @return the module creator.
+	 */
+	public static MockedDIModuleCreator getMockModuleCreator(Class toCheck) {
+		// ensure the metadata is resolved for this jar (where toCheck is in)
+		getMetaData(toCheck);
+		final MockedDIModuleCreator mockedDIModuleCreator = new MockedDIModuleCreator();
+		// add mappings to the creator
+		for (EjbJarAnnotationMetadata currentJar : ALL_JARS) {
+			mockedDIModuleCreator.addInteface2ImplMap(currentJar
+					.getInterface2implemantation());
+		}
+		return mockedDIModuleCreator;
 	}
 
 	/**

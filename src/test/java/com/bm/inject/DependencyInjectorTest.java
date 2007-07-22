@@ -1,13 +1,21 @@
 package com.bm.inject;
 
-import java.util.Map;
+import java.util.Arrays;
 
-import org.jmock.Mock;
-
-import com.bm.data.bo.MyOtherSessionBean;
-import com.bm.testsuite.mocked.JMockInjectionFactory;
+import javax.annotation.Resource;
+import javax.ejb.EJB;
+import javax.persistence.PersistenceContext;
 
 import junit.framework.TestCase;
+
+import com.bm.creators.BeanCreationListener;
+import com.bm.creators.MockedDIModuleCreator;
+import com.bm.data.bo.MyOtherSessionBean;
+import com.bm.ejb3guice.inject.Ejb3Guice;
+import com.bm.ejb3guice.inject.Injector;
+import com.bm.ejb3guice.inject.Module;
+import com.bm.ejb3guice.inject.Stage;
+import com.bm.introspectors.MetaDataCache;
 
 /**
  * JUnit test case.
@@ -17,25 +25,30 @@ import junit.framework.TestCase;
  */
 public class DependencyInjectorTest extends TestCase {
 
+	@SuppressWarnings("unchecked")
+	private MyOtherSessionBean createBeanIstance(Module module) {
+
+		// final T back = Ejb3Utils.getNewInstance(toCreate);
+		Module[] mods = { module };
+		BeanCreationListener createdbeans = new BeanCreationListener();
+		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays
+				.asList(mods), Ejb3Guice.markerToArray(EJB.class,
+				Resource.class, PersistenceContext.class), createdbeans);
+		final MyOtherSessionBean instance = injector
+				.getInstance(MyOtherSessionBean.class);
+		return instance;
+	}
+
 	/**
 	 * Test method.
 	 */
 	public void testInjector_injectMockObjects() {
-		final JMockInjectionFactory defaultFactory = new JMockInjectionFactory();
-		final DependencyInjector<Mock> injector = new DependencyInjector<Mock>(
-				defaultFactory);
-
-		final MyOtherSessionBean sessionBeanToTest = new MyOtherSessionBean();
-		Map<String, Injection<Mock>> back = injector
-				.injectDependecies(sessionBeanToTest);
+		MockedDIModuleCreator module = MetaDataCache
+				.getMockModuleCreator(MyOtherSessionBean.class);
+		final MyOtherSessionBean sessionBeanToTest = createBeanIstance(module);
 		assertNotNull(sessionBeanToTest.getDs());
 		assertNotNull(sessionBeanToTest.getEm());
 		assertNotNull(sessionBeanToTest.getSessionBean());
-
-		// test if a mock object for every field exists
-		assertNotNull(back.get("manager"));
-		assertNotNull(back.get("ds"));
-		assertNotNull(back.get("mySessionBean"));
 
 	}
 

@@ -8,6 +8,7 @@ import javax.sql.DataSource;
 
 import org.jmock.Mock;
 
+import com.bm.data.bo.IMySessionBean;
 import com.bm.data.bo.MyOtherSessionBean;
 
 /**
@@ -29,10 +30,10 @@ public class MyOtherSessionBeanTest extends
 	/**
 	 * Testmethod.
 	 */
-	public void test_executeOperation() {
+	public void test_executeOperation() { 
 		MyOtherSessionBean toTest = this.getBeanToTest();
 		assertNotNull(toTest);
-		final Mock mySessionBean = this.getMockControl("mySessionBean");
+		final Mock mySessionBean = this.getMockControl(IMySessionBean.class);
 		assertNotNull(mySessionBean);
 
 		final DataSource ds = new DataSource() {
@@ -62,10 +63,12 @@ public class MyOtherSessionBeanTest extends
 				return 0;
 			}
 
+			@SuppressWarnings("unused")
 			public boolean isWrapperFor(Class<?> arg0) throws SQLException {
 				return false;
 			}
 
+			@SuppressWarnings("unused")
 			public <T> T unwrap(Class<T> arg0) throws SQLException {
 				return null;
 			}
