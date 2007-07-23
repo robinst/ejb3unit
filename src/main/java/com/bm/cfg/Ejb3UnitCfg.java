@@ -33,6 +33,7 @@ public final class Ejb3UnitCfg {
 	/** Konfiguration key. * */
 	public static final String KEY_CONNECTION_USERNAME = "ejb3unit.connection.username";
 
+	/** Konfiguration key. * */
 	public static final String KEY_IN_MEMORY_TEST = "ejb3unit.inMemoryTest";
 
 	/** Konfiguration key. * */
@@ -40,6 +41,9 @@ public final class Ejb3UnitCfg {
 
 	/** Konfiguration key. * */
 	public static final String KEY_SQL_DIALECT = "ejb3unit.dialect";
+
+	/** Konfiguration key. * */
+	public static final String KEY_CACHE_PROVIDER = "ejb3unit.cache_provider";
 
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(Ejb3UnitCfg.class);
@@ -111,18 +115,17 @@ public final class Ejb3UnitCfg {
 					.getProperty(KEY_CONNECTION_PASSWORD));
 			this.setProperty(prop, "dialect", this.config
 					.getProperty(KEY_SQL_DIALECT));
-			this.setProperty(prop, "hibernate.show_sql", this.config
-					.getProperty(KEY_SHOW_SQL));
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", this.config
 					.getProperty(KEY_AUTOMATIC_SHEMA_UPDATE));
 		}
+		this.setProperty(prop, "hibernate.cache.provider_class", this.config
+				.getProperty(KEY_CACHE_PROVIDER));
 		this.setProperty(prop, "hibernate.show_sql", this.config
 				.getProperty(KEY_SHOW_SQL));
 		// static properties
 		this.setProperty(prop, "hibernate.transaction.factory_class",
 				"org.hibernate.transaction.JDBCTransactionFactory");
 		return cfg;
-
 	}
 
 	/**
