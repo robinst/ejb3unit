@@ -1,4 +1,4 @@
-package com.bm.utils;
+package com.bm.utils.substitues;
 
 import java.security.Principal;
 import java.util.Hashtable;

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
 import javax.persistence.EntityManagerFactory;
+
 import org.hibernate.ejb.Ejb3Configuration;
 
 /**
@@ -19,7 +21,7 @@ public final class Ejb3UnitCfg {
 	public static final String EJB3UNIT_PROPERTIES_NAME = "ejb3unit.properties";
 
 	/** Konfiguration key. * */
-	public static final String KEY_AUTOMATIC_SHEMA_UPDATE = "ejb3unit.shema.update";
+	public static final String KEY_AUTOMATIC_SCHEMA_UPDATE = "ejb3unit.schema.update";
 
 	/** Konfiguration key. * */
 	public static final String KEY_CONNECTION_DRIVER_CLASS = "ejb3unit.connection.driver_class";
@@ -100,7 +102,7 @@ public final class Ejb3UnitCfg {
 					"org.hsqldb.jdbcDriver");
 			this.setProperty(prop, "hibernate.connection.username", "sa");
 			this.setProperty(prop, "hibernate.connection.password", "");
-			this.setProperty(prop, "dialect",
+			this.setProperty(prop, "hibernate.dialect",
 					"org.hibernate.dialect.HSQLDialect");
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", "create-drop");
 		} else {
@@ -113,10 +115,10 @@ public final class Ejb3UnitCfg {
 					.getProperty(KEY_CONNECTION_USERNAME));
 			this.setProperty(prop, "hibernate.connection.password", this.config
 					.getProperty(KEY_CONNECTION_PASSWORD));
-			this.setProperty(prop, "dialect", this.config
-					.getProperty(KEY_SQL_DIALECT));
+			this.setProperty(prop, "hibernate.dialect", this.config
+								.getProperty(KEY_SQL_DIALECT));
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", this.config
-					.getProperty(KEY_AUTOMATIC_SHEMA_UPDATE));
+					.getProperty(KEY_AUTOMATIC_SCHEMA_UPDATE));
 		}
 		this.setProperty(prop, "hibernate.cache.provider_class", this.config
 				.getProperty(KEY_CACHE_PROVIDER));

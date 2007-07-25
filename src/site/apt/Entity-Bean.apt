@@ -276,6 +276,9 @@ public class RandomDateGenerator extends BaseUniqueValueGenerator<Date>
 }
 ----
 
+For complex scenarios you should probably use the "PoJoFixture" which setups the infrastructure and gives you access to an
+entity manager which allows to persist your own object graph. E.g. Unidirectional entities are not supported!
+
 
 
 

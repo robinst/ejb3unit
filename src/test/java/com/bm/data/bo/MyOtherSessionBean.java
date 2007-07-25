@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
@@ -30,6 +31,9 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 
 	@EJB
 	private IMySessionBean mySessionBean;
+	
+	@Resource
+	private TimerService timer;
 	
 	private IMySessionBean mySessionBeanJndi;
 	
@@ -97,5 +101,15 @@ public class MyOtherSessionBean implements IMyOtherSessionBean {
 		}
 
 	}
+
+	/**
+	 * Returns the timer.
+	 * @return Returns the timer.
+	 */
+	public TimerService getTimer() {
+		return timer;
+	}
+	
+	
 
 }

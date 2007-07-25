@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.SessionContext;
+import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
@@ -12,7 +13,8 @@ import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.utils.BasicDataSource;
-import com.bm.utils.FakedSessionContext;
+import com.bm.utils.substitues.FakedSessionContext;
+import com.bm.utils.substitues.FakedTimerService;
 
 public class DynamicDIModuleCreator implements Module {
 
@@ -57,6 +59,7 @@ public class DynamicDIModuleCreator implements Module {
 				.toInstance(new BasicDataSource(this.conf));
 		binder.bind(EntityManager.class).toInstance(this.manager);
 		binder.bind(SessionContext.class).to(FakedSessionContext.class);
+		binder.bind(TimerService.class).to(FakedTimerService.class);
 
 		for (String interfaze : interface2implemantation.keySet()) {
 			try {

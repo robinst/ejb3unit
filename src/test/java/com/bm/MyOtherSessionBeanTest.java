@@ -34,6 +34,7 @@ public class MyOtherSessionBeanTest extends BaseSessionBeanFixture<MyOtherSessio
 		assertNotNull(toTest.getDs());
 		assertNotNull(toTest.getEm());
 		assertNotNull(toTest.getSessionBean());
+		assertNotNull(toTest.getTimer());
 	}
 	
 	/**

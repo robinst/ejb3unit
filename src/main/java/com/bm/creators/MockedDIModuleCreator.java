@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.ejb.SessionContext;
+import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
@@ -14,6 +15,7 @@ import org.jmock.core.Formatting;
 
 import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
+import com.bm.utils.substitues.FakedTimerService;
 
 public class MockedDIModuleCreator implements Module {
 
@@ -55,6 +57,8 @@ public class MockedDIModuleCreator implements Module {
 				createMock(EntityManager.class));
 		binder.bind(SessionContext.class).toInstance(
 				createMock(SessionContext.class));
+		binder.bind(TimerService.class).toInstance(
+				createMock(TimerService.class));
 
 		for (String interfaze : interface2implemantation.keySet()) {
 			try {
