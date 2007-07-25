@@ -46,6 +46,12 @@ public final class Ejb3UnitCfg {
 
 	/** Konfiguration key. * */
 	public static final String KEY_CACHE_PROVIDER = "ejb3unit.cache_provider";
+	
+	/** Konfiguration key. * */
+	public static final String KEY_USE_SECOND_LEVEL_CACHE = "ejb3unit.use_second_level_cache";
+	
+	/** Konfiguration key. * */
+	public static final String KEY_USE_QUERY_CACHE = "ejb3unit.use_query_cache";
 
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(Ejb3UnitCfg.class);
@@ -124,6 +130,10 @@ public final class Ejb3UnitCfg {
 				.getProperty(KEY_CACHE_PROVIDER));
 		this.setProperty(prop, "hibernate.show_sql", this.config
 				.getProperty(KEY_SHOW_SQL));
+		this.setProperty(prop, "hibernate.cache.use_second_level_cache", this.config
+				.getProperty(KEY_USE_SECOND_LEVEL_CACHE));
+		this.setProperty(prop, "hibernate.cache.use_query_cache", this.config
+				.getProperty(KEY_USE_QUERY_CACHE));
 		// static properties
 		this.setProperty(prop, "hibernate.transaction.factory_class",
 				"org.hibernate.transaction.JDBCTransactionFactory");

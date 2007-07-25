@@ -15,7 +15,6 @@ import org.jmock.core.Formatting;
 
 import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
-import com.bm.utils.substitues.FakedTimerService;
 
 public class MockedDIModuleCreator implements Module {
 
