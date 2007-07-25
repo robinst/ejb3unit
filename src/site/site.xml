@@ -45,6 +45,7 @@
 			<item name="Configuration" href="Configuration.html"/>
 			<item name="Example Project" href="SampleProject.html"/>
 			<item name="Junit relation" href="Junit.html"/>
+			<item name="Snapshot builds" href="http://ejb3unit.sourceforge.net/maven2-snap/com/bm/ejb3unit/"/>
 		</menu>	
 		
 		<menu name="Upcomming">
