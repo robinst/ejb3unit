@@ -177,7 +177,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @return - a instance of an entity manager
 	 */
 	public EntityManager getEntityManager() {
-		return this.sbFactory.createEntityManager();
+		return this.sbFactory.getEntityManager();
 	}
 
 	/**

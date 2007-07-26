@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3guice.inject.CreationListner;
 import com.bm.ejb3guice.inject.Ejb3Guice;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Module;
@@ -79,22 +80,35 @@ public final class SessionBeanFactory<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public T createSessionBean(Class<T> toCreate) {
-		Module module = MetaDataCache.getDynamicModuleCreator(configuration,
-				this.createEntityManager(), toCreate);
 
-		// final T back = Ejb3Utils.getNewInstance(toCreate);
-		Module[] mods = { module };
 		BeanCreationListener createdbeans = new BeanCreationListener();
-		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays
-				.asList(mods), Ejb3Guice.markerToArray(EJB.class,
-				Resource.class, PersistenceContext.class), createdbeans);
+		Injector injector = getInjector(toCreate, createdbeans);
 		final T instance = injector.getInstance(toCreate);
-
 		// now inject other instances
 		for (Object created : createdbeans.getCreatedBeans()) {
 			lifeCycleMethodExecuter.executeLifeCycleMethodsForCreate(created);
 		}
 		return instance;
+	}
+
+	/**
+	 * Creates the injector to create session beans and inject fields
+	 * 
+	 * @param toCreate -
+	 *            the class to create
+	 * @return - the injector
+	 */
+	@SuppressWarnings("unchecked")
+	public Injector getInjector(Class<T> toCreate,
+			CreationListner creationListener) {
+		Module module = MetaDataCache.getDynamicModuleCreator(configuration,
+				this.getEntityManager(), toCreate);
+		Module[] mods = { module };
+		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays
+				.asList(mods), Ejb3Guice.markerToArray(EJB.class,
+				Resource.class, PersistenceContext.class), creationListener);
+		return injector;
+
 	}
 
 	/**
@@ -126,20 +140,19 @@ public final class SessionBeanFactory<T> {
 	}
 
 	/**
-	 * Creates an instance of the entity manager.
+	 * Gets the instance of the entity manager assotiated with this factory.
 	 * 
 	 * @author Daniel Wiese
 	 * @since 18.09.2005
 	 * @return - the entity manager
 	 */
-	public EntityManager createEntityManager() {
-		if (manager != null) {
-			return this.manager;
-		} else {
-			EntityManager manager = this.configuration
-					.getEntityManagerFactory().createEntityManager();
-			return manager;
+	public EntityManager getEntityManager() {
+		if (manager == null) {
+			this.manager = this.configuration.getEntityManagerFactory()
+					.createEntityManager();
 		}
+		return this.manager;
+
 	}
 
 }

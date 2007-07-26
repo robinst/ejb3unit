@@ -32,7 +32,7 @@ public class MemoryContext extends AbstractContext implements Context {
 			return this.bindings.get(name);
 		}
 		throw new NamingException("Can't find the name (" + name
-				+ ") in the JNDI tree");
+				+ ") in the JNDI tree Current bindings>(" + bindings + ")");
 	}
 
 	/**

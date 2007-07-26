@@ -9,9 +9,12 @@ import javax.naming.NamingException;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.cfg.JndiProperty;
+import com.bm.creators.BeanCreationListener;
 import com.bm.creators.SessionBeanFactory;
+import com.bm.ejb3guice.inject.Injector;
 import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.SessionBeanIntrospector;
+import com.bm.utils.LifeCycleMethodExecuter;
 
 /**
  * This class binds all Objects specified in the Ejb3Unit config to the jndi
@@ -30,6 +33,8 @@ public class Ejb3UnitJndiBinder {
 	private final List<JndiProperty> toBind;
 
 	private final Class[] usedEntityBeans;
+
+	private final LifeCycleMethodExecuter lifeCycleMethodExecuter = new LifeCycleMethodExecuter();
 
 	public Ejb3UnitJndiBinder(Class... usedEntityBeans) {
 		this.usedEntityBeans = usedEntityBeans;
@@ -60,20 +65,15 @@ public class Ejb3UnitJndiBinder {
 	private void bindPlainClass(JndiProperty current) {
 		Class<Object> toCreate = loadClass(current);
 		try {
-			this.ctx
-					.bind(current.getJndiName(), toCreate.newInstance());
+			this.ctx.bind(current.getJndiName(), toCreate.newInstance());
 		} catch (NamingException e) {
 			throw new IllegalArgumentException(e);
 		} catch (InstantiationException e) {
-			throw new IllegalArgumentException(
-					"Cant instantiate the class ("
-							+ current.getClassName()
-							+ ") for JNDi context binding");
+			throw new IllegalArgumentException("Cant instantiate the class ("
+					+ current.getClassName() + ") for JNDI context binding");
 		} catch (IllegalAccessException e) {
-			throw new IllegalArgumentException(
-					"Cant instantiate the class ("
-							+ current.getClassName()
-							+ ") for JNDi context binding");
+			throw new IllegalArgumentException("Cant instantiate the class ("
+					+ current.getClassName() + ") for JNDI context binding");
 		}
 	}
 
@@ -84,8 +84,14 @@ public class Ejb3UnitJndiBinder {
 		final SessionBeanFactory<Object> sf = new SessionBeanFactory<Object>(
 				intro, usedEntityBeans);
 		try {
-			Object createdSessionBean = sf
-								.createSessionBean(sessionBean);
+			BeanCreationListener createdbeans = new BeanCreationListener();
+			Injector injector = sf.getInjector(sessionBean, createdbeans);
+			final Object createdSessionBean = injector.getInstance(sessionBean);
+			// now inject other instances
+			for (Object created : createdbeans.getCreatedBeans()) {
+				lifeCycleMethodExecuter
+						.executeLifeCycleMethodsForCreate(created);
+			}
 			this.ctx.bind(current.getJndiName(), createdSessionBean);
 		} catch (NamingException e) {
 			throw new IllegalArgumentException(e);

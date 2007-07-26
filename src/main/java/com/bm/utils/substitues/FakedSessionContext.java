@@ -124,7 +124,7 @@ public class FakedSessionContext implements SessionContext {
 	 * {@inheritDoc}
 	 */
 	public TimerService getTimerService()  {
-		return null;
+		return new FakedTimerService();
 	}
 
 
