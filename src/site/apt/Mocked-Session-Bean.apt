@@ -9,23 +9,43 @@ Mocked session bean test
 
   EJB3Unit is able to inject to annotated fields (using EJB 3 (JSR 220) annotations), mock objects. 
   The MockedSessionBeanTest can be used to automate the dependency injection and execute easily test 
-  with mocked dependencies. The basic test can be configured by extending the MockedSessionBeanTest class. 
-  The next example shows ho to test a session bean class called MyOtherSessionBean:
+  with mocked dependencies. 
+  
+  THe above example shows a session bean with annotated fields. To test this class 
+  in isolation we want to inject mock objects for each annotated field.
+  
+----  
+@Stateless
+public class MySessionBean implements IMySessionBean {
+
+	@Resource(name = "java:/MSSqlDS")
+	private DataSource ds;
+
+	@Resource
+	private SessionContext ctx;
+
+	@PersistenceContext
+	private EntityManager manager; 
+	... 
+	public void test_executeOperation() {
+	…
+	}
+----
+
+  The basic test can be configured by extending the MockedSessionBeanTest class. 
+  The next example shows ho to test the session bean MySessionBean:
 
 ----
-public class MyOtherSessionBeanTest extends
-		MockedSessionBeanTest<MyOtherSessionBean> {
+public class MockedSessionBeanTest extends
+		MockedSessionBeanTest<MySessionBean> {
 
 	/**
 	 * Constructor.
 	 */
-	public MyOtherSessionBeanTest() {
-		super(MyOtherSessionBean.class);
+	public MyockedSessionBeanTest() {
+		super(MySessionBean.class);
 	}
 
-	public void test_executeOperation() {
-	…
-	}
 }
 ----
 
@@ -34,12 +54,12 @@ public class MyOtherSessionBeanTest extends
 
 ----
 public void test_executeOperation() {
-	MyOtherSessionBean toTest = this.getBeanToTest();
-	final Mock mySessionBean = 
-       this.getMockControl("mySessionBean");
+	MySessionBean toTest = this.getBeanToTest();
+	final Mock mockedDataSource = 
+       this.getMockControl(DataSource.class);
 
-	mySessionBean.expects(once()).method("getDs").
-        will(returnValue(ds));
+	mockedDataSource.expects(once()).method("getConnection").
+        will(returnValue(...));
 		
 	//call the expected operation
 	toTest.executeOperation();

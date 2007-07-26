@@ -6,10 +6,10 @@
                                     2007
 
 
-Testing complex object graphs or comlex query operations
+Testing complex object graphs or comlex queries
 
   With EJB3Unit you can also test complex object graphs of your domain objects or test complex
-  database operations. The PoJoFixture provides you access to the EntityManager "this.getEntityManager()" 
+  database operations (by testing complex queries). The PoJoFixture provides you access to the EntityManager "this.getEntityManager()" 
   and it also provides convenient way to store, rerieve and compare complex persistent objects.
 
 ----

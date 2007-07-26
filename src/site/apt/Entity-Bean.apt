@@ -14,8 +14,8 @@ Entity-Bean test
   Furthermore EJB3Unit will check your equals and hashCode implementations for 
   your Entity beans. 
   
-  Sometimes Ejb3Unit your use case will be too complex for automated testining. In this
-  case you should read the section {{{http://testingComplexObjectGraphs.html}Testing complex object graphs}}!
+  Sometimes Ejb3Unit your use case will be too complex for automated testing. In this
+  case you should read the section {{{testingComplexObjectGraphs.html} testing complex object graphs}}!
 
   <<How to write a simple Entity bean test?>>
 
