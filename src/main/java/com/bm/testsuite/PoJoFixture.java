@@ -98,24 +98,50 @@ public abstract class PoJoFixture extends BaseTest {
 			}
 		}
 	}
-	
+
 	/**
-	 * Find all rows of the given class in the database. 
-	 * @param <T> the tyme of the persistent object
-	 * @param clazz the class of of the persistent object
+	 * Find all rows of the given class in the database.
+	 * 
+	 * @param <T>
+	 *            the tyme of the persistent object
+	 * @param clazz
+	 *            the class of of the persistent object
 	 * @return all DB instances
 	 */
 	@SuppressWarnings("unchecked")
 	protected <T> List<T> findAll(Class<T> clazz) {
 		EntityManager manager = this.getEntityManager();
-		Query query = manager.createQuery("select c from " + clazz.getName() + " c");
+		Query query = manager.createQuery("select c from " + clazz.getName()
+				+ " c");
 		return (List<T>) query.getResultList();
 	}
 
 	/**
+	 * Deletes all rows of the given class in the database.
+	 * 
+	 * @param <T>
+	 *            the tyme of the persistent object
+	 * @param clazz
+	 *            the class of of the persistent object
+	 * @return all DB instances
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> void deleteAll(Class<T> clazz) {
+		EntityManager manager = this.getEntityManager();
+		EntityTransaction tx = manager.getTransaction();
+		tx.begin();
+		Query query = manager.createQuery("delete from " + clazz.getName());
+		query.executeUpdate();
+		tx.commit();
+	}
+
+	/**
 	 * Persists all objects in the database.
-	 * @param  <T> the tyme of the persistent object
-	 * @param complexObjectGraph th egraph to persist
+	 * 
+	 * @param <T>
+	 *            the tyme of the persistent object
+	 * @param complexObjectGraph
+	 *            th egraph to persist
 	 * @return the persisted objects
 	 */
 	protected <T> List<T> persist(List<T> complexObjectGraph) {

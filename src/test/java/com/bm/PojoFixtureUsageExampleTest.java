@@ -21,6 +21,17 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 		super(USED_ENTITIES);
 	}
 
+	/**
+	 * Delets all data.
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		deleteAll(LineItem.class);
+		deleteAll(Order.class);
+		super.tearDown();
+	}
+
 	public void testToWriteComplexObjectGraph() {
 		List<Order> complexObjectGraph = generateTestOrders();
 

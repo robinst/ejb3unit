@@ -14,7 +14,7 @@ import com.bm.testsuite.BaseSessionBeanFixture;
  * 
  * @author Daniel Wiese
  */
-public class DIMedhodSessionBeanTest extends
+public class DIMethodSessionBeanTest extends
 		BaseSessionBeanFixture<AnnotatedMethodsSessionBean> {
 
 	private static final Class[] usedBeans = { StockWKNBo.class };
@@ -22,7 +22,7 @@ public class DIMedhodSessionBeanTest extends
 	/**
 	 * Constructor.
 	 */
-	public DIMedhodSessionBeanTest() {
+	public DIMethodSessionBeanTest() {
 		super(AnnotatedMethodsSessionBean.class, usedBeans);
 	}
 

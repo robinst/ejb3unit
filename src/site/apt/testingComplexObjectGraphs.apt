@@ -34,3 +34,16 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 	}
 }
 ----
+  To delete the inseted data we can use:
+  
+----
+    /**
+	 * Delets all data. {@inheritDoc}
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		deleteAll(LineItem.class);
+		deleteAll(Order.class);
+		super.tearDown();
+	}
+----
