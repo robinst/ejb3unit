@@ -19,7 +19,7 @@ import javax.sql.DataSource;
  * @since 08.11.2005
  */
 @Stateless
-public class MyOtherSessionBean implements IMyOtherSessionBean {
+public class AnnotatedFieldsSessionBean implements IMyOtherSessionBean {
 
 	private static final long serialVersionUID = 1L;
 

@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.MockedDIModuleCreator;
-import com.bm.data.bo.MyOtherSessionBean;
+import com.bm.data.bo.AnnotatedFieldsSessionBean;
 import com.bm.ejb3guice.inject.Ejb3Guice;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Module;
@@ -26,7 +26,7 @@ import com.bm.introspectors.MetaDataCache;
 public class DependencyInjectorTest extends TestCase {
 
 	@SuppressWarnings("unchecked")
-	private MyOtherSessionBean createBeanIstance(Module module) {
+	private AnnotatedFieldsSessionBean createBeanIstance(Module module) {
 
 		// final T back = Ejb3Utils.getNewInstance(toCreate);
 		Module[] mods = { module };
@@ -34,8 +34,8 @@ public class DependencyInjectorTest extends TestCase {
 		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays
 				.asList(mods), Ejb3Guice.markerToArray(EJB.class,
 				Resource.class, PersistenceContext.class), createdbeans);
-		final MyOtherSessionBean instance = injector
-				.getInstance(MyOtherSessionBean.class);
+		final AnnotatedFieldsSessionBean instance = injector
+				.getInstance(AnnotatedFieldsSessionBean.class);
 		return instance;
 	}
 
@@ -44,8 +44,8 @@ public class DependencyInjectorTest extends TestCase {
 	 */
 	public void testInjector_injectMockObjects() {
 		MockedDIModuleCreator module = MetaDataCache
-				.getMockModuleCreator(MyOtherSessionBean.class);
-		final MyOtherSessionBean sessionBeanToTest = createBeanIstance(module);
+				.getMockModuleCreator(AnnotatedFieldsSessionBean.class);
+		final AnnotatedFieldsSessionBean sessionBeanToTest = createBeanIstance(module);
 		assertNotNull(sessionBeanToTest.getDs());
 		assertNotNull(sessionBeanToTest.getEm());
 		assertNotNull(sessionBeanToTest.getSessionBean());

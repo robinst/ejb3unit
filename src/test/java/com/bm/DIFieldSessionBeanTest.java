@@ -1,6 +1,6 @@
 package com.bm;
 
-import com.bm.data.bo.MyOtherSessionBean;
+import com.bm.data.bo.AnnotatedFieldsSessionBean;
 import com.bm.data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
 
@@ -10,7 +10,7 @@ import com.bm.testsuite.BaseSessionBeanFixture;
  * @author Daniel Wiese
  * @since 08.11.2005
  */
-public class MyOtherSessionBeanTest extends BaseSessionBeanFixture<MyOtherSessionBean> {
+public class DIFieldSessionBeanTest extends BaseSessionBeanFixture<AnnotatedFieldsSessionBean> {
 
 	private static final Class[] usedBeans = { StockWKNBo.class };
 
@@ -18,8 +18,8 @@ public class MyOtherSessionBeanTest extends BaseSessionBeanFixture<MyOtherSessio
 	/**
 	 * Constructor.
 	 */
-	public MyOtherSessionBeanTest() {
-		super(MyOtherSessionBean.class, usedBeans);
+	public DIFieldSessionBeanTest() {
+		super(AnnotatedFieldsSessionBean.class, usedBeans);
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class MyOtherSessionBeanTest extends BaseSessionBeanFixture<MyOtherSessio
 	 * @since 08.11.2005
 	 */
 	public void testDependencyInjection() {
-		final MyOtherSessionBean toTest = this.getBeanToTest();
+		final AnnotatedFieldsSessionBean toTest = this.getBeanToTest();
 		assertNotNull(toTest);
 		assertNotNull(toTest.getDs());
 		assertNotNull(toTest.getEm());
@@ -44,7 +44,7 @@ public class MyOtherSessionBeanTest extends BaseSessionBeanFixture<MyOtherSessio
 	 * @since 08.11.2005
 	 */
 	public void testJndiLookup() {
-		final MyOtherSessionBean toTest = this.getBeanToTest();
+		final AnnotatedFieldsSessionBean toTest = this.getBeanToTest();
 		assertNotNull(toTest);
 		assertNotNull(toTest.getSessionBeanOverJndi());
 	}

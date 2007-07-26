@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 import org.jmock.Mock;
 
 import com.bm.data.bo.IMySessionBean;
-import com.bm.data.bo.MyOtherSessionBean;
+import com.bm.data.bo.AnnotatedFieldsSessionBean;
 
 /**
  * Testcase.
@@ -18,20 +18,20 @@ import com.bm.data.bo.MyOtherSessionBean;
  * 
  */
 public class MyOtherSessionBeanTest extends
-		MockedSessionBeanFixture<MyOtherSessionBean> {
+		MockedSessionBeanFixture<AnnotatedFieldsSessionBean> {
 
 	/**
 	 * Constructor.
 	 */
 	public MyOtherSessionBeanTest() {
-		super(MyOtherSessionBean.class);
+		super(AnnotatedFieldsSessionBean.class);
 	}
 
 	/**
 	 * Testmethod.
 	 */
 	public void test_executeOperation() { 
-		MyOtherSessionBean toTest = this.getBeanToTest();
+		AnnotatedFieldsSessionBean toTest = this.getBeanToTest();
 		assertNotNull(toTest);
 		final Mock mySessionBean = this.getMockControl(IMySessionBean.class);
 		assertNotNull(mySessionBean);
