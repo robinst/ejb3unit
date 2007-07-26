@@ -7,7 +7,15 @@
 
 Entity-Bean test 
 
-  With EJB3Unit you can create and test entity beans outside the container. EJB3Unit will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write access against your database. During this test possible data truncations, wrong declared nullable fields or other possible schema errors will be checked. Furthermore EJB3Unit will check your equals and hashCode implementations for your Entity beans. 
+  With EJB3Unit you can create and test entity beans outside the container. EJB3Unit 
+  will automate your entity bean testing. Ejb3Unit will generate random (or customized) entity beans for you and test the read write 
+  access against your database. During this test possible data truncations, 
+  wrong declared nullable fields or other possible schema errors will be checked. 
+  Furthermore EJB3Unit will check your equals and hashCode implementations for 
+  your Entity beans. 
+  
+  Sometimes Ejb3Unit your use case will be too complex for automated testining. In this
+  case you should read the section {{{http://testingComplexObjectGraphs.html}Testing complex object graphs}}!
 
   <<How to write a simple Entity bean test?>>
 

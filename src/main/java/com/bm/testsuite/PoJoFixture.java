@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
@@ -96,6 +97,38 @@ public abstract class PoJoFixture extends BaseTest {
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Find all rows of the given class in the database. 
+	 * @param <T> the tyme of the persistent object
+	 * @param clazz the class of of the persistent object
+	 * @return all DB instances
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> List<T> findAll(Class<T> clazz) {
+		EntityManager manager = this.getEntityManager();
+		Query query = manager.createQuery("select c from " + clazz.getName() + " c");
+		return (List<T>) query.getResultList();
+	}
+
+	/**
+	 * Persists all objects in the database.
+	 * @param  <T> the tyme of the persistent object
+	 * @param complexObjectGraph th egraph to persist
+	 * @return the persisted objects
+	 */
+	protected <T> List<T> persist(List<T> complexObjectGraph) {
+		EntityManager manager = this.getEntityManager();
+		EntityTransaction tx = manager.getTransaction();
+		tx.begin();
+		final List<T> persited = new ArrayList<T>();
+		for (T order : complexObjectGraph) {
+			persited.add(manager.merge(order));
+		}
+		tx.commit();
+
+		return persited;
 	}
 
 	/**

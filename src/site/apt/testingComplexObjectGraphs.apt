@@ -1,0 +1,36 @@
+  				    ------
+                                    JBoss Service Test
+                                    ------
+				    Daniel Wiese, Fabian Bauschulte
+                                    ------
+                                    2007
+
+
+Testing complex object graphs or comlex query operations
+
+  With EJB3Unit you can also test complex object graphs of your domain objects or test complex
+  database operations. The PoJoFixture provides you access to the EntityManager "this.getEntityManager()" 
+  and it also provides convenient way to store, rerieve and compare complex persistent objects.
+
+----
+public class PojoFixtureUsageExampleTest extends PoJoFixture {
+
+	private static final Class<?>[] USED_ENTITIES = { Order.class,
+			LineItem.class };
+
+	public PojoFixtureUsageExampleTest() {
+		super(USED_ENTITIES);
+	}
+
+	public void testToWriteComplexObjectGraph() {
+		List<Order> complexObjectGraph = {.. build your own graph here...}
+
+		// persist the graph and load it again
+		List<Order> persisted = persist(complexObjectGraph);
+		List<Order> allFromDB = findAll(Order.class);
+
+		// assert the persisted graph and the loaded are equal
+		assertCollectionsEqual(persisted, allFromDB);
+	}
+}
+----
