@@ -36,6 +36,7 @@
 			<item name="EntityBeans" href="Entity-Bean.html"/>
 			<item name="SessionBeans" href="Session-Bean.html"/>
 			<item name="SessionBeans (Mocked)" href="Mocked-Session-Bean.html"/>
+			<item name="Complex test cases" href="testingComplexObjectGraphs.html"/>
 			<item name="JbossServices" href="Jboss-Service.html"/>
 			<item name="Full-Documentation" href="http://ejb3unit.sourceforge.net/doc/Ejb3Unit.doc"/>
 		</menu>
