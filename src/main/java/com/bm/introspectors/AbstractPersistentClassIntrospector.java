@@ -303,7 +303,8 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
 
                 aktFieldInfo.setEntityReleationInfo(o2mReleation);
             } else if (a instanceof JoinColumn) {
-                final JoinColumn jC = (JoinColumn) a;
+                //TODO fix that
+            	//final JoinColumn jC = (JoinColumn) a;
                 // put this property to the global store
                 GlobalRelationStore.getStore().put(classToInspect, aktProperty);
             }
