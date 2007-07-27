@@ -3,7 +3,7 @@
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.1.0-RC5-SNAPSHOT</version>
+	<version>1.1.0</version>
 	<description>Out of Container Testing of EJB 3.0</description>
 	<url>http://ejb3unit.sourceforge.net/</url>
 	<ciManagement>
@@ -45,9 +45,9 @@
             </license>
         </licenses>
 	<scm>
-		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit</url>
-		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
-		<developerConnection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</developerConnection>
+		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/tags/ejb3unit-1.1.0</url>
+		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/ejb3unit-1.1.0</connection>
+		<developerConnection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/tags/ejb3unit-1.1.0</developerConnection>
 	</scm>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
