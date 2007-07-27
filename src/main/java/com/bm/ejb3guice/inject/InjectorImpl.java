@@ -16,14 +16,6 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.GuiceFastClass;
-import com.google.inject.internal.Objects;
-import com.google.inject.internal.ReferenceCache;
-import com.google.inject.internal.StackTraceElements;
-import com.google.inject.internal.Strings;
-import com.google.inject.internal.ToStringBuilder;
-import com.google.inject.introspect.Resolver;
-import com.google.inject.spi.SourceProviders;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
@@ -41,8 +33,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import net.sf.cglib.reflect.FastClass;
 import net.sf.cglib.reflect.FastMethod;
+
+import com.bm.ejb3guice.annotations.InjectedIn;
+import com.bm.ejb3guice.annotations.NotifyOnInject;
+import com.google.inject.internal.GuiceFastClass;
+import com.google.inject.internal.Objects;
+import com.google.inject.internal.ReferenceCache;
+import com.google.inject.internal.StackTraceElements;
+import com.google.inject.internal.Strings;
+import com.google.inject.internal.ToStringBuilder;
+import com.google.inject.introspect.Resolver;
+import com.google.inject.spi.SourceProviders;
 
 /**
  * Default {@link Injector} implementation.
@@ -85,7 +89,7 @@ class InjectorImpl implements Injector {
 	private static final Map<Class<?>, Converter<?>> PRIMITIVE_CONVERTERS = new PrimitiveConverters();
 
 	final CreationListner creationListener;
-	
+
 	final ConstructionProxyFactory constructionProxyFactory;
 
 	final Map<Key<?>, BindingImpl<?>> bindings;
@@ -102,7 +106,7 @@ class InjectorImpl implements Injector {
 
 	InjectorImpl(ConstructionProxyFactory constructionProxyFactory,
 			Map<Key<?>, BindingImpl<?>> bindings,
-			Map<Class<? extends Annotation>, Scope> scopes, 
+			Map<Class<? extends Annotation>, Scope> scopes,
 			Class<? extends Annotation>[] injectionMarkers,
 			CreationListner crListner) {
 		this.constructionProxyFactory = constructionProxyFactory;
@@ -395,14 +399,15 @@ class InjectorImpl implements Injector {
 	private <M extends Member & AnnotatedElement> void checkInjectionMarkers(
 			List<SingleMemberInjector> injectors,
 			SingleInjectorFactory<M> injectorFactory, M member) {
-		Annotation markerAnnotationFound=null;
-		for (Class<? extends Annotation> current: this.injectionMarkers){
-			markerAnnotationFound= member.getAnnotation(current);
+		Annotation markerAnnotationFound = null;
+		for (Class<? extends Annotation> current : this.injectionMarkers) {
+			markerAnnotationFound = member.getAnnotation(current);
 			if (markerAnnotationFound != null) {
 				try {
 					injectors.add(injectorFactory.create(this, member));
 				} catch (MissingDependencyException e) {
-					if (markerAnnotationFound instanceof Inject && !((Inject)markerAnnotationFound).optional()) {
+					if (markerAnnotationFound instanceof Inject
+							&& !((Inject) markerAnnotationFound).optional()) {
 						// TODO: Report errors for more than one parameter per
 						// member.
 						e.handle(errorHandler);
@@ -496,6 +501,7 @@ class InjectorImpl implements Injector {
 					throw new AssertionError(); // we should have prevented this
 				}
 				field.set(o, value);
+				setContextIfAnnotated(value, o);
 			} catch (IllegalAccessException e) {
 				throw new AssertionError(e);
 			} catch (ConfigurationException e) {
@@ -506,6 +512,7 @@ class InjectorImpl implements Injector {
 				context.setExternalContext(previous);
 			}
 		}
+
 	}
 
 	/**
@@ -572,7 +579,7 @@ class InjectorImpl implements Injector {
 				};
 			} else {
 				FastClass fastClass = GuiceFastClass.create(method
-						.getDeclaringClass());
+						.getDeclaringClass()); 
 				final FastMethod fastMethod = fastClass.getMethod(method);
 
 				this.methodInvoker = new MethodInvoker() {
@@ -593,8 +600,14 @@ class InjectorImpl implements Injector {
 
 		public void inject(InternalContext context, Object o) {
 			try {
-				methodInvoker.invoke(o, getParameters(context,
-						parameterInjectors));
+				Object[] parameters = getParameters(context, parameterInjectors);
+				//notify the objects about the invocation
+				if (parameters != null) {
+					for (Object param : parameters) {
+						setContextIfAnnotated(param, o);
+					}
+				}
+				methodInvoker.invoke(o, parameters);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -1057,5 +1070,37 @@ class InjectorImpl implements Injector {
 	public String toString() {
 		return new ToStringBuilder(Injector.class).add("bindings", bindings)
 				.toString();
+	}
+
+	/**
+	 * If the object want to know where it was injected, it can annotate a
+	 * mothod with on object parameter with
+	 * 
+	 * @InjectedIn.
+	 * @param injectedIn
+	 *            where this object o was injected
+	 * @param o
+	 *            the object
+	 */
+	private static void setContextIfAnnotated(Object object, Object injectedIn) {
+		if (object.getClass().isAnnotationPresent(NotifyOnInject.class)) {
+			Method[] methods = object.getClass().getMethods();
+			for (Method method : methods) {
+				if (method.isAnnotationPresent(InjectedIn.class)) {
+					Object[] args = { injectedIn };
+					try {
+						method.invoke(object, args);
+					} catch (IllegalArgumentException e) {
+						throw new RuntimeException(e);
+					} catch (IllegalAccessException e) {
+						throw new RuntimeException(e);
+					} catch (InvocationTargetException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+
+		}
+
 	}
 }

@@ -13,6 +13,7 @@ import javax.naming.NamingException;
  */
 public class MemoryContext extends AbstractContext implements Context {
 
+	private static final String JAVA_COMP_SPACE = "java:/";
 	private final Map<String, Object> bindings = new HashMap<String, Object>();
 
 	/**
@@ -28,6 +29,9 @@ public class MemoryContext extends AbstractContext implements Context {
 	 */
 	@Override
 	public Object lookup(String name) throws NamingException {
+		if (name.startsWith(JAVA_COMP_SPACE)) {
+			name = name.substring(JAVA_COMP_SPACE.length());
+		}
 		if (this.bindings.containsKey(name)) {
 			return this.bindings.get(name);
 		}

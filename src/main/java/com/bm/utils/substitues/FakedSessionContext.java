@@ -16,19 +16,22 @@ import javax.naming.NamingException;
 import javax.transaction.UserTransaction;
 import javax.xml.rpc.handler.MessageContext;
 
+import org.apache.commons.lang.NotImplementedException;
+
 import com.bm.jndi.MemoryContextFactory;
 
 /**
- * Represnts a dummy implementation for a session context. Later we can implements more
- * functionality here.
+ * Represnts a dummy implementation for a session context. Later we can
+ * implements more functionality here.
+ * 
  * @author Daniel Wiese
- *
+ * 
  */
 public class FakedSessionContext implements SessionContext {
-	
+
 	private final InitialContext ctx;
-	
-	public FakedSessionContext(){
+
+	public FakedSessionContext() {
 		Hashtable<String, String> env = new Hashtable<String, String>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, MemoryContextFactory.class
 				.getName());
@@ -43,115 +46,101 @@ public class FakedSessionContext implements SessionContext {
 	 * {@inheritDoc}
 	 */
 	public <T> T getBusinessObject(Class<T> businessInterface) {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-	
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public EJBLocalObject getEJBLocalObject() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public EJBObject getEJBObject()  {
-		return null;
+	public EJBObject getEJBObject() {
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
-	 */	
-	public Class getInvokedBusinessInterface()  {
-		return null;
+	 */
+	public Class getInvokedBusinessInterface() {
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public MessageContext getMessageContext() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Principal getCallerPrincipal() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public EJBHome getEJBHome() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public EJBLocalHome getEJBLocalHome() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Properties getEnvironment() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean getRollbackOnly()  {
-		return false;
+	public boolean getRollbackOnly() {
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public TimerService getTimerService()  {
-		return new FakedTimerService();
+	public TimerService getTimerService() {
+		throw new NotImplementedException(
+				"Please use injection for timer: @Resource private TimerService timerService;");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public UserTransaction getUserTransaction()  {
-		return null;
+	public UserTransaction getUserTransaction() {
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("deprecation")
 	public boolean isCallerInRole(java.security.Identity role) {
-		return false;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public boolean isCallerInRole(String roleName) {
-		return false;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
@@ -164,22 +153,19 @@ public class FakedSessionContext implements SessionContext {
 		}
 	}
 
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setRollbackOnly() {
-		
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("deprecation")
 	public java.security.Identity getCallerIdentity() {
-		return null;
+		throw new NotImplementedException("Not yet implemented");
 	}
-
 
 }

@@ -73,6 +73,19 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 				"ejb/MySessionBean");
 		assertNotNull(lookedUp);
 	}
+	
+	/**
+	 * Test the dpendency injection.
+	 * 
+	 * @author Daniel Wiese
+	 * @since 08.11.2005
+	 */
+	public void testJavaCompJndiLookup() {
+		final MySessionBean toTest = this.getBeanToTest();
+		MySessionBean lookedUp = (MySessionBean) toTest.getCtx().lookup(
+				"java:/ejb/MySessionBean");
+		assertNotNull(lookedUp);
+	}
 
 	/**
 	 * Creates a initial data set.

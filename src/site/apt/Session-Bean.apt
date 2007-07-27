@@ -22,6 +22,8 @@ Session bean test
  [[3]]	@DataSource : A data source implementation is Injected (conform to the Ejb3Unit) settings
 
  [[4]]	@PersistenceContext EntityManager: A full function implementation of the EJB 3.0 EntityManager is injected automatically
+ 
+ [[5]]	@Resource TimerService: A simple implementation of the TimerService is injected
 
 ----
 public class MySessionBeanTest extends

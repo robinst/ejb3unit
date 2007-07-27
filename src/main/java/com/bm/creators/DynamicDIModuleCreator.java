@@ -14,7 +14,7 @@ import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.utils.BasicDataSource;
 import com.bm.utils.substitues.FakedSessionContext;
-import com.bm.utils.substitues.FakedTimerService;
+import com.bm.utils.substitues.MockedTimerService;
 
 public class DynamicDIModuleCreator implements Module {
 
@@ -59,7 +59,7 @@ public class DynamicDIModuleCreator implements Module {
 				.toInstance(new BasicDataSource(this.conf));
 		binder.bind(EntityManager.class).toInstance(this.manager);
 		binder.bind(SessionContext.class).to(FakedSessionContext.class);
-		binder.bind(TimerService.class).to(FakedTimerService.class);
+		binder.bind(TimerService.class).to(MockedTimerService.class);
 
 		for (String interfaze : interface2implemantation.keySet()) {
 			try {

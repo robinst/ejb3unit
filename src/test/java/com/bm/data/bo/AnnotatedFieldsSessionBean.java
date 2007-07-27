@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,12 +35,14 @@ public class AnnotatedFieldsSessionBean implements IMyOtherSessionBean {
 	private IMySessionBean mySessionBean;
 	
 	@Resource
-	private TimerService timer;
+	private TimerService timerService;
 	
 	private IMySessionBean mySessionBeanJndi;
 	
 	@Resource
 	private SessionContext sc;
+
+	private boolean timerWasCalled = false;
 	
 	@PostConstruct
 	void setup() {
@@ -107,7 +111,27 @@ public class AnnotatedFieldsSessionBean implements IMyOtherSessionBean {
 	 * @return Returns the timer.
 	 */
 	public TimerService getTimer() {
-		return timer;
+		return timerService;
+	}
+	
+	public void createTimer(long intervalDuration) {
+	    @SuppressWarnings("unused")
+		Timer timer = this.timerService.createTimer(intervalDuration,
+	        "Created new timer");
+	    
+	  }
+
+	  @Timeout
+	  public void timeout(Timer timer) {
+	    timerWasCalled = true;
+	  }
+
+	 /**
+	  * True if the timer was called
+	  * @return true if called
+	  */
+	public boolean isTimerWasCalled() {
+		return timerWasCalled;
 	}
 	
 	

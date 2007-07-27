@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
+import javax.ejb.Timer;
 import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,9 +30,11 @@ public class AnnotatedMethodsSessionBean implements IMyMethodAnnotaedSessionBean
 
 	private IMySessionBean mySessionBean;
 	
-	private TimerService timer;
-	
 	private SessionContext sc;
+
+	private TimerService timerService;
+
+	private boolean timerWasCalled;
 
 	/**
 	 * Operation which do somethig internal.
@@ -82,12 +86,35 @@ public class AnnotatedMethodsSessionBean implements IMyMethodAnnotaedSessionBean
 	}
 
 	public TimerService getTimer() {
-		return timer;
+		return timerService;
 	}
 
 	@Resource
 	public void setTimer(TimerService timer) {
-		this.timer = timer;
+		this.timerService = timer;
 	}	
+	
+	
+	public void createTimer(long intervalDuration) {
+	    @SuppressWarnings("unused")
+		Timer timer = this.timerService.createTimer(intervalDuration,
+	        "Created new timer");
+	    
+	  }
+
+	  @Timeout
+	  public void timeout(Timer timer) {
+	    timerWasCalled = true;
+	  }
+
+	 /**
+	  * True if the timer was called
+	  * @return true if called
+	  */
+	public boolean isTimerWasCalled() {
+		return timerWasCalled;
+	}
+
+	
 
 }

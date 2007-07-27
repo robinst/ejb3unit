@@ -10,10 +10,10 @@ import com.bm.testsuite.BaseSessionBeanFixture;
  * @author Daniel Wiese
  * @since 08.11.2005
  */
-public class DIFieldSessionBeanTest extends BaseSessionBeanFixture<AnnotatedFieldsSessionBean> {
+public class DIFieldSessionBeanTest extends
+		BaseSessionBeanFixture<AnnotatedFieldsSessionBean> {
 
 	private static final Class[] usedBeans = { StockWKNBo.class };
-
 
 	/**
 	 * Constructor.
@@ -36,7 +36,22 @@ public class DIFieldSessionBeanTest extends BaseSessionBeanFixture<AnnotatedFiel
 		assertNotNull(toTest.getSessionBean());
 		assertNotNull(toTest.getTimer());
 	}
-	
+
+	/**
+	 * Test the dpendency injection.
+	 * 
+	 * @author Daniel Wiese
+	 * @throws InterruptedException
+	 * @since 08.11.2005
+	 */
+	public void testTimer() throws InterruptedException {
+		final AnnotatedFieldsSessionBean toTest = this.getBeanToTest();
+		assertFalse(toTest.isTimerWasCalled());
+		toTest.createTimer(10);
+		Thread.sleep(1000);
+		assertTrue(toTest.isTimerWasCalled());
+	}
+
 	/**
 	 * Test the dpendency injection.
 	 * 
@@ -48,7 +63,5 @@ public class DIFieldSessionBeanTest extends BaseSessionBeanFixture<AnnotatedFiel
 		assertNotNull(toTest);
 		assertNotNull(toTest.getSessionBeanOverJndi());
 	}
-
-	
 
 }

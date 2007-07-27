@@ -1,5 +1,6 @@
 package com.bm;
 
+import com.bm.data.bo.AnnotatedFieldsSessionBean;
 import com.bm.data.bo.AnnotatedMethodsSessionBean;
 import com.bm.data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
@@ -51,7 +52,20 @@ public class DIMethodSessionBeanTest extends
 		final AnnotatedMethodsSessionBean toTest = this.getBeanToTest();
 		toTest.executeOperation();
 	}
-
 	
+	/**
+	 * Test the dpendency injection.
+	 * 
+	 * @author Daniel Wiese
+	 * @throws InterruptedException
+	 * @since 08.11.2005
+	 */
+	public void testTimer() throws InterruptedException {
+		final AnnotatedMethodsSessionBean toTest = this.getBeanToTest();
+		assertFalse(toTest.isTimerWasCalled());
+		toTest.createTimer(10);
+		Thread.sleep(1000);
+		assertTrue(toTest.isTimerWasCalled());
+	}
 
 }
