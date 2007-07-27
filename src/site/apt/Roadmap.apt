@@ -17,5 +17,9 @@ Roadmap for Ejb3Unit
 
       * Support for out of container testing for J2EE (EJB 2.x) Specification
       
-      * Automated N:M entity bean testing
+  * Minor feature
+  
+      * Better relation ship support for automatead entity bean test: 
+        Unidirectional 1:N, Multidirectional n:m and one2one. Currently only bi-directional 
+        1:n is supported
     
