@@ -16,7 +16,8 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.introspect.Resolver;
+import com.bm.ejb3guice.introspect.Resolver;
+
 import java.util.List;
 import java.util.Map;
 

@@ -16,7 +16,8 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.spi.Message;
+import com.bm.ejb3guice.spi.Message;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

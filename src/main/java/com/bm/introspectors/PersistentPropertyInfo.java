@@ -1,6 +1,6 @@
 package com.bm.introspectors;
 
-import com.bm.introspectors.releations.EntityReleationInfo;
+import com.bm.introspectors.relations.EntityReleationInfo;
 
 /**
  * This class represents all informations about persitent fields.

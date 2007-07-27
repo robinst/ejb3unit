@@ -16,7 +16,8 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.matcher.Matcher;
+import com.bm.ejb3guice.matcher.Matcher;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;

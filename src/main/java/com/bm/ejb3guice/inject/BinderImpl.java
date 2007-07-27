@@ -17,7 +17,7 @@
 package com.bm.ejb3guice.inject;
 
 import static com.bm.ejb3guice.inject.Scopes.SINGLETON;
-import static com.google.inject.internal.Objects.nonNull;
+import static com.bm.ejb3guice.internal.Objects.nonNull;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
@@ -36,12 +36,12 @@ import java.util.logging.Logger;
 import org.aopalliance.intercept.MethodInterceptor;
 
 import com.bm.ejb3guice.inject.InjectorImpl.SingleMemberInjector;
-import com.google.inject.internal.Annotations;
-import com.google.inject.internal.StackTraceElements;
-import com.google.inject.internal.Stopwatch;
-import com.google.inject.matcher.Matcher;
-import com.google.inject.spi.Message;
-import com.google.inject.spi.SourceProviders;
+import com.bm.ejb3guice.internal.Annotations;
+import com.bm.ejb3guice.internal.StackTraceElements;
+import com.bm.ejb3guice.internal.Stopwatch;
+import com.bm.ejb3guice.matcher.Matcher;
+import com.bm.ejb3guice.spi.Message;
+import com.bm.ejb3guice.spi.SourceProviders;
 
 /**
  * Builds a dependency injection {@link Injector}. Binds {@link Key}s to

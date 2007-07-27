@@ -16,11 +16,12 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.binder.AnnotatedBindingBuilder;
-import com.google.inject.binder.AnnotatedConstantBindingBuilder;
-import com.google.inject.binder.LinkedBindingBuilder;
-import com.google.inject.matcher.Matcher;
-import com.google.inject.spi.Message;
+import com.bm.ejb3guice.binder.AnnotatedBindingBuilder;
+import com.bm.ejb3guice.binder.AnnotatedConstantBindingBuilder;
+import com.bm.ejb3guice.binder.LinkedBindingBuilder;
+import com.bm.ejb3guice.matcher.Matcher;
+import com.bm.ejb3guice.spi.Message;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -107,7 +108,7 @@ import org.aopalliance.intercept.MethodInterceptor;
  * 
  * <p>Besides {@link Singleton}/{@link Scopes#SINGLETON}, there are
  * servlet-specific scopes available in
- * {@code com.google.inject.servlet.ServletScopes}, and your Modules can
+ * {@code com.bm.ejb3guice.servlet.ServletScopes}, and your Modules can
  * contribute their own custom scopes for use here as well.
  *
  * <pre>
@@ -162,7 +163,7 @@ import org.aopalliance.intercept.MethodInterceptor;
  *         .to(BlueService.class);</pre>
  *
  * Differentiating by names is a common enough use case that we provided a
- * standard annotation, {@link com.google.inject.name.Named @Named}.  Because of
+ * standard annotation, {@link com.bm.ejb3guice.name.Named @Named}.  Because of
  * Guice's library support, binding by name is quite easier than in the
  * arbitrary binding annotation case we just saw.  However, remember that these
  * names will live in a single flat namespace with all the other names used in

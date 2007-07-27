@@ -16,12 +16,13 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.binder.AnnotatedBindingBuilder;
-import com.google.inject.binder.AnnotatedConstantBindingBuilder;
-import com.google.inject.binder.LinkedBindingBuilder;
-import com.google.inject.internal.Objects;
-import com.google.inject.matcher.Matcher;
-import com.google.inject.spi.SourceProviders;
+import com.bm.ejb3guice.binder.AnnotatedBindingBuilder;
+import com.bm.ejb3guice.binder.AnnotatedConstantBindingBuilder;
+import com.bm.ejb3guice.binder.LinkedBindingBuilder;
+import com.bm.ejb3guice.internal.Objects;
+import com.bm.ejb3guice.matcher.Matcher;
+import com.bm.ejb3guice.spi.SourceProviders;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -33,7 +34,7 @@ import org.aopalliance.intercept.MethodInterceptor;
  * {@link Binder}. For example:
  *
  * <pre>
- * import static com.google.inject.Names.named;
+ * import static com.bm.ejb3guice.Names.named;
  *
  * public class MyModule extends AbstractModule {
  *   protected void configure() {
@@ -147,8 +148,8 @@ public abstract class AbstractModule implements Module {
   }
 
   /**
-   * @see Binder#bindInterceptor(com.google.inject.matcher.Matcher,
-   *  com.google.inject.matcher.Matcher,
+   * @see Binder#bindInterceptor(com.bm.ejb3guice.matcher.Matcher,
+   *  com.bm.ejb3guice.matcher.Matcher,
    *  org.aopalliance.intercept.MethodInterceptor[])
    */
   protected void bindInterceptor(Matcher<? super Class<?>> classMatcher,

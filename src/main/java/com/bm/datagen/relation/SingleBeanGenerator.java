@@ -21,9 +21,9 @@ import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Introspector;
 import com.bm.introspectors.PersistentPropertyInfo;
 import com.bm.introspectors.Property;
-import com.bm.introspectors.releations.EntityReleationInfo;
-import com.bm.introspectors.releations.ManyToOneReleation;
-import com.bm.introspectors.releations.RelationType;
+import com.bm.introspectors.relations.EntityReleationInfo;
+import com.bm.introspectors.relations.ManyToOneReleation;
+import com.bm.introspectors.relations.RelationType;
 import com.bm.utils.Ejb3Utils;
 
 /**

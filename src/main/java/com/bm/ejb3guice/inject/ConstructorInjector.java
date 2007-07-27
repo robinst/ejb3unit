@@ -16,7 +16,7 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.StackTraceElements;
+import com.bm.ejb3guice.internal.StackTraceElements;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

@@ -34,7 +34,7 @@ public class EntityBeanCreator<T> {
 
 	private final EntityBeanIntrospector intro;
 
-	private final InstanceCreator<T> baseCreator;
+	private final EntityInstanceCreator<T> baseCreator;
 
 	private final List<Generator> currentGeneratorList = new ArrayList<Generator>();
 
@@ -62,7 +62,7 @@ public class EntityBeanCreator<T> {
 	public EntityBeanCreator(EntityBeanIntrospector<T> intro, Class<T> toCreate) {
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
-		this.baseCreator = new InstanceCreator<T>(intro, toCreate,
+		this.baseCreator = new EntityInstanceCreator<T>(intro, toCreate,
 				this.currentGeneratorList);
 	}
 
@@ -81,7 +81,7 @@ public class EntityBeanCreator<T> {
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
 		this.currentGeneratorList.addAll(additionalGenerators);
-		this.baseCreator = new InstanceCreator<T>(intro, toCreate,
+		this.baseCreator = new EntityInstanceCreator<T>(intro, toCreate,
 				this.currentGeneratorList);
 	}
 
@@ -115,7 +115,7 @@ public class EntityBeanCreator<T> {
 			try {
 				final EmbeddedClassIntrospector emInspector = this.intro
 						.getEmbeddedPKClass();
-				final InstanceCreator embCreator = new InstanceCreator(
+				final EntityInstanceCreator embCreator = new EntityInstanceCreator(
 						emInspector, emInspector.getEmbeddedClassName(),
 						this.currentGeneratorList);
 				final Object embeddedInstance = embCreator.createInstance();

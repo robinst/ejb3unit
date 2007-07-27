@@ -16,8 +16,8 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.Objects;
-import com.google.inject.spi.SourceProviders;
+import com.bm.ejb3guice.internal.Objects;
+import com.bm.ejb3guice.spi.SourceProviders;
 
 /**
  * @author crazybob@google.com (Bob Lee)

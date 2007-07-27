@@ -16,12 +16,13 @@
 
 package com.bm.ejb3guice.inject;
 
+import com.bm.ejb3guice.binder.AnnotatedConstantBindingBuilder;
+import com.bm.ejb3guice.binder.ConstantBindingBuilder;
 import com.bm.ejb3guice.inject.Key.AnnotationStrategy;
-import com.google.inject.binder.AnnotatedConstantBindingBuilder;
-import com.google.inject.binder.ConstantBindingBuilder;
-import com.google.inject.internal.Annotations;
-import com.google.inject.internal.Objects;
-import com.google.inject.internal.StackTraceElements;
+import com.bm.ejb3guice.internal.Annotations;
+import com.bm.ejb3guice.internal.Objects;
+import com.bm.ejb3guice.internal.StackTraceElements;
+
 import java.lang.annotation.Annotation;
 
 /**

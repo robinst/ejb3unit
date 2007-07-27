@@ -16,9 +16,10 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.StackTraceElements;
-import com.google.inject.spi.SourceProvider;
-import com.google.inject.spi.SourceProviders;
+import com.bm.ejb3guice.internal.StackTraceElements;
+import com.bm.ejb3guice.spi.SourceProvider;
+import com.bm.ejb3guice.spi.SourceProviders;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +29,7 @@ import java.util.List;
 
 /**
  * Creates bindings to methods annotated with {@link
- * @com.google.inject.Provides}. Use the scope and binding annotations on the
+ * @com.bm.ejb3guice.Provides}. Use the scope and binding annotations on the
  * provider method to configure the binding.
  */
 public class ProviderMethods {

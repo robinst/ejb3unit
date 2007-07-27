@@ -16,7 +16,7 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.ToStringBuilder;
+import com.bm.ejb3guice.internal.ToStringBuilder;
 
 /**
  * @author crazybob@google.com (Bob Lee)

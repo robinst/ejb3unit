@@ -16,10 +16,11 @@
 
 package com.bm.ejb3guice.inject;
 
-import static com.google.inject.matcher.Matchers.annotatedWith;
-import static com.google.inject.matcher.Matchers.any;
-import static com.google.inject.matcher.Matchers.not;
-import static com.google.inject.matcher.Matchers.only;
+import static com.bm.ejb3guice.matcher.Matchers.annotatedWith;
+import static com.bm.ejb3guice.matcher.Matchers.any;
+import static com.bm.ejb3guice.matcher.Matchers.not;
+import static com.bm.ejb3guice.matcher.Matchers.only;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;

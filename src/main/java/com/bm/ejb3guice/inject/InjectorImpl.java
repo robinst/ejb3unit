@@ -39,14 +39,14 @@ import net.sf.cglib.reflect.FastMethod;
 
 import com.bm.ejb3guice.annotations.InjectedIn;
 import com.bm.ejb3guice.annotations.NotifyOnInject;
-import com.google.inject.internal.GuiceFastClass;
-import com.google.inject.internal.Objects;
-import com.google.inject.internal.ReferenceCache;
-import com.google.inject.internal.StackTraceElements;
-import com.google.inject.internal.Strings;
-import com.google.inject.internal.ToStringBuilder;
-import com.google.inject.introspect.Resolver;
-import com.google.inject.spi.SourceProviders;
+import com.bm.ejb3guice.internal.GuiceFastClass;
+import com.bm.ejb3guice.internal.Objects;
+import com.bm.ejb3guice.internal.ReferenceCache;
+import com.bm.ejb3guice.internal.StackTraceElements;
+import com.bm.ejb3guice.internal.Strings;
+import com.bm.ejb3guice.internal.ToStringBuilder;
+import com.bm.ejb3guice.introspect.Resolver;
+import com.bm.ejb3guice.spi.SourceProviders;
 
 /**
  * Default {@link Injector} implementation.

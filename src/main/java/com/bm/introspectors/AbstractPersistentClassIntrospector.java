@@ -20,10 +20,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import com.bm.introspectors.releations.GlobalRelationStore;
-import com.bm.introspectors.releations.ManyToOneReleation;
-import com.bm.introspectors.releations.OneToManyReleation;
-import com.bm.introspectors.releations.RelationPropertyResolver;
+
+import com.bm.introspectors.relations.GlobalRelationStore;
+import com.bm.introspectors.relations.ManyToOneReleation;
+import com.bm.introspectors.relations.OneToManyReleation;
+import com.bm.introspectors.relations.RelationPropertyResolver;
 
 /**
  * This class implements the common methodes for all concrete inspectors.

@@ -16,7 +16,7 @@
 
 package com.bm.ejb3guice.inject;
 
-import static com.google.inject.matcher.Matchers.any;
+import static com.bm.ejb3guice.matcher.Matchers.any;
 import junit.framework.TestCase;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

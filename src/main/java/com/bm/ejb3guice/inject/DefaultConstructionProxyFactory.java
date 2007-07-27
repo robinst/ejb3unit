@@ -16,8 +16,9 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.GuiceFastClass;
-import com.google.inject.internal.Objects;
+import com.bm.ejb3guice.internal.GuiceFastClass;
+import com.bm.ejb3guice.internal.Objects;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;

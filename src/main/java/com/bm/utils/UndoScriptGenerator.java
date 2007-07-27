@@ -13,10 +13,10 @@ import org.apache.log4j.Logger;
 import com.bm.introspectors.EmbeddedClassIntrospector;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
-import com.bm.introspectors.releations.EntityReleationInfo;
-import com.bm.introspectors.releations.ManyToOneReleation;
-import com.bm.introspectors.releations.OneToManyReleation;
-import com.bm.introspectors.releations.RelationType;
+import com.bm.introspectors.relations.EntityReleationInfo;
+import com.bm.introspectors.relations.ManyToOneReleation;
+import com.bm.introspectors.relations.OneToManyReleation;
+import com.bm.introspectors.relations.RelationType;
 
 /**
  * This class generates a undo script for all DB oprations excuted in jUnit. tests

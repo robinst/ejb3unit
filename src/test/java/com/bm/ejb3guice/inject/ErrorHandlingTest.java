@@ -25,8 +25,9 @@ import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3guice.inject.Provider;
 import com.bm.ejb3guice.inject.Scopes;
 import com.bm.ejb3guice.inject.TypeLiteral;
-import com.google.inject.name.Named;
-import com.google.inject.name.Names;
+import com.bm.ejb3guice.name.Named;
+import com.bm.ejb3guice.name.Names;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

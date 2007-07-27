@@ -16,7 +16,8 @@
 
 package com.bm.ejb3guice.inject;
 
-import static com.google.inject.internal.Objects.nonNull;
+import static com.bm.ejb3guice.internal.Objects.nonNull;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

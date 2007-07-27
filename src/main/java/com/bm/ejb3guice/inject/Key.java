@@ -16,10 +16,12 @@
 
 package com.bm.ejb3guice.inject;
 
-import com.google.inject.internal.Annotations;
-import static com.google.inject.internal.Objects.nonNull;
-import com.google.inject.internal.StackTraceElements;
-import com.google.inject.internal.ToStringBuilder;
+import com.bm.ejb3guice.internal.Annotations;
+import com.bm.ejb3guice.internal.StackTraceElements;
+import com.bm.ejb3guice.internal.ToStringBuilder;
+
+import static com.bm.ejb3guice.internal.Objects.nonNull;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;
 import java.lang.reflect.Type;

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.bm.ejb3guice.example.EJB;
 import com.bm.ejb3guice.inject.AbstractModule;
 import com.bm.ejb3guice.inject.BinderImpl;
 import com.bm.ejb3guice.inject.CreationException;
@@ -31,7 +32,6 @@ import com.bm.ejb3guice.inject.Inject;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Key;
 import com.bm.ejb3guice.inject.Stage;
-import com.google.inject.example.EJB;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import junit.framework.TestCase;
