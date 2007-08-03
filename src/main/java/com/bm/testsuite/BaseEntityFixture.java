@@ -215,7 +215,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
      * @throws Exception -
      *             in an error case
      */
-    public void testWriteWithNullFields() throws Exception {
+    public void disabled_testWriteWithNullFields() throws Exception {
         EntityTransaction tx = manager.getTransaction();
         T created = null;
         try {

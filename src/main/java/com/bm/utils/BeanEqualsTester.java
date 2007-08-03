@@ -105,9 +105,8 @@ public final class BeanEqualsTester extends Assert {
 						} else if (valueOrig instanceof Collection
 								&& valueRead instanceof Collection) {
 							// test collections independend from the order
-							testColletionsForEqual(
-									(Collection<? extends Object>) valueOrig,
-									(Collection<? extends Object>) valueRead);
+							testColletionsForEqual((Collection<?>) valueOrig,
+									(Collection<?>) valueRead);
 
 						} else if (!isEqual(akt, valueOrig, valueRead)) {
 							// usual equals failed
@@ -116,6 +115,7 @@ public final class BeanEqualsTester extends Assert {
 										(String) valueRead);
 							}
 							fail("The values of the field (" + akt.getName()
+									+ ") in class (" + akt.getDeclaringClass()
 									+ ") are not equal");
 						}
 					}
