@@ -296,10 +296,13 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 			parser.close();
 		} catch (FileNotFoundException e) {
+			log.error("Data-Loader failing ", e);
 			new RuntimeException(e);
 		} catch (IOException e) {
+			log.error("Data-Loader failing ", e);
 			new RuntimeException(e);
 		} catch (SQLException e) {
+			log.error("Data-Loader failing ", e);
 			new RuntimeException(e);
 		} finally {
 			SQLUtils.cleanup(con, prep);

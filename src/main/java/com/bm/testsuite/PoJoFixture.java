@@ -149,10 +149,13 @@ public abstract class PoJoFixture extends BaseTest {
 		EntityTransaction tx = manager.getTransaction();
 		tx.begin();
 		final List<T> persited = new ArrayList<T>();
-		for (T order : complexObjectGraph) {
-			persited.add(manager.merge(order));
+		try {
+			for (T order : complexObjectGraph) {
+				persited.add(manager.merge(order));
+			}
+		} finally {
+			tx.commit();
 		}
-		tx.commit();
 
 		return persited;
 	}

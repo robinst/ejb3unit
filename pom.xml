@@ -3,7 +3,7 @@
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.1.2-SNPAPSHOT</version>
+	<version>1.1.2-SNAPSHOT</version>
 	<description>Out of Container Testing of EJB 3.0</description>
 	<url>http://ejb3unit.sourceforge.net/</url>
 	<ciManagement>
