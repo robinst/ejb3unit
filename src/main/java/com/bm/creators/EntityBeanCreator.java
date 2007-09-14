@@ -54,6 +54,16 @@ public class EntityBeanCreator<T> {
 	/**
 	 * Deafult constructor.
 	 * 
+	 * @param toCreate -
+	 *            the class to create
+	 */
+	public EntityBeanCreator(Class<T> toCreate) {
+		this(new EntityBeanIntrospector<T>(toCreate), toCreate);
+	}
+
+	/**
+	 * Deafult constructor.
+	 * 
 	 * @param intro -
 	 *            a isntance of bean introspection
 	 * @param toCreate -
@@ -76,8 +86,10 @@ public class EntityBeanCreator<T> {
 	 * @param additionalGenerators -
 	 *            additional generators
 	 */
-	public EntityBeanCreator(EntityBeanIntrospector<T> intro,
-			Class<T> toCreate, List<Generator> additionalGenerators) {
+	public EntityBeanCreator(
+			EntityBeanIntrospector<T> intro,
+			Class<T> toCreate,
+			List<Generator> additionalGenerators) {
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
 		this.currentGeneratorList.addAll(additionalGenerators);
@@ -119,12 +131,11 @@ public class EntityBeanCreator<T> {
 						emInspector, emInspector.getEmbeddedClassName(),
 						this.currentGeneratorList);
 				final Object embeddedInstance = embCreator.createInstance();
-				this.intro.setField(back, emInspector.getAttibuteName(),
-						embeddedInstance);
+				this.intro
+						.setField(back, emInspector.getAttibuteName(), embeddedInstance);
 			} catch (IllegalAccessException e) {
 				log.error("Cannot create the Embedded PK-Class", e);
-				throw new RuntimeException(
-						"Cannot create the Embedded PK-Class", e);
+				throw new RuntimeException("Cannot create the Embedded PK-Class", e);
 			}
 
 		}

@@ -75,7 +75,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
      * @param additionalGenerators
      *            -a dditional generators (plug in)
      */
-    public BaseEntityFixture(Class<T> entityToTest, Generator[] additionalGenerators) {
+    @SuppressWarnings("unchecked")
+	public BaseEntityFixture(Class<T> entityToTest, Generator[] additionalGenerators) {
         final List<Class<? extends Object>> entitiesToTest = new ArrayList<Class<? extends Object>>();
         // add the currenbt class
         entitiesToTest.add(entityToTest);

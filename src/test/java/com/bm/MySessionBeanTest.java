@@ -2,6 +2,10 @@ package com.bm;
 
 import java.util.List;
 
+import javax.persistence.EntityTransaction;
+
+import com.bm.creators.EntityBeanCreator;
+import com.bm.data.bo.ExpertiseAreas;
 import com.bm.data.bo.MySessionBean;
 import com.bm.data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
@@ -16,20 +20,18 @@ import com.bm.testsuite.dataloader.EntityInitialDataSet;
  */
 public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 
-	private static final Class[] usedBeans = { StockWKNBo.class };
+	private static final Class[] usedBeans = { StockWKNBo.class, ExpertiseAreas.class };
 
 	private static final CSVInitialDataSet CSV_SET = new CSVInitialDataSet<StockWKNBo>(
-			StockWKNBo.class, "allstatData.csv", "wkn", "aktienName", "isin",
-			"symbol", "kaufModus", "branchenCode", "branche",
-			"transaktionenProTag", "zumHandelZugelassen", "volatilitaet",
-			"durchschnittskaufkurs");
+			StockWKNBo.class, "allstatData.csv", "wkn", "aktienName", "isin", "symbol",
+			"kaufModus", "branchenCode", "branche", "transaktionenProTag",
+			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");
 
 	/**
 	 * Constructor.
 	 */
 	public MySessionBeanTest() {
-		super(MySessionBean.class, usedBeans,
-				new StockWKNEntityInitialDataSet(), CSV_SET);
+		super(MySessionBean.class, usedBeans, new StockWKNEntityInitialDataSet(), CSV_SET);
 	}
 
 	/**
@@ -43,6 +45,19 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 		assertNotNull(toTest);
 		assertNotNull(toTest.getDs());
 		assertNotNull(toTest.getEm());
+	}
+
+	/**
+	 * Test persistence.
+	 */
+	public void testPersistABean() {
+		EntityTransaction tx = this.getEntityManager().getTransaction();
+		final MySessionBean toTest = this.getBeanToTest();
+		tx.begin();
+		final EntityBeanCreator<ExpertiseAreas> expAreasCreator = new EntityBeanCreator<ExpertiseAreas>(
+				ExpertiseAreas.class);
+		toTest.saveEntityBean(expAreasCreator.createBeanInstance());
+		tx.commit();
 	}
 
 	/**
@@ -73,7 +88,7 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 				"ejb/MySessionBean");
 		assertNotNull(lookedUp);
 	}
-	
+
 	/**
 	 * Test the dpendency injection.
 	 * 

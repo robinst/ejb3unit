@@ -65,19 +65,29 @@ public class MySessionBean implements IMySessionBean {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<StockWKNBo> getAllStocks() {
-		final Query query = this.manager
-				.createNamedQuery("StockWKNBo.allStocks");
-		List<StockWKNBo> loaded = Collections.checkedList(
-				query.getResultList(), StockWKNBo.class);
+		final Query query = this.manager.createNamedQuery("StockWKNBo.allStocks");
+		List<StockWKNBo> loaded = Collections.checkedList(query.getResultList(),
+				StockWKNBo.class);
 		return loaded;
 	}
 
 	/**
 	 * Returns the ctx.
+	 * 
 	 * @return Returns the ctx.
 	 */
 	public SessionContext getCtx() {
 		return ctx;
+	}
+
+	/**
+	 * Pesists the passed instance.
+	 * 
+	 * @param createBeanInstance
+	 *            entity manager instance
+	 */
+	public void saveEntityBean(ExpertiseAreas createBeanInstance) {
+		manager.persist(createBeanInstance);
 	}
 
 }
