@@ -221,7 +221,7 @@ public class UndoScriptGenerator<T> {
             List<Property> pkProperties = null;
 
             // check if is embedded or not
-            if (this.inspector.hasPKClass()) {
+            if (this.inspector.hasEmbeddedPKClass()) {
                 final EmbeddedClassIntrospector<Object> emci = this.inspector.getEmbeddedPKClass();
                 pkProperties = emci.getPersitentFields();
             } else {
@@ -232,7 +232,7 @@ public class UndoScriptGenerator<T> {
             for (int i = 0; i < pkProperties.size(); i++) {
                 final Property aktProperty = pkProperties.get(i);
                 aktFieldName = aktProperty.getName();
-                if (this.inspector.hasPKClass()) {
+                if (this.inspector.hasEmbeddedPKClass()) {
                     sb.append(this.inspector.getEmbeddedPKClass().getPresistentFieldInfo(aktProperty)
                             .getDbName());
                     sb.append("=");

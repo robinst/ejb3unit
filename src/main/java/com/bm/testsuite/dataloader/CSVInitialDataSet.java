@@ -192,7 +192,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	@SuppressWarnings("unchecked")
 	private Property getProperty(String property) {
 		Property info = null;
-		if (this.introspector.hasPKClass()) {
+		if (this.introspector.hasEmbeddedPKClass()) {
 			final EmbeddedClassIntrospector pkintro = this.introspector
 					.getEmbeddedPKClass();
 			final List<Property> pkFields = pkintro.getPersitentFields();
@@ -224,7 +224,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	@SuppressWarnings("unchecked")
 	private PersistentPropertyInfo getPersistentFieldInfo(String property) {
 		PersistentPropertyInfo info = null;
-		if (this.introspector.hasPKClass()) {
+		if (this.introspector.hasEmbeddedPKClass()) {
 			final EmbeddedClassIntrospector pkintro = this.introspector
 					.getEmbeddedPKClass();
 			final List<Property> pkFields = pkintro.getPersitentFields();

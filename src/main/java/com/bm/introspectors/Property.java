@@ -241,6 +241,7 @@ public class Property {
 	 * 
 	 * @return - the type of the typed class or null
 	 */
+	@SuppressWarnings("unchecked")
 	public Class<Object> getGenericTypeClass() {
 		if (this.getGenericType() instanceof ParameterizedType) {
 			final ParameterizedType type = (ParameterizedType) this

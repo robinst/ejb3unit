@@ -111,7 +111,7 @@ public class EntityBeanCreator<T> {
 	public T createBeanInstance() {
 		// for error messages
 		final T back = this.baseCreator.createInstance();
-		if (this.intro.hasPKClass()) {
+		if (this.intro.hasEmbeddedPKClass()) {
 			try {
 				final EmbeddedClassIntrospector emInspector = this.intro
 						.getEmbeddedPKClass();

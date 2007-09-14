@@ -5,12 +5,14 @@ import java.lang.reflect.Field;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 import org.apache.log4j.Logger;
 
 import com.bm.utils.AccessType;
 import com.bm.utils.AccessTypeFinder;
+import com.bm.utils.IdClassInstanceGen;
 
 /**
  * This class inspects all relevant fields of an entity bean and holds the
@@ -36,6 +38,8 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	/** the table name. * */
 	private String tableName;
 
+	private Class<?> idClass = null;
+
 	/**
 	 * Constroctor with the class to inspect.
 	 * 
@@ -48,24 +52,25 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		boolean isSessionBean = false;
 		boolean isTableNameSpecified = false;
 		boolean isAccessTypeField = false;
-                Entity entityAnnotation = null;
-                
+		Entity entityAnnotation = null;
+
 		// iterate over the annotations
 		for (Annotation a : classAnnotations) {
 			if (a instanceof Entity) {
-				log.debug("The class to introspect "
-						+ toInspect.getCanonicalName() + " is an Entity-Bean");
+				log.debug("The class to introspect " + toInspect.getCanonicalName()
+						+ " is an Entity-Bean");
 				isSessionBean = true;
-				if (AccessTypeFinder.findAccessType(toInspect).equals(
-						AccessType.FIELD)) {
+				if (AccessTypeFinder.findAccessType(toInspect).equals(AccessType.FIELD)) {
 					isAccessTypeField = true;
 				}
-                                
-                                entityAnnotation = (Entity) a;
-                                
+
+				entityAnnotation = (Entity) a;
+
 			} else if (a instanceof Table) {
 				this.tableName = ((Table) a).name();
 				isTableNameSpecified = true;
+			} else if (a instanceof IdClass) {
+				this.idClass = ((IdClass) a).value();
 			}
 		}
 
@@ -145,17 +150,21 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 */
 	public Object getPrimaryKey(T entityBean) {
 		try {
-			if (this.hasPKClass()) {
+			if (this.hasEmbeddedPKClass()) {
 				// return the embedded class instance
-				return this.getField(entityBean, this.embeddedPKClass
-						.getAttibuteName());
+				return this.getField(entityBean, this.embeddedPKClass.getAttibuteName());
 			} else if (this.getPkFields().size() == 1) {
 				// return the single element
 				Property toRead = this.getPkFields().iterator().next();
 				return this.getField(entityBean, toRead);
+			} else if (this.getPkFields().size() > 0 && hasIdClass()) {
+				IdClassInstanceGen idClassInstanceGen = new IdClassInstanceGen(this
+						.getPkFields(), this.idClass, entityBean);
+				return idClassInstanceGen.getIDClassIntance();
+
 			} else {
 				throw new RuntimeException(
-						"Multiple PK fields are not yet implemented");
+						"Multiple PK fields detected, use EmbeddedPKClass or IDClass");
 			}
 		} catch (IllegalAccessException e) {
 			log.error(e);
@@ -186,8 +195,17 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 * 
 	 * @return Returns the hasPKClass.
 	 */
-	public boolean hasPKClass() {
+	public boolean hasEmbeddedPKClass() {
 		return hasPKClass;
+	}
+
+	/**
+	 * Returns the hasPKClass.
+	 * 
+	 * @return Returns the hasPKClass.
+	 */
+	public boolean hasIdClass() {
+		return idClass != null;
 	}
 
 	/**
@@ -198,15 +216,13 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 * @return - the JSR 220 default table name
 	 */
 	private String generateDefautTableName(Class clazz, Entity entityAnnotation) {
-            
-                if (entityAnnotation != null && !entityAnnotation.name().equals(""))
-                {
-                    return entityAnnotation.name().toUpperCase();
-                }
-            
+
+		if (entityAnnotation != null && !entityAnnotation.name().equals("")) {
+			return entityAnnotation.name().toUpperCase();
+		}
+
 		String back = clazz.getName();
-		if (back.lastIndexOf(".") > 0
-				&& back.lastIndexOf(".") + 1 < back.length()) {
+		if (back.lastIndexOf(".") > 0 && back.lastIndexOf(".") + 1 < back.length()) {
 			back = back.substring(back.lastIndexOf(".") + 1, back.length());
 			return back.toUpperCase();
 		} else {

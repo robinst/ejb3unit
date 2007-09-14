@@ -13,21 +13,22 @@ import java.util.Random;
  */
 public final class BaseRandomDataGenerator {
 
+	private static final int STRING_MAX_SIZE = 1000;
+
 	private static final Random random = new Random(System.currentTimeMillis());
 
 	/** first 255 unicude letters* */
-	private static final char[] chars = { 'q', 'w', 'e', 'r', 't', 'z', 'u',
-			'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'y',
-			'x', 'c', 'v', 'b', 'n', 'm', 'ö', 'ä', 'ü', 'ß', 'Q', 'W', 'E',
-			'R', 'T', 'Z', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H',
-			'J', 'K', 'L', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'Ö', 'Ä', 'Ü',
-			'1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '!', '"', '§',
-			'$', '%', '&', '/', '(', ')', '=', '?', '>', '#', '+', '*', ',',
-			';', ':', '.', '-', '_', '`', '´', '{', '}' };
+	private static final char[] chars = { 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o',
+			'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'y', 'x', 'c', 'v', 'b',
+			'n', 'm', 'ö', 'ä', 'ü', 'ß', 'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O',
+			'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Y', 'X', 'C', 'V', 'B',
+			'N', 'M', 'Ö', 'Ä', 'Ü', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
+			'!', '"', '§', '$', '%', '&', '/', '(', ')', '=', '?', '>', '#', '+', '*',
+			',', ';', ':', '.', '-', '_', '`', '´', '{', '}' };
 
-	private static final char[] simpleChars = { 'q', 'w', 'e', 'r', 't', 'z',
-			'u', 'i', 'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l',
-			'y', 'x', 'c', 'v', 'b', 'n', 'm', 'ö', 'ä', 'ü', 'ß' };
+	private static final char[] simpleChars = { 'q', 'w', 'e', 'r', 't', 'z', 'u', 'i',
+			'o', 'p', 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'y', 'x', 'c', 'v',
+			'b', 'n', 'm', 'ö', 'ä', 'ü', 'ß' };
 
 	private BaseRandomDataGenerator() {
 		// intentionally left blank
@@ -102,6 +103,9 @@ public final class BaseRandomDataGenerator {
 	 */
 	public static String getValueString(int size, boolean isSimple) {
 		final StringBuilder sb = new StringBuilder();
+		if (size > STRING_MAX_SIZE) {
+			size = 1000;
+		}
 		for (int i = 0; i < size; i++) {
 			if (isSimple) {
 				sb.append(simpleChars[random.nextInt(simpleChars.length)]);
