@@ -10,8 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +52,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 	private File file;
 
+	private List<DateFormats> userDefinedDateFormats = new ArrayList<DateFormats>();
+
 	/**
 	 * Constructor.
 	 * 
@@ -66,21 +68,22 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @param csvFileName -
 	 *            the name of the cvs file
 	 */
-	public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
-			boolean isCompressed, String... propertyMapping) {
+	public CSVInitialDataSet(
+			Class<T> entityBeanClass,
+			String csvFileName,
+			boolean isCompressed,
+			String... propertyMapping) {
 		initialize(entityBeanClass, propertyMapping);
 		if (isCompressed) {
 			try {
-				URL compressedFile = Thread.currentThread()
-						.getContextClassLoader().getResource(csvFileName);
+				URL compressedFile = Thread.currentThread().getContextClassLoader()
+						.getResource(csvFileName);
 				if (compressedFile == null) {
-					throw new IllegalArgumentException(
-							"Can´t find the CVS file named (" + csvFileName
-									+ ")");
+					throw new IllegalArgumentException("Can´t find the CVS file named ("
+							+ csvFileName + ")");
 				}
 				File tempDir = Ejb3Utils.getTempDirectory();
-				InputStream input = new FileInputStream(compressedFile
-						.getFile());
+				InputStream input = new FileInputStream(compressedFile.getFile());
 				List<File> extracted = Ejb3Utils.unjar(input, tempDir);
 				input.close();
 				if (extracted.isEmpty()) {
@@ -96,18 +99,16 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 				log.error("The file " + csvFileName + " was not found", e);
 				throw new IllegalArgumentException("The file was not found");
 			} catch (IOException e) {
-				log.error("The file " + csvFileName + " could not be accessed",
-						e);
-				throw new IllegalArgumentException(
-						"The file could not be accessed");
+				log.error("The file " + csvFileName + " could not be accessed", e);
+				throw new IllegalArgumentException("The file could not be accessed");
 			}
 
 		} else {
-			final URL tmp = Thread.currentThread().getContextClassLoader()
-					.getResource(csvFileName);
+			final URL tmp = Thread.currentThread().getContextClassLoader().getResource(
+					csvFileName);
 			if (tmp == null) {
-				throw new IllegalArgumentException(
-						"Can´t find the CVS file named (" + csvFileName + ")");
+				throw new IllegalArgumentException("Can´t find the CVS file named ("
+						+ csvFileName + ")");
 			}
 
 			file = new File(tmp.getFile());
@@ -127,18 +128,24 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @param csvFileName -
 	 *            the name of the cvs file
 	 */
-	public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
+	public CSVInitialDataSet(
+			Class<T> entityBeanClass,
+			String csvFileName,
 			String... propertyMapping) {
-		initialize(entityBeanClass, propertyMapping);
-		final URL tmp = Thread.currentThread().getContextClassLoader()
-				.getResource(csvFileName);
-		if (tmp == null) {
-			throw new IllegalArgumentException(
-					"Can´t find the CVS file named (" + csvFileName + ")");
-		}
+		this(entityBeanClass, csvFileName, false, propertyMapping);
+	}
 
-		file = new File(tmp.getFile());
-
+	/**
+	 * Allows to specify a user specific date format pattern's. The are
+	 * processed in the added order.
+	 * 
+	 * @param dateFormat
+	 *            the date format pattern
+	 * @return this instance for inlining.
+	 */
+	public CSVInitialDataSet<T> addDateFormat(DateFormats dateFormat) {
+		this.userDefinedDateFormats.add(dateFormat);
+		return this;
 	}
 
 	/**
@@ -154,6 +161,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			List<Class<? extends Object>> usedBeans = new ArrayList<Class<? extends Object>>();
 			usedBeans.add(entityBeanClass);
 			Ejb3UnitCfg.addEntytiesToTest(usedBeans);
+			//call the factory to create the tables
+			Ejb3UnitCfg.getConfiguration().getEntityManagerFactory();
 		}
 		this.propertyMapping = propertyMapping;
 		this.propertyInfo = new Property[propertyMapping.length];
@@ -163,8 +172,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	private String buildInsertSQL() {
 		StringBuilder insertSQL = new StringBuilder();
 		StringBuilder questionMarks = new StringBuilder();
-		insertSQL.append("INSERT INTO ").append(
-				this.introspector.getTableName()).append(" (");
+		insertSQL.append("INSERT INTO ").append(this.introspector.getTableName()).append(
+				" (");
 		int counter = -1;
 		for (String stringProperty : this.propertyMapping) {
 			final Property property = this.getProperty(stringProperty);
@@ -172,8 +181,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			final PersistentPropertyInfo info = this
 					.getPersistentFieldInfo(stringProperty);
 
-			insertSQL.append((info.getDbName().length() == 0) ? property
-					.getName() : info.getDbName());
+			insertSQL.append((info.getDbName().length() == 0) ? property.getName() : info
+					.getDbName());
 			questionMarks.append("?");
 			counter++;
 			// store the property
@@ -183,8 +192,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 				questionMarks.append(", ");
 			}
 		}
-		insertSQL.append(") ").append("VALUES (").append(
-				questionMarks.toString()).append(")");
+		insertSQL.append(") ").append("VALUES (").append(questionMarks.toString())
+				.append(")");
 
 		return insertSQL.toString();
 	}
@@ -282,8 +291,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 				// insert only if neccessary (ignore not requiered fields)
 				if (count < this.propertyInfo.length) {
-					this.setPreparedStatement(count + 1, prep,
-							this.propertyInfo[count], value);
+					this.setPreparedStatement(count + 1, prep, this.propertyInfo[count],
+							value);
 					count++;
 				}
 
@@ -320,8 +329,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 */
 	public void cleanup(DataSource ds) {
 		StringBuilder deleteSQL = new StringBuilder();
-		deleteSQL.append("DELETE FROM ").append(
-				this.introspector.getTableName());
+		deleteSQL.append("DELETE FROM ").append(this.introspector.getTableName());
 
 		Connection con = null;
 		PreparedStatement prep = null;
@@ -351,53 +359,82 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @throws SQLException -
 	 *             in error case
 	 */
-	private void setPreparedStatement(int index, PreparedStatement statement,
-			Property prop, String value) throws SQLException {
+	private void setPreparedStatement(int index,
+			PreparedStatement statement,
+			Property prop,
+			String value) throws SQLException {
 		// convert to nonprimitive if primitive
 		Class type = Ejb3Utils.getNonPrimitiveType(prop.getType());
 
 		if (type.equals(String.class)) {
 			statement.setString(index, value);
 		} else if (type.equals(Integer.class)) {
-			statement.setInt(index, ((value.equals("")) ? 0 : Integer
-					.valueOf(value)));
+			statement.setInt(index, ((value.equals("")) ? 0 : Integer.valueOf(value)));
 		} else if (type.equals(Long.class)) {
-			statement.setLong(index, ((value.equals("")) ? 0 : Long
-					.valueOf(value)));
+			statement.setLong(index, ((value.equals("")) ? 0 : Long.valueOf(value)));
 		} else if (type.equals(Boolean.class)) {
-			final boolean result = (value != null && value.equals("True") ? true
-					: false);
+			final boolean result = (value != null && value.equals("True") ? true : false);
 			statement.setBoolean(index, result);
 		} else if (type.equals(Short.class)) {
-			statement.setShort(index, ((value.equals("")) ? 0 : Short
-					.valueOf(value)));
+			statement.setShort(index, ((value.equals("")) ? 0 : Short.valueOf(value)));
 		} else if (type.equals(Byte.class)) {
 			statement.setByte(index, Byte.valueOf(value));
 		} else if (type.equals(Character.class)) {
 			statement.setString(index, String.valueOf(value));
 		} else if (type.equals(Date.class)) {
-			try {
-				statement.setDate(index, new java.sql.Date(SimpleDateFormat
-						.getDateInstance().parse(value).getTime()));
-			} catch (ParseException e) {
-				throw new IllegalArgumentException("Illegal date format ("
-						+ value + ")");
-			}
+			parseAndSetDate(index, value, statement);
 		} else if (type.equals(Double.class)) {
-			statement.setDouble(index, ((value.equals("")) ? 0 : Double
-					.valueOf(value)));
+			statement.setDouble(index, ((value.equals("")) ? 0 : Double.valueOf(value)));
 		} else if (type.equals(Float.class)) {
-			statement.setFloat(index, ((value.equals("")) ? 0 : Float
-					.valueOf(value)));
+			statement.setFloat(index, ((value.equals("")) ? 0 : Float.valueOf(value)));
 		} else if (type.isEnum()) {
 			// TODO: possible to have the ordinal value of an
-			// enum in a .csv file
-			// maybe it would be reasonable to extend this so that it is also
-			// possible to
-			// have enums by literal name
+			// enum in a .csv file maybe it would be reasonable to extend this
+			// so that it is also possible to have enums by literal name
 			statement.setInt(index, Integer.valueOf(value));
 		}
 
 	}
 
+	private void parseAndSetDate(int index, String value, PreparedStatement statement)
+			throws SQLException {
+		if (value.equals("") || value.equalsIgnoreCase("null")) {
+			statement.setNull(index, java.sql.Types.DATE);
+		} else {
+			// try to guess the default format
+			boolean success = false;
+			List<DateFormats> allValidFormats = getValidFormats();
+			for (DateFormats current : allValidFormats) {
+				try {
+					current.parseToPreparedStatemnt(value, statement, index);
+					success = true;
+					break;
+				} catch (ParseException ex) {
+					log.debug("Date parser (" + current
+							+ ") was not working, trying next");
+				}
+			}
+
+			if (!success) {
+				// java 1.5 will convert this to string builder internally
+				String msg = "Illegal date format (" + value + ")";
+				msg += " expecting one of: ";
+				for (DateFormats current : DateFormats.values()) {
+					msg += current.toPattern() + ", ";
+				}
+
+				throw new IllegalArgumentException(msg);
+			}
+		}
+	}
+
+	private List<DateFormats> getValidFormats() {
+		final List<DateFormats> dtFormats = new ArrayList<DateFormats>();
+		if (!this.userDefinedDateFormats.isEmpty()) {
+			dtFormats.addAll(this.userDefinedDateFormats);
+		}
+
+		dtFormats.addAll(Arrays.asList(DateFormats.values()));
+		return dtFormats;
+	}
 }
