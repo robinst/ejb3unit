@@ -7,24 +7,32 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Represents date formats for CVS initial data set.
+ * @author Daniel Wiese
+ * @author Peter Doornbosch
+ *
+ */
 public enum DateFormats {
 
-	DEFAULT_DATE_TIME(DateFormat.getDateTimeInstance(), SQLTypes.SQL_TIMESTAMP),
+	DEFAULT_DATE_TIME(false, DateFormat.getDateTimeInstance(), SQLTypes.SQL_TIMESTAMP),
 
-	DEFAULT_DATE(DateFormat.getDateInstance(), SQLTypes.SQL_DATE),
+	DEFAULT_DATE(false, DateFormat.getDateInstance(), SQLTypes.SQL_DATE),
 
-	DEFAULT_TIME(DateFormat.getDateTimeInstance(), SQLTypes.SQL_TIME),
+	DEFAULT_TIME(false, DateFormat.getDateTimeInstance(), SQLTypes.SQL_TIME),
 
-	USER_DATE_TIME(null, SQLTypes.SQL_TIMESTAMP),
+	USER_DATE_TIME(true, null, SQLTypes.SQL_TIMESTAMP),
 
-	USER_DATE(null, SQLTypes.SQL_DATE),
+	USER_DATE(true, null, SQLTypes.SQL_DATE),
 
-	USER_TIME(null, SQLTypes.SQL_TIME);
+	USER_TIME(true, null, SQLTypes.SQL_TIME);
 
 	private DateFormat dateFormatter;
 	private final SQLTypes sqlType;
+	private boolean userDefined;
 
-	private DateFormats(DateFormat dateFormatter, SQLTypes sqlType) {
+	private DateFormats(boolean userDefined, DateFormat dateFormatter, SQLTypes sqlType) {
+		this.userDefined = userDefined;
 		this.dateFormatter = dateFormatter;
 		this.sqlType = sqlType;
 
@@ -38,7 +46,7 @@ public enum DateFormats {
 	 * @return this intance for inlining
 	 */
 	public DateFormats setUserDefinedFomatter(String pattern) {
-		if (this.dateFormatter == null) {
+		if (this.userDefined) {
 			this.dateFormatter = new SimpleDateFormat(pattern);
 		} else {
 			throw new IllegalArgumentException("Only allowed for user defined values");
@@ -73,6 +81,7 @@ public enum DateFormats {
 			break;
 		case SQL_TIME:
 			ps.setTime(pos, new java.sql.Time(dateValue.getTime()));
+			break;
 		default:
 			throw new IllegalArgumentException(
 					"No handling specified foer this SQL type (" + sqlType + ")");
@@ -93,4 +102,7 @@ public enum DateFormats {
 		}
 	}
 
+	public static DateFormats[] systemValues() {
+		return new DateFormats[] { DEFAULT_DATE, DEFAULT_DATE_TIME, DEFAULT_TIME };
+	}
 }

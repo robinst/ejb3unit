@@ -31,7 +31,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 
 	private T beanToTest = null;
 
-	private InitialDataSet[] initalDataSet = null;
+	private InitialDataSet[] initalDataSets = null;
 
 	/**
 	 * Constructor.
@@ -65,7 +65,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			Class[] usedEntityBeans, InitialDataSet... initialData) {
 		this(sessionBeanToTest, usedEntityBeans);
-		this.initalDataSet = initialData;
+		this.initalDataSets = initialData;
 	}
 
 	/**
@@ -86,8 +86,16 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		super();
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
-		this.initalDataSet = initialData;
+		this.initalDataSets = initialData;
 		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
+	}
+	
+	/**
+	 * Sets a CSV inital data set to prepopylate the database with data.
+	 * @param initalDataSets the array of initial data sets
+	 */
+	public void setInitalDataSets(InitialDataSet... initalDataSets){
+		this.initalDataSets = initalDataSets;
 	}
 
 	/**
@@ -101,10 +109,10 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		this.jndiBinder.bind();
 		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
 
-		if (this.initalDataSet != null) {
+		if (this.initalDataSets != null) {
 			EntityManager em = this.getEntityManager();
 
-			for (InitialDataSet current : this.initalDataSet) {
+			for (InitialDataSet current : this.initalDataSets) {
 				// insert entity manager
 				if (current instanceof EntityInitialDataSet) {
 					EntityInitialDataSet curentEntDs = (EntityInitialDataSet) current;
@@ -143,8 +151,8 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		// delete all objects (faster than shutdown and restart everything)
 		final BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg
 				.getConfiguration());
-		if (this.initalDataSet != null) {
-			for (InitialDataSet current : this.initalDataSet) {
+		if (this.initalDataSets != null) {
+			for (InitialDataSet current : this.initalDataSets) {
 				current.cleanup(ds);
 			}
 		}

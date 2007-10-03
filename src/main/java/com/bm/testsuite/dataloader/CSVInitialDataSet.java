@@ -35,6 +35,7 @@ import com.bm.utils.csv.CSVParser;
  * 
  * @author Daniel Wiese
  * @author Istvan Devai
+ * @author Peter Doornbosch
  * @since 17.04.2006
  */
 public class CSVInitialDataSet<T> implements InitialDataSet {
@@ -434,7 +435,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			dtFormats.addAll(this.userDefinedDateFormats);
 		}
 
-		dtFormats.addAll(Arrays.asList(DateFormats.values()));
+		dtFormats.addAll(Arrays.asList(DateFormats.systemValues()));
 		return dtFormats;
 	}
 }
