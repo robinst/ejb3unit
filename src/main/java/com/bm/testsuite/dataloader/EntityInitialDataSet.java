@@ -60,8 +60,7 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 	 *            entyties to add;
 	 */
 	protected void add(T toAdd) {
-		em.merge(toAdd);
-		// em.persist(toAdd);
+		em.persist(toAdd);
 	}
 
 	/**
