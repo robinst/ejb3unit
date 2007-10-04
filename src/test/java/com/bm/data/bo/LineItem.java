@@ -98,6 +98,7 @@ public class LineItem implements java.io.Serializable {
      * 
      * @return Returns the quantity.
      */
+    @Column(name="QUANTITY") 
     public int getQuantity() {
         return quantity;
     }
