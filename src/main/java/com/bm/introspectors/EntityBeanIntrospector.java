@@ -38,6 +38,11 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	/** the table name. * */
 	private String tableName;
 
+	/** the table name. * */
+	private String schemaName;
+
+	private boolean hasSchema = false;
+
 	private Class<?> idClass = null;
 
 	/**
@@ -67,7 +72,10 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 				entityAnnotation = (Entity) a;
 
 			} else if (a instanceof Table) {
-				this.tableName = ((Table) a).name();
+				Table table = (Table) a;
+				this.tableName = table.name();
+				this.hasSchema = !table.schema().equals("");
+				this.schemaName = table.schema();
 				isTableNameSpecified = true;
 			} else if (a instanceof IdClass) {
 				this.idClass = ((IdClass) a).value();
@@ -179,6 +187,24 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 */
 	public String getTableName() {
 		return tableName;
+	}
+
+	/**
+	 * Returns the tableName.
+	 * 
+	 * @return Returns the tableName.
+	 */
+	public String getShemaName() {
+		return this.schemaName;
+	}
+
+	/**
+	 * Returns if a chema name is persent.
+	 * 
+	 * @return a chema name is persent.
+	 */
+	public boolean hasSchema() {
+		return this.hasSchema;
 	}
 
 	/**

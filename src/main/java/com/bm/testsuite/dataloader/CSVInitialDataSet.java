@@ -55,6 +55,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 	private List<DateFormats> userDefinedDateFormats = new ArrayList<DateFormats>();
 
+	private final boolean useSchemaName;
+
 	/**
 	 * Constructor.
 	 * 
@@ -66,6 +68,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 *            <code>propertyMapping[0]</code>
 	 * @param isCompressed -
 	 *            true if compressed (zip)
+	 * @param useSchemaName
+	 *            the schema name will be used for sql generation
 	 * @param csvFileName -
 	 *            the name of the cvs file
 	 */
@@ -73,7 +77,9 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			Class<T> entityBeanClass,
 			String csvFileName,
 			boolean isCompressed,
+			boolean useSchemaName,
 			String... propertyMapping) {
+		this.useSchemaName = useSchemaName;
 		initialize(entityBeanClass, propertyMapping);
 		if (isCompressed) {
 			try {
@@ -126,6 +132,28 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 *            a string array whith the meaning the first column of the cvs
 	 *            file belongs to the property with the name
 	 *            <code>propertyMapping[0]</code>
+	 * @param isCompressed -
+	 *            true if compressed (zip)
+	 * @param csvFileName -
+	 *            the name of the cvs file
+	 */
+	public CSVInitialDataSet(
+			Class<T> entityBeanClass,
+			String csvFileName,
+			boolean isCompressed,
+			String... propertyMapping) {
+		this(entityBeanClass, csvFileName, isCompressed, false, propertyMapping);
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param entityBeanClass -
+	 *            the corresponding enetity bean class
+	 * @param propertyMapping -
+	 *            a string array whith the meaning the first column of the cvs
+	 *            file belongs to the property with the name
+	 *            <code>propertyMapping[0]</code>
 	 * @param csvFileName -
 	 *            the name of the cvs file
 	 */
@@ -133,7 +161,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			Class<T> entityBeanClass,
 			String csvFileName,
 			String... propertyMapping) {
-		this(entityBeanClass, csvFileName, false, propertyMapping);
+		this(entityBeanClass, csvFileName, false, false, propertyMapping);
 	}
 
 	/**
@@ -162,7 +190,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			List<Class<? extends Object>> usedBeans = new ArrayList<Class<? extends Object>>();
 			usedBeans.add(entityBeanClass);
 			Ejb3UnitCfg.addEntytiesToTest(usedBeans);
-			//call the factory to create the tables
+			// call the factory to create the tables
 			Ejb3UnitCfg.getConfiguration().getEntityManagerFactory();
 		}
 		this.propertyMapping = propertyMapping;
@@ -170,11 +198,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		this.insertSQLString = this.buildInsertSQL();
 	}
 
-	private String buildInsertSQL() {
+	/**
+	 * Returns the insert SQL.
+	 * 
+	 * @return the inser SQL
+	 */
+	public String buildInsertSQL() {
 		StringBuilder insertSQL = new StringBuilder();
 		StringBuilder questionMarks = new StringBuilder();
-		insertSQL.append("INSERT INTO ").append(this.introspector.getTableName()).append(
-				" (");
+		insertSQL.append("INSERT INTO ").append(getTableName()).append(" (");
 		int counter = -1;
 		for (String stringProperty : this.propertyMapping) {
 			final Property property = this.getProperty(stringProperty);
@@ -197,6 +229,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 				.append(")");
 
 		return insertSQL.toString();
+	}
+
+	private String getTableName() {
+		if (useSchemaName && this.introspector.hasSchema()) {
+			return this.introspector.getShemaName() + "."
+					+ this.introspector.getTableName();
+		}
+		return this.introspector.getTableName();
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -330,7 +371,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 */
 	public void cleanup(DataSource ds) {
 		StringBuilder deleteSQL = new StringBuilder();
-		deleteSQL.append("DELETE FROM ").append(this.introspector.getTableName());
+		deleteSQL.append("DELETE FROM ").append(getTableName());
 
 		Connection con = null;
 		PreparedStatement prep = null;
@@ -438,4 +479,5 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		dtFormats.addAll(Arrays.asList(DateFormats.systemValues()));
 		return dtFormats;
 	}
+
 }

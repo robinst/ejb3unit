@@ -20,7 +20,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author Daniel Wiese since 11.09.2005
  */
 @Entity
-@Table(name = "stocks")
+@Table(name = "stocks",  schema = "foo")
 @NamedQuery(name = "StockWKNBo.allStocks", query = "from com.bm.data.bo.StockWKNBo")
 public class StockWKNBo implements Comparable, Serializable {
     private static final long serialVersionUID = 1L;
