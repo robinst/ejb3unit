@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.data.bo.StockWKNBo;
+import com.bm.data.bo.StockWKNBoWithShema;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.utils.BasicDataSource;
 
@@ -20,8 +21,8 @@ public class CSVInitialDataSetTest extends TestCase {
 			"kaufModus", "branchenCode", "branche", "transaktionenProTag",
 			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");
 	
-	private final CSVInitialDataSet toTestWithSchema = new CSVInitialDataSet<StockWKNBo>(
-			StockWKNBo.class, "allstatData.csv", false, true, "wkn", "aktienName", "isin", "symbol",
+	private final CSVInitialDataSet toTestWithSchema = new CSVInitialDataSet<StockWKNBoWithShema>(
+			StockWKNBoWithShema.class, "allstatData.csv", false, true, "wkn", "aktienName", "isin", "symbol",
 			"kaufModus", "branchenCode", "branche", "transaktionenProTag",
 			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");
 

@@ -20,9 +20,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @author Daniel Wiese since 11.09.2005
  */
 @Entity
-@Table(name = "stocks")
+@Table(name = "stocks",  schema = "foo")
 @NamedQuery(name = "StockWKNBo.allStocks", query = "from com.bm.data.bo.StockWKNBo")
-public class StockWKNBo implements Comparable, Serializable {
+public class StockWKNBoWithShema implements Comparable, Serializable {
     private static final long serialVersionUID = 1L;
 
     @Transient
@@ -72,7 +72,7 @@ public class StockWKNBo implements Comparable, Serializable {
     /**
      * Parameterless Constructor.
      */
-    public StockWKNBo() {
+    public StockWKNBoWithShema() {
     }
 
     /**
@@ -81,7 +81,7 @@ public class StockWKNBo implements Comparable, Serializable {
      * @param wkn -
      *            the wkn
      */
-    public StockWKNBo(final int wkn) {
+    public StockWKNBoWithShema(final int wkn) {
         this.setWkn(wkn);
     }
 
@@ -95,7 +95,7 @@ public class StockWKNBo implements Comparable, Serializable {
      * @param zumHandelZugelassen -
      *            ob die aktie zum handel zugelassen ist
      */
-    public StockWKNBo(int wkn, boolean kaufModus, boolean zumHandelZugelassen) {
+    public StockWKNBoWithShema(int wkn, boolean kaufModus, boolean zumHandelZugelassen) {
 
         this.setWkn(wkn);
         this.setKaufModus(kaufModus);
@@ -110,7 +110,7 @@ public class StockWKNBo implements Comparable, Serializable {
      * @param name -
      *            der aktiename wie ADIDAS
      */
-    public StockWKNBo(int wkn, String name) {
+    public StockWKNBoWithShema(int wkn, String name) {
         this(wkn);
         this.setAktienName(name);
     }
@@ -119,8 +119,8 @@ public class StockWKNBo implements Comparable, Serializable {
      * {@inheritDoc}
      */
     public int compareTo(Object o) {
-        if (o instanceof StockWKNBo) {
-            return (this.getWkn() == ((StockWKNBo) o).getWkn()) ? 0 : (-1);
+        if (o instanceof StockWKNBoWithShema) {
+            return (this.getWkn() == ((StockWKNBoWithShema) o).getWkn()) ? 0 : (-1);
         }
         return -1;
 
@@ -180,8 +180,8 @@ public class StockWKNBo implements Comparable, Serializable {
      * {@inheritDoc}
      */
     public boolean equals(Object other) {
-        if (other instanceof StockWKNBo) {
-            final StockWKNBo otherCast = (StockWKNBo) other;
+        if (other instanceof StockWKNBoWithShema) {
+            final StockWKNBoWithShema otherCast = (StockWKNBoWithShema) other;
             final EqualsBuilder builder = new EqualsBuilder();
             builder.append(this.getWkn(), otherCast.getWkn());
             return builder.isEquals();
