@@ -2,7 +2,7 @@ package com.bm.utils;
 
 import junit.framework.TestCase;
 
-import com.bm.data.bo.LineItem;
+import com.bm.ejb3data.bo.LineItem;
 
 /**
  * JUnit test.

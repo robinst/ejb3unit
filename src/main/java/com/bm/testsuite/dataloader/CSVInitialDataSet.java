@@ -15,7 +15,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.Query;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.introspectors.EmbeddedClassIntrospector;
@@ -237,7 +239,10 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 					+ this.introspector.getTableName();
 		}
 		return this.introspector.getTableName();
+	}
 
+	private String getClassName() {
+		return this.introspector.getPersistentClassName();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -246,7 +251,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		if (this.introspector.hasEmbeddedPKClass()) {
 			final EmbeddedClassIntrospector pkintro = this.introspector
 					.getEmbeddedPKClass();
-			final List<Property> pkFields = pkintro.getPersitentFields();
+			final List<Property> pkFields = pkintro.getPersitentProperties();
 
 			for (Property current : pkFields) {
 				if (current.getName().equals(property)) {
@@ -256,7 +261,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			}
 		}
 		if (info == null) {
-			for (Property current : this.introspector.getPersitentFields()) {
+			for (Property current : this.introspector.getPersitentProperties()) {
 				if (current.getName().equals(property)) {
 					info = current;
 					break;
@@ -278,7 +283,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		if (this.introspector.hasEmbeddedPKClass()) {
 			final EmbeddedClassIntrospector pkintro = this.introspector
 					.getEmbeddedPKClass();
-			final List<Property> pkFields = pkintro.getPersitentFields();
+			final List<Property> pkFields = pkintro.getPersitentProperties();
 
 			for (Property current : pkFields) {
 				if (current.getName().equals(property)) {
@@ -288,7 +293,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			}
 		}
 		if (info == null) {
-			for (Property current : this.introspector.getPersitentFields()) {
+			for (Property current : this.introspector.getPersitentProperties()) {
 				if (current.getName().equals(property)) {
 					info = this.introspector.getPresistentFieldInfo(current);
 					break;
@@ -363,27 +368,20 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	/**
 	 * Deletes the data.
 	 * 
-	 * @param ds -
-	 *            the datasource.
+	 * @param em -
+	 *            the entyty manager.
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
-	 * @see com.bm.testsuite.dataloader.InitialDataSet#cleanup(javax.sql.DataSource)
+	 * @see com.bm.testsuite.dataloader.InitialDataSet#cleanup(EntityManager)
 	 */
-	public void cleanup(DataSource ds) {
+	public void cleanup(EntityManager em) {
 		StringBuilder deleteSQL = new StringBuilder();
-		deleteSQL.append("DELETE FROM ").append(getTableName());
-
-		Connection con = null;
-		PreparedStatement prep = null;
-		try {
-			con = ds.getConnection();
-			prep = con.prepareStatement(deleteSQL.toString());
-			prep.execute();
-		} catch (SQLException e) {
-			new RuntimeException(e);
-		} finally {
-			SQLUtils.cleanup(con, prep);
-		}
+		deleteSQL.append("DELETE FROM ").append(getClassName());
+		EntityTransaction tx = em.getTransaction();
+		tx.begin();
+		Query query = em.createQuery(deleteSQL.toString());
+		query.executeUpdate();
+		tx.commit();
 
 	}
 

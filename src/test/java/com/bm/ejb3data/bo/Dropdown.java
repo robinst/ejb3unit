@@ -1,4 +1,4 @@
-package com.bm.data.bo;
+package com.bm.ejb3data.bo;
 
 import java.util.List;
 

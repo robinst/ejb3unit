@@ -5,8 +5,8 @@ import javax.naming.NamingException;
 
 import junit.framework.TestCase;
 
-import com.bm.data.bo.IMySessionBean;
-import com.bm.data.bo.MySessionBean;
+import com.bm.ejb3data.bo.IMySessionBean;
+import com.bm.ejb3data.bo.MySessionBean;
 
 /**
  * Tests the automatic binding of classes defined in ejb3unit properties.

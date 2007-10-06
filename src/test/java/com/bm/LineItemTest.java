@@ -1,10 +1,10 @@
 package com.bm;
 
-import com.bm.data.bo.LineItem;
-import com.bm.data.bo.Order;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.GeneratorType;
 import com.bm.datagen.relation.SingleBeanGenerator;
+import com.bm.ejb3data.bo.LineItem;
+import com.bm.ejb3data.bo.Order;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**

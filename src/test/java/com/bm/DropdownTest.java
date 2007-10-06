@@ -2,11 +2,11 @@ package com.bm;
 
 import java.util.Collection;
 
-import com.bm.data.bo.Choice;
-import com.bm.data.bo.Dropdown;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.GeneratorType;
 import com.bm.datagen.relation.BeanCollectionGenerator;
+import com.bm.ejb3data.bo.Choice;
+import com.bm.ejb3data.bo.Dropdown;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**

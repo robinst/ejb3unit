@@ -1,4 +1,4 @@
-package com.bm.data.bo;
+package com.bm.ejb3data.bo;
 
 import java.sql.SQLException;
 
@@ -76,7 +76,7 @@ public class AnnotatedFieldsSessionBean implements IMyOtherSessionBean {
 	/**
 	 * Reference to another session bean via dependency injection.
 	 * 
-	 * @see com.bm.data.bo.IMyOtherSessionBean#getSessionBean()
+	 * @see com.bm.ejb3data.bo.IMyOtherSessionBean#getSessionBean()
 	 * @return the injected session bean.
 	 */
 	public IMySessionBean getSessionBean() {
@@ -86,7 +86,7 @@ public class AnnotatedFieldsSessionBean implements IMyOtherSessionBean {
 	/**
 	 * Reference to another session bean via jndi lookup.
 	 * 
-	 * @see com.bm.data.bo.IMyOtherSessionBean#getSessionBean()
+	 * @see com.bm.ejb3data.bo.IMyOtherSessionBean#getSessionBean()
 	 * @return the injected session bean.
 	 */
 	public IMySessionBean getSessionBeanOverJndi() {

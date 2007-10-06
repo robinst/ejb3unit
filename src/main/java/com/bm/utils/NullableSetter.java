@@ -55,7 +55,7 @@ public final class NullableSetter {
 	 *            the introspector of the bean class
 	 */
 	public static <T> void setFieldsToNull(T bean, Introspector<T> intro) {
-		List<Property> fields = intro.getPersitentFields();
+		List<Property> fields = intro.getPersitentProperties();
 
 		for (Property aktProperty : fields) {
 			final PersistentPropertyInfo pfi = intro

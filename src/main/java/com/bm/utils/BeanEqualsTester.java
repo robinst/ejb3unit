@@ -86,7 +86,7 @@ public final class BeanEqualsTester extends Assert {
 			T origB = original.get(i);
 			T readB = readed.get(i);
 
-			for (Property akt : intro.getPersitentFields()) {
+			for (Property akt : intro.getPersitentProperties()) {
 				try {
 					Object valueOrig = intro.getField(origB, akt);
 					Object valueRead = intro.getField(readB, akt);

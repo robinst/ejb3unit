@@ -136,24 +136,12 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		// DO NOT DESTRROY SESSION BEANS, BECAUSE WE ARE USING THEM
-		// IN SINGLE THREADS CURRENTLY TOGETHER
-		// this.sbFactory.destroySessionBean(this.beanToTest);
-		// this.beanToTest = null;
-
-		// schutdown hybernate if in memory
-		// if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
-		// final BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg
-		// .getConfiguration());
-		// ds.shutdownInMemoryDatabase();
-		// }
-
+		
 		// delete all objects (faster than shutdown and restart everything)
-		final BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg
-				.getConfiguration());
+		final EntityManager em = this.getEntityManager();
 		if (this.initalDataSets != null) {
 			for (InitialDataSet current : this.initalDataSets) {
-				current.cleanup(ds);
+				current.cleanup(em);
 			}
 		}
 

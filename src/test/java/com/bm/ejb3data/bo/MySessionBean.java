@@ -1,4 +1,4 @@
-package com.bm.data.bo;
+package com.bm.ejb3data.bo;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +37,7 @@ public class MySessionBean implements IMySessionBean {
 	 * @return Returns the ds.
 	 * @author Daniel Wiese
 	 * @since 08.11.2005
-	 * @see com.bm.data.bo.IMySessionBean#getDs()
+	 * @see com.bm.ejb3data.bo.IMySessionBean#getDs()
 	 */
 	public DataSource getDs() {
 		return this.ds;
@@ -49,7 +49,7 @@ public class MySessionBean implements IMySessionBean {
 	 * @return Returns the em.
 	 * @author Daniel Wiese
 	 * @since 08.11.2005
-	 * @see com.bm.data.bo.IMySessionBean#getEm()
+	 * @see com.bm.ejb3data.bo.IMySessionBean#getEm()
 	 */
 	public EntityManager getEm() {
 		return this.manager;
@@ -61,7 +61,7 @@ public class MySessionBean implements IMySessionBean {
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
 	 * @return - a test list
-	 * @see com.bm.data.bo.IMySessionBean#getAllStocks()
+	 * @see com.bm.ejb3data.bo.IMySessionBean#getAllStocks()
 	 */
 	@SuppressWarnings("unchecked")
 	public List<StockWKNBo> getAllStocks() {

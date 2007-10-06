@@ -79,7 +79,7 @@ public class EntityInstanceCreator<T> {
 		try {
 			final T back = Ejb3Utils.getNewInstance(this.toCreate);
 			// iterate over all fields
-			for (Property aktProperty : this.intro.getPersitentFields()) {
+			for (Property aktProperty : this.intro.getPersitentProperties()) {
 				aktFieldName = aktProperty.getName();
 				final PersistentPropertyInfo pfi = this.intro
 						.getPresistentFieldInfo(aktProperty);

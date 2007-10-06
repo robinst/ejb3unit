@@ -2,11 +2,11 @@ package com.bm;
 
 import java.util.Collection;
 
-import com.bm.data.bo.LineItem;
-import com.bm.data.bo.Order;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.GeneratorType;
 import com.bm.datagen.relation.BeanCollectionGenerator;
+import com.bm.ejb3data.bo.LineItem;
+import com.bm.ejb3data.bo.Order;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**

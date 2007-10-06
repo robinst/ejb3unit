@@ -8,8 +8,8 @@ import javax.sql.DataSource;
 
 import org.jmock.Mock;
 
-import com.bm.data.bo.IMySessionBean;
-import com.bm.data.bo.AnnotatedFieldsSessionBean;
+import com.bm.ejb3data.bo.AnnotatedFieldsSessionBean;
+import com.bm.ejb3data.bo.IMySessionBean;
 
 /**
  * Testcase.

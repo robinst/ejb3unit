@@ -111,8 +111,7 @@ public abstract class PoJoFixture extends BaseTest {
 	@SuppressWarnings("unchecked")
 	protected <T> List<T> findAll(Class<T> clazz) {
 		EntityManager manager = this.getEntityManager();
-		Query query = manager.createQuery("select c from " + clazz.getName()
-				+ " c");
+		Query query = manager.createQuery("select c from " + clazz.getName() + " c");
 		return (List<T>) query.getResultList();
 	}
 
@@ -167,17 +166,13 @@ public abstract class PoJoFixture extends BaseTest {
 	 */
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-
-		// delete all objects (faster than shutdown and restart everything)
-		final BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg
-				.getConfiguration());
 		if (this.initalDataSet != null) {
 			for (InitialDataSet current : this.initalDataSet) {
-				current.cleanup(ds);
+				current.cleanup(entityManager);
 			}
 		}
 		this.entityManager = null;
+		super.tearDown();
 
 	}
 

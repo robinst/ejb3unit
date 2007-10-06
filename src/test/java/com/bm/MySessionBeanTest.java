@@ -5,9 +5,9 @@ import java.util.List;
 import javax.persistence.EntityTransaction;
 
 import com.bm.creators.EntityBeanCreator;
-import com.bm.data.bo.ExpertiseAreas;
-import com.bm.data.bo.MySessionBean;
-import com.bm.data.bo.StockWKNBo;
+import com.bm.ejb3data.bo.ExpertiseAreas;
+import com.bm.ejb3data.bo.MySessionBean;
+import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;

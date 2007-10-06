@@ -45,6 +45,8 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 
 	private Class<?> idClass = null;
 
+	private final Class<T> toInspect;
+
 	/**
 	 * Constroctor with the class to inspect.
 	 * 
@@ -53,6 +55,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 */
 	public EntityBeanIntrospector(Class<T> toInspect) {
 
+		this.toInspect = toInspect;
 		Annotation[] classAnnotations = toInspect.getAnnotations();
 		boolean isSessionBean = false;
 		boolean isTableNameSpecified = false;
@@ -254,6 +257,14 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		} else {
 			return back.toUpperCase();
 		}
+	}
+
+	/**
+	 * Returns the name of the class to inspect.
+	 */
+	public String getPersistentClassName() {
+		return this.toInspect.getName();
+
 	}
 
 }

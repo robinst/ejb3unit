@@ -1,16 +1,8 @@
 package com.bm.testsuite.dataloader;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
 
 import com.bm.introspectors.EntityBeanIntrospector;
-import com.bm.utils.SQLUtils;
 import com.bm.utils.UndoScriptGenerator;
 
 /**
@@ -24,9 +16,6 @@ import com.bm.utils.UndoScriptGenerator;
  */
 public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 
-	private static final Logger log = Logger
-			.getLogger(EntityInitialDataSet.class);
-
 	private EntityManager em = null;
 
 	private final UndoScriptGenerator<T> undo;
@@ -39,8 +28,7 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 	 *            sollen.
 	 */
 	public EntityInitialDataSet(Class<T> entityType) {
-		undo = new UndoScriptGenerator<T>(new EntityBeanIntrospector<T>(
-				entityType));
+		undo = new UndoScriptGenerator<T>(new EntityBeanIntrospector<T>(entityType));
 	}
 
 	/**
@@ -70,21 +58,10 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 	 *            the datasource.
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
-	 * @see com.bm.testsuite.dataloader.InitialDataSet#cleanup(javax.sql.DataSource)
+	 * @see com.bm.testsuite.dataloader.InitialDataSet#cleanup(EntityManager)
 	 */
-	public void cleanup(DataSource ds) {
-		Connection con = null;
-		PreparedStatement ps = null;
-		try {
-			con = ds.getConnection();
-			ps = con.prepareStatement(undo.getOneDeleteAllStatement());
-			ps.execute();
-		} catch (SQLException e) {
-			log.error("Cant claenup", e);
-			throw new RuntimeException(e);
-		} finally {
-			SQLUtils.cleanup(con, ps);
-		}
+	public void cleanup(EntityManager em) {
+		undo.deleteAllDataInAllUsedTables(em);
 
 	}
 

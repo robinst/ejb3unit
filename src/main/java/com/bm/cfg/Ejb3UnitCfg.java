@@ -2,6 +2,7 @@ package com.bm.cfg;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -199,6 +200,16 @@ public final class Ejb3UnitCfg {
 			prop.setProperty(key, value);
 		}
 	}
+	
+	/**
+	 * Add entities to test to the configuration.
+	 * 
+	 * @param entytiesToTest -
+	 *            the used entity beans
+	 */
+	public static synchronized void addEntytiesToTest(Class<?>...entytiesToTest){
+		addEntytiesToTest(Arrays.asList(entytiesToTest));
+	}
 
 	/**
 	 * Add entities to test to the configuration.
@@ -207,7 +218,7 @@ public final class Ejb3UnitCfg {
 	 *            the used entity beans
 	 */
 	public static synchronized void addEntytiesToTest(
-			Collection<Class<? extends Object>> entytiesToTest) {
+			Collection<Class<?>> entytiesToTest) {
 		// init only if the entits for the test change or not initialized at all
 		if (singelton == null) {
 			singelton = new Ejb3UnitCfg();

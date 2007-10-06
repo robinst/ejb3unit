@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.MockedDIModuleCreator;
-import com.bm.data.bo.AnnotatedFieldsSessionBean;
+import com.bm.ejb3data.bo.AnnotatedFieldsSessionBean;
 import com.bm.ejb3guice.inject.Ejb3Guice;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Module;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.bm.data.bo.LineItem;
-import com.bm.data.bo.Order;
+import com.bm.ejb3data.bo.LineItem;
+import com.bm.ejb3data.bo.Order;
 import com.bm.testsuite.PoJoFixture;
 
 /**

@@ -37,7 +37,7 @@ public interface Introspector<T> {
 	 * 
 	 * @return Returns the persitentFields.
 	 */
-	List<Property> getPersitentFields();
+	List<Property> getPersitentProperties();
 
 	/**
 	 * Return the primary key fields.

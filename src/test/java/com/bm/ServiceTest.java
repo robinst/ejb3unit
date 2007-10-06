@@ -3,12 +3,12 @@
  */
 package com.bm;
 
-import com.bm.data.bo.Etablissement;
-import com.bm.data.bo.Service;
-import com.bm.data.bo.Societe;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.GeneratorType;
 import com.bm.datagen.relation.SingleBeanGenerator;
+import com.bm.ejb3data.bo.Etablissement;
+import com.bm.ejb3data.bo.Service;
+import com.bm.ejb3data.bo.Societe;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**

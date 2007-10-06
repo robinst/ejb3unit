@@ -1,6 +1,6 @@
 package com.bm;
 
-import com.bm.data.bo.StockWKNBo;
+import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**

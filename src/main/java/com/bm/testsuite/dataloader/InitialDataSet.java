@@ -1,6 +1,6 @@
 package com.bm.testsuite.dataloader;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
 
 /**
  * This interface must be implemented if the database should contain initial
@@ -20,9 +20,9 @@ public interface InitialDataSet {
 	/**
 	 * Deletes the data.
 	 * 
-	 * @param ds -
-	 *            the datasource.
+	 * @param em -
+	 *            the enntity manager.
 	 */
-	void cleanup(DataSource ds);
+	void cleanup(EntityManager em);
 
 }

@@ -1,8 +1,8 @@
 package com.bm;
 
-import com.bm.data.bo.AnnotatedFieldsSessionBean;
-import com.bm.data.bo.AnnotatedMethodsSessionBean;
-import com.bm.data.bo.StockWKNBo;
+import com.bm.ejb3data.bo.AnnotatedFieldsSessionBean;
+import com.bm.ejb3data.bo.AnnotatedMethodsSessionBean;
+import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
 
 /**

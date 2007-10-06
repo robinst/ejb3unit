@@ -1,7 +1,7 @@
 package com.bm;
 
-import com.bm.data.bo.NewsBo;
 import com.bm.datagen.Generator;
+import com.bm.ejb3data.bo.NewsBo;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**

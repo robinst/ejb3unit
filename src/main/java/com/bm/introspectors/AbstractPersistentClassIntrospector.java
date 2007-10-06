@@ -43,7 +43,7 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
     private static final int DEFAULTLENGTH = 652345;
 
     /** holds the persitent fields of the class * */
-    private final List<Property> persitentFields = new ArrayList<Property>();
+    private final List<Property> persitentProperties = new ArrayList<Property>();
 
     /** holds the transient fields of the class * */
     private final List<Property> transientFields = new ArrayList<Property>();
@@ -138,11 +138,11 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
     /**
      * Returns the persistent fields.
      * 
-     * @see com.bm.introspectors.Introspector#getPersitentFields()
+     * @see com.bm.introspectors.Introspector#getPersitentProperties()
      * @return the list of persistent fields
      */
-    public List<Property> getPersitentFields() {
-        return persitentFields;
+    public List<Property> getPersitentProperties() {
+        return persitentProperties;
     }
 
     /**
@@ -316,7 +316,7 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
 
         if (!isTransient) {
             final Property toAdd = aktProperty;
-            this.persitentFields.add(toAdd);
+            this.persitentProperties.add(toAdd);
             this.fieldInfo.put(toAdd, aktFieldInfo);
         }
     }

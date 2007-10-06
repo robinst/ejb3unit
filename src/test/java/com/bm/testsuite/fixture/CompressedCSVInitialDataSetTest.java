@@ -1,11 +1,10 @@
 package com.bm.testsuite.fixture;
 
-import com.bm.cfg.Ejb3UnitCfg;
-import com.bm.data.bo.StockWKNBo;
-import com.bm.testsuite.dataloader.CSVInitialDataSet;
-import com.bm.utils.BasicDataSource;
-
 import junit.framework.TestCase;
+
+import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3data.bo.StockWKNBo;
+import com.bm.testsuite.dataloader.CSVInitialDataSet;
 
 /**
  * Testclass for the CSVInitialDataSet.
@@ -26,9 +25,9 @@ public class CompressedCSVInitialDataSetTest extends TestCase {
 	 */
 	@Override
 	protected void tearDown() throws Exception {
-		final BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg
-				.getConfiguration());
-		toTest.cleanup(ds);
+		Ejb3UnitCfg.addEntytiesToTest(StockWKNBo.class);
+		toTest.cleanup(Ejb3UnitCfg.getConfiguration().getEntityManagerFactory()
+				.createEntityManager());
 	}
 
 	/**
