@@ -49,6 +49,7 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 	 */
 	protected void add(T toAdd) {
 		em.persist(toAdd);
+		undo.protokollCreate(toAdd);
 	}
 
 	/**
