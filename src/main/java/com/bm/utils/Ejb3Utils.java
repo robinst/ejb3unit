@@ -5,12 +5,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -99,13 +101,28 @@ public final class Ejb3Utils {
 	 * @return - the name of the jar file
 	 */
 	public static String isolateJarName(URL fileInJar) {
-		String urlSt = fileInJar.getFile();
+		String urlSt =  getDecodedFilename(fileInJar);
 		urlSt = urlSt.substring("file:/".length(), urlSt.indexOf("!"));
 		// under linux, solaris we need an absolute path
 		if (getOs() == OSTYPE_LINUX || getOs() == OSTYPE_SOLARIS) {
 			urlSt = "/" + urlSt;
 		}
 		return urlSt;
+	}
+	
+	/**
+	 * Decodes an encoded file name in url
+	 * @param url the file name
+	 * @return the decoded version
+	 */
+	public static String getDecodedFilename(URL url) {
+		String decoded = null;
+		try {
+			decoded = URLDecoder.decode(url.getFile(), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return decoded;
 	}
 
 	/**

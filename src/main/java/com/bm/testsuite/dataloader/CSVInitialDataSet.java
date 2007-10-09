@@ -120,7 +120,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 						+ csvFileName + ")");
 			}
 
-			file = new File(tmp.getFile());
+			file = new File(Ejb3Utils.getDecodedFilename(tmp));
 		}
 
 	}

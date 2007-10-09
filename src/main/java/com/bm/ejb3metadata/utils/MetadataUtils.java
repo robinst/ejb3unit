@@ -17,6 +17,8 @@ import java.util.zip.ZipEntry;
 import javax.ejb.Local;
 import javax.ejb.Remote;
 
+import com.bm.utils.Ejb3Utils;
+
 /**
  * Util class for ejb3unit.
  * 
@@ -84,14 +86,9 @@ public final class MetadataUtils {
 	 * @return - the name of the jar file
 	 */
 	public static String isolateJarName(URL fileInJar) {
-		String urlSt = fileInJar.getFile();
-		urlSt = urlSt.substring("file:/".length(), urlSt.indexOf("!"));
-		// under linux, solaris we need an absolute path
-		if (getOs() == OSTYPE_LINUX || getOs() == OSTYPE_SOLARIS) {
-			urlSt = "/" + urlSt;
-		}
-		return urlSt;
+		return Ejb3Utils.isolateJarName(fileInJar);
 	}
+	
 
 	/**
 	 * Determines the OS.

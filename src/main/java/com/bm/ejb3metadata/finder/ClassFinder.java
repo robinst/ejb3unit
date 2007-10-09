@@ -14,6 +14,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import com.bm.ejb3metadata.utils.MetadataUtils;
+import com.bm.utils.Ejb3Utils;
 
 /**
  * This class discover implementations for interfaces. The current implementation
@@ -53,7 +54,7 @@ public class ClassFinder {
 		String name = toFind.getName().replace('.', '/');
 		URL loc = toFind.getResource("/" + name + ".class");
 
-		File f = new File(loc.getFile());
+		File f = new File(Ejb3Utils.getDecodedFilename(loc));
 		// Class file is inside a jar file.
 		if (f.getPath().startsWith("file:")) {
 			String s = f.getPath();
@@ -76,8 +77,6 @@ public class ClassFinder {
 
 	private void findImplementationInJarFiles(URL locationInJar) {
 		String jarName = MetadataUtils.isolateJarName(locationInJar);
-		// windows bug with spaces
-		jarName = jarName.replaceAll("\\%20", " ");
 		try {
 			InputStream input = new FileInputStream(jarName);
 
