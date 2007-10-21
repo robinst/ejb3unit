@@ -3,14 +3,12 @@ package com.bm.testsuite;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.SessionBeanFactory;
 import com.bm.introspectors.AbstractIntrospector;
 import com.bm.introspectors.SessionBeanIntrospector;
 import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
-import com.bm.utils.BasicDataSource;
 
 /**
  * This is the base class for all JUnit test - testing stateless/statefull
@@ -41,11 +39,9 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param usedEntityBeans -
 	 *            the used entity bens
 	 */
-	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
-			Class[] usedEntityBeans) {
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class[] usedEntityBeans) {
 		super();
-		AbstractIntrospector<T> intro = new SessionBeanIntrospector<T>(
-				sessionBeanToTest);
+		AbstractIntrospector<T> intro = new SessionBeanIntrospector<T>(sessionBeanToTest);
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
 		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
@@ -62,8 +58,10 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
-			Class[] usedEntityBeans, InitialDataSet... initialData) {
+	public BaseSessionBeanFixture(
+			Class<T> sessionBeanToTest,
+			Class[] usedEntityBeans,
+			InitialDataSet... initialData) {
 		this(sessionBeanToTest, usedEntityBeans);
 		this.initalDataSets = initialData;
 	}
@@ -80,8 +78,10 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest,
-			AbstractIntrospector<T> intro, Class[] usedEntityBeans,
+	protected BaseSessionBeanFixture(
+			Class<T> sessionBeanToTest,
+			AbstractIntrospector<T> intro,
+			Class[] usedEntityBeans,
 			InitialDataSet... initialData) {
 		super();
 		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
@@ -89,12 +89,14 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		this.initalDataSets = initialData;
 		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
 	}
-	
+
 	/**
 	 * Sets a CSV inital data set to prepopylate the database with data.
-	 * @param initalDataSets the array of initial data sets
+	 * 
+	 * @param initalDataSets
+	 *            the array of initial data sets
 	 */
-	public void setInitalDataSets(InitialDataSet... initalDataSets){
+	public void setInitalDataSets(InitialDataSet... initalDataSets) {
 		this.initalDataSets = initalDataSets;
 	}
 
@@ -107,7 +109,10 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.jndiBinder.bind();
-		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
+		// the creation process is expensive, do it once per test
+		if (this.beanToTest == null) {
+			this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
+		}
 
 		if (this.initalDataSets != null) {
 			EntityManager em = this.getEntityManager();
@@ -136,7 +141,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		
+
 		// delete all objects (faster than shutdown and restart everything)
 		final EntityManager em = this.getEntityManager();
 		if (this.initalDataSets != null) {
