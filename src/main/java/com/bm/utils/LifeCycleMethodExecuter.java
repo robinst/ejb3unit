@@ -25,29 +25,30 @@ public class LifeCycleMethodExecuter {
 	 *            invokes life cycle methods.
 	 */
 	public void executeLifeCycleMethodsForCreate(Object justCreated) {
-		ClassAnnotationMetadata classMeta = MetaDataCache
-				.getMetaData(justCreated.getClass());
+		ClassAnnotationMetadata classMeta = MetaDataCache.getMetaData(justCreated
+				.getClass());
 		if (classMeta != null && (classMeta.isBean() || classMeta.isMdb())) {
 			final Set<MethodAnnotationMetadata> lifeCycleMethods = IntrospectorFactory
-					.createIntrospector(justCreated.getClass())
-					.getLifecycleMethods();
+					.createIntrospector(justCreated.getClass()).getLifecycleMethods();
 			for (MethodAnnotationMetadata current : lifeCycleMethods) {
 				if (current.isPostConstruct() || current.isPostActivate()) {
 					if (current.getJMethod().getSignature() != null) {
-						throw new IllegalArgumentException(
-								"The life cycle method ("
-										+ current.getJMethod()
-										+ ") has arguments");
+						throw new IllegalArgumentException("The life cycle method ("
+								+ current.getJMethod() + ") has arguments");
 					}
-					Method toInvoke = Ejb3Utils.getParameterlessMethodByName(
-							current.getMethodName(), justCreated.getClass());
-					toInvoke.setAccessible(true);
-					try {
-						toInvoke.invoke(justCreated, (Object[]) null);
-					} catch (Exception e) {
-						throw new IllegalArgumentException(
-								"Can't invoke method (" + current.getJMethod()
-										+ ")", e);
+					Method toInvoke = Ejb3Utils.getParameterlessMethodByName(current
+							.getMethodName(), justCreated.getClass());
+					// dont inject lifecycle methods with this name
+					// 'injectGuiceDependencies' This method is reserved for
+					// guice integration
+					if (!toInvoke.getName().equalsIgnoreCase("injectGuiceDependencies")) {
+						toInvoke.setAccessible(true);
+						try {
+							toInvoke.invoke(justCreated, (Object[]) null);
+						} catch (Exception e) {
+							throw new IllegalArgumentException("Can't invoke method ("
+									+ current.getJMethod() + ")", e);
+						}
 					}
 				}
 			}
