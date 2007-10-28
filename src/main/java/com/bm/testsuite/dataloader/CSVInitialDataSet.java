@@ -53,7 +53,9 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 	private String insertSQLString;
 
-	private File file;
+	private final File file;
+
+	private final boolean isCopressed;
 
 	private List<DateFormats> userDefinedDateFormats = new ArrayList<DateFormats>();
 
@@ -82,46 +84,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			boolean useSchemaName,
 			String... propertyMapping) {
 		this.useSchemaName = useSchemaName;
+		this.isCopressed = isCompressed;
 		initialize(entityBeanClass, propertyMapping);
-		if (isCompressed) {
-			try {
-				URL compressedFile = Thread.currentThread().getContextClassLoader()
-						.getResource(csvFileName);
-				if (compressedFile == null) {
-					throw new IllegalArgumentException("Can´t find the CVS file named ("
-							+ csvFileName + ")");
-				}
-				File tempDir = Ejb3Utils.getTempDirectory();
-				InputStream input = new FileInputStream(compressedFile.getFile());
-				List<File> extracted = Ejb3Utils.unjar(input, tempDir);
-				input.close();
-				if (extracted.isEmpty()) {
-					throw new IllegalArgumentException("The copressed file "
-							+ csvFileName + " was empty");
-				} else if (extracted.size() != 1) {
-					throw new IllegalArgumentException("The copressed file "
-							+ csvFileName + " must contain exactly ONE file");
-				}
-
-				file = extracted.get(0);
-			} catch (FileNotFoundException e) {
-				log.error("The file " + csvFileName + " was not found", e);
-				throw new IllegalArgumentException("The file was not found");
-			} catch (IOException e) {
-				log.error("The file " + csvFileName + " could not be accessed", e);
-				throw new IllegalArgumentException("The file could not be accessed");
-			}
-
-		} else {
-			final URL tmp = Thread.currentThread().getContextClassLoader().getResource(
-					csvFileName);
-			if (tmp == null) {
-				throw new IllegalArgumentException("Can´t find the CVS file named ("
-						+ csvFileName + ")");
-			}
-
-			file = new File(Ejb3Utils.getDecodedFilename(tmp));
+		final URL tmp = Thread.currentThread().getContextClassLoader().getResource(csvFileName);
+		if (tmp == null) {
+			throw new IllegalArgumentException("Can´t find the CVS file named (" + csvFileName
+					+ ")");
 		}
+
+		file = new File(Ejb3Utils.getDecodedFilename(tmp));
 
 	}
 
@@ -213,8 +184,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		for (String stringProperty : this.propertyMapping) {
 			final Property property = this.getProperty(stringProperty);
 			// persistent field info
-			final PersistentPropertyInfo info = this
-					.getPersistentFieldInfo(stringProperty);
+			final PersistentPropertyInfo info = this.getPersistentFieldInfo(stringProperty);
 
 			insertSQL.append((info.getDbName().length() == 0) ? property.getName() : info
 					.getDbName());
@@ -227,16 +197,14 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 				questionMarks.append(", ");
 			}
 		}
-		insertSQL.append(") ").append("VALUES (").append(questionMarks.toString())
-				.append(")");
+		insertSQL.append(") ").append("VALUES (").append(questionMarks.toString()).append(")");
 
 		return insertSQL.toString();
 	}
 
 	private String getTableName() {
 		if (useSchemaName && this.introspector.hasSchema()) {
-			return this.introspector.getShemaName() + "."
-					+ this.introspector.getTableName();
+			return this.introspector.getShemaName() + "." + this.introspector.getTableName();
 		}
 		return this.introspector.getTableName();
 	}
@@ -249,8 +217,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	private Property getProperty(String property) {
 		Property info = null;
 		if (this.introspector.hasEmbeddedPKClass()) {
-			final EmbeddedClassIntrospector pkintro = this.introspector
-					.getEmbeddedPKClass();
+			final EmbeddedClassIntrospector pkintro = this.introspector.getEmbeddedPKClass();
 			final List<Property> pkFields = pkintro.getPersitentProperties();
 
 			for (Property current : pkFields) {
@@ -281,8 +248,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	private PersistentPropertyInfo getPersistentFieldInfo(String property) {
 		PersistentPropertyInfo info = null;
 		if (this.introspector.hasEmbeddedPKClass()) {
-			final EmbeddedClassIntrospector pkintro = this.introspector
-					.getEmbeddedPKClass();
+			final EmbeddedClassIntrospector pkintro = this.introspector.getEmbeddedPKClass();
 			final List<Property> pkFields = pkintro.getPersitentProperties();
 
 			for (Property current : pkFields) {
@@ -323,7 +289,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		try {
 			con = ds.getConnection();
 			prep = con.prepareStatement(this.insertSQLString);
-			final CSVParser parser = new CSVParser(new FileInputStream(file));
+			final CSVParser parser = new CSVParser(getCSVInputStream());
 			parser.setCommentStart("#;!");
 			parser.setEscapes("nrtf", "\n\r\t\f");
 			String value;
@@ -338,8 +304,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 				// insert only if neccessary (ignore not requiered fields)
 				if (count < this.propertyInfo.length) {
-					this.setPreparedStatement(count + 1, prep, this.propertyInfo[count],
-							value);
+					this.setPreparedStatement(count + 1, prep, this.propertyInfo[count], value);
 					count++;
 				}
 
@@ -363,6 +328,33 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		} finally {
 			SQLUtils.cleanup(con, prep);
 		}
+	}
+
+	private InputStream getCSVInputStream() {
+		InputStream toReturn = null;
+		if (this.isCopressed) {
+			try {
+				toReturn = Ejb3Utils.unjar(new FileInputStream(this.file));
+				if (toReturn == null) {
+					throw new IllegalArgumentException("The copressed file " + this.file.getName()
+							+ " was empty");
+				}
+			} catch (IOException e) {
+				log.error("The file " + this.file.getName() + " could not be accessed", e);
+				throw new IllegalArgumentException("The file " + this.file.getAbsolutePath()
+						+ " could not be accessed", e);
+			}
+
+		} else {
+			try {
+				toReturn = new FileInputStream(this.file);
+			} catch (FileNotFoundException e) {
+				throw new IllegalArgumentException("The copressed file " + this.file.getName()
+						+ "not found");
+			}
+		}
+
+		return toReturn;
 	}
 
 	/**
@@ -450,8 +442,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 					success = true;
 					break;
 				} catch (ParseException ex) {
-					log.debug("Date parser (" + current
-							+ ") was not working, trying next");
+					log.debug("Date parser (" + current + ") was not working, trying next");
 				}
 			}
 

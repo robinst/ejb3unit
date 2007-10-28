@@ -1,5 +1,7 @@
 package com.bm.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -297,6 +299,47 @@ public final class Ejb3Utils {
 		}
 		jin.close();
 		return back;
+	}
+	
+	/**
+	 * Extract the first enry in the jar file to an output stream.
+	 * 
+	 * @param in -
+	 *            the jar archive as input stream
+	 * @throws IOException -
+	 *             in an error case
+	 */
+	public static InputStream unjar(InputStream in)
+			throws IOException {
+
+		JarInputStream jin = new JarInputStream(in);
+		final byte[] buffer = new byte[2048];
+		ZipEntry entry = jin.getNextEntry();
+		InputStream toReturn = null;
+		while (entry != null) {
+			if (!entry.isDirectory()) {
+				// make sure the directory exists
+
+				// dump the file
+
+				final ByteArrayOutputStream out = new ByteArrayOutputStream();
+				int len = 0;
+				while ((len = jin.read(buffer, 0, buffer.length)) != -1) {
+					out.write(buffer, 0, len);
+				}
+
+				out.flush();
+				out.close();
+				jin.closeEntry();
+				toReturn = new ByteArrayInputStream(out.toByteArray());
+				break;
+			}
+
+			entry = jin.getNextEntry();
+		}
+		jin.close();
+		
+		return toReturn;
 	}
 
 	/**
