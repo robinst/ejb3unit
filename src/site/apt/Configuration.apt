@@ -20,6 +20,7 @@ ejb3unit.show_sql=false
 
 ----
 ### The ejb3unit configuration file ###
+ejb3unit.inMemoryTest=false
 ejb3unit.connection.url=jdbc:protokoll:db://host:port/shema
 ejb3unit.connection.driver_class=my.jdbc.Driver
 ejb3unit.connection.username=ejb3unit
