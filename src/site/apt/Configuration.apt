@@ -29,5 +29,5 @@ ejb3unit.dialect=org.hibernate.dialect.SQLServerDialect
 ejb3unit.show_sql=true
 
 ## values are create-drop, create, update ##
-ejb3unit.shema.update=create
+ejb3unit.schema.update=create
 ----
