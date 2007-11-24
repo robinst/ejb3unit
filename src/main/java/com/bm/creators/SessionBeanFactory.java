@@ -17,8 +17,8 @@ import com.bm.ejb3guice.inject.Ejb3Guice;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3guice.inject.Stage;
+import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.introspectors.AbstractIntrospector;
-import com.bm.introspectors.MetaDataCache;
 import com.bm.introspectors.Property;
 import com.bm.utils.LifeCycleMethodExecuter;
 

@@ -49,13 +49,21 @@ public class EjbJarAnnotationMetadata {
 	}
 
 	/**
+	 * Merge the items from another
+	 * 
+	 * @param other
+	 */
+	public void mergeClassAnnotationMetadata(EjbJarAnnotationMetadata other) {
+		classesAnnotationMetadata.putAll(other.classesAnnotationMetadata);
+	}
+
+	/**
 	 * Add annotation metadata for a given class.
 	 * 
 	 * @param classAnnotationMetadata
 	 *            annotation metadata of a class.
 	 */
-	public void addClassAnnotationMetadata(
-			final ClassAnnotationMetadata classAnnotationMetadata) {
+	public void addClassAnnotationMetadata(final ClassAnnotationMetadata classAnnotationMetadata) {
 		String key = classAnnotationMetadata.getClassName();
 		// already exists ?
 		if (classesAnnotationMetadata.containsKey(key)) {
@@ -101,27 +109,22 @@ public class EjbJarAnnotationMetadata {
 	 */
 	private void buildInterfaceImplementationMap() {
 		interface2implemantation = new HashMap<String, String>();
-		for (ClassAnnotationMetadata current : this
-				.getClassAnnotationMetadataCollection()) {
+		for (ClassAnnotationMetadata current : this.getClassAnnotationMetadataCollection()) {
 			if (current.getLocalInterfaces() != null) {
-				for (String interfaze : current.getLocalInterfaces()
-						.getInterfaces()) {
+				for (String interfaze : current.getLocalInterfaces().getInterfaces()) {
 					// build no implementation map for anonymus classes and
 					// inner classes
 					if (current.getClassName().indexOf('$') < 0) {
-						this.interface2implemantation.put(interfaze, current
-								.getClassName());
+						this.interface2implemantation.put(interfaze, current.getClassName());
 					}
 				}
 			}
 			if (current.getRemoteInterfaces() != null) {
-				for (String interfaze : current.getRemoteInterfaces()
-						.getInterfaces()) {
+				for (String interfaze : current.getRemoteInterfaces().getInterfaces()) {
 					// build no implementation map for anonymus classes and
 					// inner classes
 					if (current.getClassName().indexOf('$') < 0) {
-						this.interface2implemantation.put(interfaze, current
-								.getClassName());
+						this.interface2implemantation.put(interfaze, current.getClassName());
 					}
 				}
 			}
@@ -135,8 +138,7 @@ public class EjbJarAnnotationMetadata {
 	 *            key of the map of annotations bean.
 	 * @return Bean annotation metadata of a given name.
 	 */
-	public ClassAnnotationMetadata getClassAnnotationMetadata(
-			final String className) {
+	public ClassAnnotationMetadata getClassAnnotationMetadata(final String className) {
 		return classesAnnotationMetadata.get(className);
 	}
 
@@ -182,12 +184,11 @@ public class EjbJarAnnotationMetadata {
 
 		// For each class, look if it is an application exception
 		for (ClassAnnotationMetadata classMetadata : getClassAnnotationMetadataCollection()) {
-			ApplicationException appException = classMetadata
-					.getApplicationException();
+			ApplicationException appException = classMetadata.getApplicationException();
 			// found it then add it in the map.
 			if (appException != null) {
-				applicationExceptions.put(classMetadata.getClassName()
-						.replaceAll("/", "."), appException);
+				applicationExceptions.put(classMetadata.getClassName().replaceAll("/", "."),
+						appException);
 			}
 		}
 		return applicationExceptions;

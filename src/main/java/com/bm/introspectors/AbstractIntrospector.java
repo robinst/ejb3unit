@@ -16,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import org.apache.log4j.Logger;
 
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
 import com.bm.utils.Ejb3Utils;
 

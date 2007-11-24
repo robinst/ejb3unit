@@ -1,6 +1,7 @@
 package com.bm.introspectors;
 
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 
 /**
  * SessionBeanIntrospector.

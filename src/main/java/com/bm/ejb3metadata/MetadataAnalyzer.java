@@ -26,32 +26,30 @@ public final class MetadataAnalyzer {
 	 */
 	public static final String JAVA_LANG_OBJECT = "java/lang/Object";
 
-	/**
-	 * Creates an new enhancer.
-	 * 
-	 * @param loader
-	 *            classloader where to define enhanced classes.
-	 * @param ejbJarAnnotationMetadata
-	 *            object with references to the metadata.
-	 * @param map
-	 *            a map allowing to give some objects to the enhancer.
-	 */
 	private MetadataAnalyzer() {
 
 	}
 
-	
-	public static synchronized EjbJarAnnotationMetadata initialize(
-			Class<?> toInspect) {
-		EjbJarAnnotationMetadata toReturn = null;
+	public static EjbJarAnnotationMetadata initialize(Class<?> toInspect) {
 		final ClassFinder finder = new ClassFinder();
 		final List<String> classes = finder.getListOfClasses(toInspect);
+		return analyzeClasses(classes, toInspect.getName());
+	}
+
+	public static EjbJarAnnotationMetadata initialize(String className) {
+		final ClassFinder finder = new ClassFinder();
+		final List<String> classes = finder.getListOfClasses(className);
+		return analyzeClasses(classes, className);
+	}
+
+	private static synchronized EjbJarAnnotationMetadata analyzeClasses(List<String> classes,
+			String className) {
+		EjbJarAnnotationMetadata toReturn = null;
 		try {
-			toReturn = MetadataAnalyzer.analyze(Thread.currentThread()
-					.getContextClassLoader(), classes, null);
+			toReturn = MetadataAnalyzer.analyze(Thread.currentThread().getContextClassLoader(),
+					classes, null);
 		} catch (ResolverException e) {
-			throw new RuntimeException("Class (" + toInspect.getName()
-					+ ") can´t be resolved");
+			throw new RuntimeException("Class (" + className + ") can´t be resolved");
 		}
 		return toReturn;
 	}
@@ -70,11 +68,10 @@ public final class MetadataAnalyzer {
 	 *             in error case
 	 */
 	private static EjbJarAnnotationMetadata analyze(final ClassLoader loader,
-			final List<String> classesToAnalyze, final Map<String, Object> map)
-			throws ResolverException {
+			final List<String> classesToAnalyze,
+			final Map<String, Object> map) throws ResolverException {
 		EjbJarAnnotationMetadata ejbJarAnnotationMetadata = new EjbJarAnnotationMetadata();
-		ScanClassVisitor scanVisitor = new ScanClassVisitor(
-				ejbJarAnnotationMetadata);
+		ScanClassVisitor scanVisitor = new ScanClassVisitor(ejbJarAnnotationMetadata);
 		// logger.info("ClassLoader used = (" + loader + ")");
 		for (String clazz : classesToAnalyze) {
 			read(clazz, loader, scanVisitor, ejbJarAnnotationMetadata);
@@ -97,7 +94,8 @@ public final class MetadataAnalyzer {
 	 * @param ejbJarAnnotationMetadata
 	 *            the structure containing class metadata
 	 */
-	private static void read(final String className, final ClassLoader loader,
+	private static void read(final String className,
+			final ClassLoader loader,
 			final ScanClassVisitor scanVisitor,
 			final EjbJarAnnotationMetadata ejbJarAnnotationMetadata) {
 		String readingClass = className;
@@ -110,8 +108,7 @@ public final class MetadataAnalyzer {
 		try {
 			new ClassReader(is).accept(scanVisitor, ClassReader.SKIP_CODE);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot read the given class '"
-					+ className + "'.", e);
+			throw new RuntimeException("Cannot read the given class '" + className + "'.", e);
 		}
 
 		// get the class parsed
@@ -124,9 +121,8 @@ public final class MetadataAnalyzer {
 		try {
 			is.close();
 		} catch (IOException e) {
-			throw new RuntimeException(
-					"Cannot close the input stream for class '" + className
-							+ "'.", e);
+			throw new RuntimeException("Cannot close the input stream for class '" + className
+					+ "'.", e);
 		}
 
 	}

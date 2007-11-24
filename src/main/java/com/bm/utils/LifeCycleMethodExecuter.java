@@ -4,9 +4,9 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
 import com.bm.introspectors.IntrospectorFactory;
-import com.bm.introspectors.MetaDataCache;
 
 /**
  * Invokes the life cycle methods.

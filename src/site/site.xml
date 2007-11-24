@@ -38,6 +38,7 @@
 			<item name="SessionBeans (Mocked)" href="Mocked-Session-Bean.html"/>
 			<item name="Complex test cases" href="testingComplexObjectGraphs.html"/>
 			<item name="JbossServices" href="Jboss-Service.html"/>
+			<item name="Multiple Jar files" href="MultipleJarFiles.html"/>
 		</menu>
 
 		<menu name="Get your hands on ejb3unit">

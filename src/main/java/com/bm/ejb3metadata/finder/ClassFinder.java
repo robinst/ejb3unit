@@ -33,7 +33,7 @@ public class ClassFinder {
 	private boolean isInitailized = false;
 
 	/**
-	 * Searches all classer in a given directory (up to top lever and from there
+	 * Searches all classes in a given directory (up to top lever and from there
 	 * recursive) of in a given jar file.
 	 * 
 	 * @param firstSearchClue -
@@ -43,17 +43,30 @@ public class ClassFinder {
 	 */
 	public List<String> getListOfClasses(Class firstSearchClue) {
 		if (!isInitailized) {
-			this.init(firstSearchClue);
+      this.init(firstSearchClue.getName());
 		}
 		return new ArrayList<String>(allClasses);
 	}
 
-	private void init(Class toFind) {
+  /**
+   * Searches all classer in a given directory (up to top lever and from there
+	 * recursive) of in a given jar file.
+   *
+   * @param firstSearchClue 
+   * @return
+   */
+  public List<String> getListOfClasses(String firstSearchClue) {
+		if (!isInitailized) {
+      this.init(firstSearchClue);
+		}
+		return new ArrayList<String>(allClasses);
+	}
+
+  private void init(String toFind) {
 		// Translate the package name into an absolute path
 		boolean isLoadInJar = false;
-		String name = toFind.getName().replace('.', '/');
-		URL loc = toFind.getResource("/" + name + ".class");
-
+    String name = toFind.replace('.', '/');
+    URL loc = getClass().getResource("/" + name + ".class");
 		File f = new File(Ejb3Utils.getDecodedFilename(loc));
 		// Class file is inside a jar file.
 		if (f.getPath().startsWith("file:")) {
@@ -66,8 +79,7 @@ public class ClassFinder {
 		}
 
 		if (!isLoadInJar) {
-			File rootDirectory = MetadataUtils.getRootPackageDir(f, toFind
-					.getName());
+			File rootDirectory = MetadataUtils.getRootPackageDir(f, toFind);
 			findClassesRecursive("", rootDirectory);
 			// generate interface-impl map
 		} else {

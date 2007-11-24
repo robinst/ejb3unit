@@ -1,0 +1,25 @@
+
+------
+                                    JUnit, EJB3Unit, EJB3 Test, Junit testing
+                                    ------
+				    		Nick Jones, Daniel Wiese
+                                    ------
+                                    2007
+                                    
+Test of annotated classes in multiple jar files 
+
+  Nick Jones worte a solution for us, how to test classes in multiple jar files. Example see below, 
+  which can be used as a base test class:
+  
+----					
+
+public class MyEJB3UnitTestUtility<T> extends BaseSessionBeanFixture<T> {    
+    static {
+        MetaDataCache.addClasses("com.pioneer.wipe.common.log.injection.ejb.PortalLoggerInterceptor");
+    }
+    
+    public EJB3UnitTestUtility(Class<T> classUnderTest) {
+        super(classUnderTest, null);        
+    }
+}
+----

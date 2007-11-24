@@ -3,6 +3,7 @@ package com.bm.introspectors;
 import org.jboss.annotation.ejb.Consumer;
 
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 
 /**
  * Introspector for MDB (supports also jboss mdb.

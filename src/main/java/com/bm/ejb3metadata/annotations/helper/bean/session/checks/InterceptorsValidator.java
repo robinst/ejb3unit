@@ -25,17 +25,17 @@
 
 package com.bm.ejb3metadata.annotations.helper.bean.session.checks;
 
-import java.util.List;
-
-import static org.ejb3unit.asm.Opcodes.ACC_FINAL;
-import static org.ejb3unit.asm.Opcodes.ACC_STATIC;
-
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.exceptions.InterceptorsValidationException;
 import com.bm.ejb3metadata.annotations.impl.JInterceptors;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
+import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
+import static org.ejb3unit.asm.Opcodes.ACC_FINAL;
+import static org.ejb3unit.asm.Opcodes.ACC_STATIC;
+
+import java.util.List;
 
 /**
  * This class ensures that the interceptors have the correct signature.
@@ -179,13 +179,16 @@ public final class InterceptorsValidator {
 	private static void analyzeInterceptorClass(
 			final EjbJarAnnotationMetadata ejbMetaData, final String className) {
 		// get the metadata of the class
-		ClassAnnotationMetadata interceptorMetaData = ejbMetaData
-				.getClassAnnotationMetadata(className);
+		ClassAnnotationMetadata interceptorMetaData = ejbMetaData.getClassAnnotationMetadata(className);
 		if (interceptorMetaData == null) {
-			throw new InterceptorsValidationException(
+      //Check in the cache first to see if it's in there
+      interceptorMetaData = MetaDataCache.getClassAnnotationMetaData(className);
+      if (interceptorMetaData == null) {
+      throw new InterceptorsValidationException(
 					"Internal problem as no metadata was found for '"
 							+ className + "'.");
-		}
+      }
+    }
 
 		List<MethodAnnotationMetadata> aroundInvokeList = interceptorMetaData
 				.getAroundInvokeMethodMetadatas();
