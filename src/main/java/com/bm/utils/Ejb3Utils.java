@@ -74,19 +74,24 @@ public final class Ejb3Utils {
 	public static final int OSTYPE_SOLARIS = 6;
 
 	/**
+	 * This field is used to OSTYPE_SUN.
+	 */
+	public static final int OSTYPE_SUN = 7;
+
+	/**
 	 * This field is used to OSTYPE_NETWARE.
 	 */
-	public static final int OSTYPE_NETWARE = 7;
+	public static final int OSTYPE_NETWARE = 8;
 
 	/**
 	 * This field is used to OSTYPE_OS2.
 	 */
-	public static final int OSTYPE_OS2 = 8;
+	public static final int OSTYPE_OS2 = 9;
 
 	/**
 	 * This field is used to OSTYPE_UNKNOWN.
 	 */
-	public static final int OSTYPE_UNKNOWN = 9;
+	public static final int OSTYPE_UNKNOWN = 10;
 
 	/** default type * */
 	private static int type = OSTYPE_UNKNOWN;
@@ -103,18 +108,21 @@ public final class Ejb3Utils {
 	 * @return - the name of the jar file
 	 */
 	public static String isolateJarName(URL fileInJar) {
-		String urlSt =  getDecodedFilename(fileInJar);
+		String urlSt = getDecodedFilename(fileInJar);
 		urlSt = urlSt.substring("file:/".length(), urlSt.indexOf("!"));
 		// under linux, solaris we need an absolute path
-		if (getOs() == OSTYPE_LINUX || getOs() == OSTYPE_SOLARIS) {
+		int os = getOs();
+		if (os == OSTYPE_LINUX || os == OSTYPE_SOLARIS || os == OSTYPE_SUN) {
 			urlSt = "/" + urlSt;
 		}
 		return urlSt;
 	}
-	
+
 	/**
 	 * Decodes an encoded file name in url
-	 * @param url the file name
+	 * 
+	 * @param url
+	 *            the file name
 	 * @return the decoded version
 	 */
 	public static String getDecodedFilename(URL url) {
@@ -145,8 +153,7 @@ public final class Ejb3Utils {
 		Constructor<T>[] parameterlessConstructors = (Constructor<T>[]) forClass
 				.getDeclaredConstructors();
 		if (parameterlessConstructors == null) {
-			throw new RuntimeException("The session/entity bean ("
-					+ forClass.getName()
+			throw new RuntimeException("The session/entity bean (" + forClass.getName()
 					+ ") has no public/protected parameterles constructor");
 		}
 
@@ -159,17 +166,14 @@ public final class Ejb3Utils {
 					back = current.newInstance((Object[]) null);
 				} catch (InstantiationException e) {
 					log.error("Can´t create the session/entity bean", e);
-					throw new RuntimeException(
-							"Can´t create the session/entity bean", e);
+					throw new RuntimeException("Can´t create the session/entity bean", e);
 
 				} catch (IllegalArgumentException e) {
 					log.error("Can´t create the entity bean", e);
-					throw new RuntimeException(
-							"Can´t create the session/entity bean", e);
+					throw new RuntimeException("Can´t create the session/entity bean", e);
 				} catch (InvocationTargetException e) {
 					log.error("Can´t create the entity bean", e);
-					throw new RuntimeException(
-							"Can´t create the session/entity bean", e);
+					throw new RuntimeException("Can´t create the session/entity bean", e);
 				} catch (SecurityException e) {
 					throw new RuntimeException(
 							"Insufficient access rights to create the session/entity bean ("
@@ -183,8 +187,7 @@ public final class Ejb3Utils {
 			}
 		}
 
-		throw new RuntimeException("The session/entity bean ("
-				+ forClass.getName()
+		throw new RuntimeException("The session/entity bean (" + forClass.getName()
 				+ ") has no public/protected parameterles constructor");
 	}
 
@@ -197,7 +200,7 @@ public final class Ejb3Utils {
 		if (type == OSTYPE_UNKNOWN) {
 
 			final String osname = System.getProperty("os.name").toLowerCase();
-
+			log.info("OS was found to be: " + osname);
 			if (osname.indexOf("windows") != -1) {
 				if (osname.indexOf("nt") != -1 || osname.indexOf("2000") != -1
 						|| osname.indexOf("xp") != -1) {
@@ -207,14 +210,14 @@ public final class Ejb3Utils {
 				} else {
 					type = OSTYPE_WINDOWS;
 				}
-			} else if (osname.indexOf("linux") != -1
-					|| osname.indexOf("bsd") != -1) {
+			} else if (osname.indexOf("linux") != -1 || osname.indexOf("bsd") != -1) {
 				type = OSTYPE_LINUX;
-			} else if (osname.indexOf("mac os") != -1
-					|| osname.indexOf("macos") != -1) {
+			} else if (osname.indexOf("mac os") != -1 || osname.indexOf("macos") != -1) {
 				type = OSTYPE_MAC;
 			} else if (osname.indexOf("solaris") != -1) {
 				type = OSTYPE_SOLARIS; // could also be old freebsd version
+			} else if (osname.indexOf("sun") != -1) {
+				type = OSTYPE_SUN;
 			} else if (osname.indexOf("netware") != -1) {
 				type = OSTYPE_NETWARE;
 			} else if (osname.indexOf("os/2") != -1) {
@@ -238,8 +241,7 @@ public final class Ejb3Utils {
 	 * @throws IOException -
 	 *             in an error case
 	 */
-	public static List<File> unjar(InputStream in, File dest)
-			throws IOException {
+	public static List<File> unjar(InputStream in, File dest) throws IOException {
 
 		final List<File> back = new ArrayList<File>();
 		if (!dest.exists()) {
@@ -300,7 +302,7 @@ public final class Ejb3Utils {
 		jin.close();
 		return back;
 	}
-	
+
 	/**
 	 * Extract the first enry in the jar file to an output stream.
 	 * 
@@ -309,8 +311,7 @@ public final class Ejb3Utils {
 	 * @throws IOException -
 	 *             in an error case
 	 */
-	public static InputStream unjar(InputStream in)
-			throws IOException {
+	public static InputStream unjar(InputStream in) throws IOException {
 
 		JarInputStream jin = new JarInputStream(in);
 		final byte[] buffer = new byte[2048];
@@ -338,7 +339,7 @@ public final class Ejb3Utils {
 			entry = jin.getNextEntry();
 		}
 		jin.close();
-		
+
 		return toReturn;
 	}
 
@@ -352,8 +353,7 @@ public final class Ejb3Utils {
 	 * @throws IOException -
 	 *             in an error case
 	 */
-	public static List<String> scanFileNamesInArchive(InputStream in)
-			throws IOException {
+	public static List<String> scanFileNamesInArchive(InputStream in) throws IOException {
 
 		final List<String> back = new ArrayList<String>();
 
@@ -464,8 +464,7 @@ public final class Ejb3Utils {
 	 *            the superclass
 	 * @return true if a supeclass or interface
 	 */
-	public static boolean hasSuperclassOrInterface(Class toCheck,
-			Class superclassOrInterface) {
+	public static boolean hasSuperclassOrInterface(Class toCheck, Class superclassOrInterface) {
 		if (toCheck == null) {
 			return false;
 		} else if (superclassOrInterface.equals(toCheck)) {
@@ -481,8 +480,7 @@ public final class Ejb3Utils {
 					}
 				}
 			}
-			return hasSuperclassOrInterface(toCheck.getSuperclass(),
-					superclassOrInterface);
+			return hasSuperclassOrInterface(toCheck.getSuperclass(), superclassOrInterface);
 		}
 	}
 
@@ -495,10 +493,8 @@ public final class Ejb3Utils {
 	 *            given genrator
 	 * @return returns a given genrator type
 	 */
-	public static GeneratorType getGeneratorTypeAnnotation(
-			Generator actGenerator) {
-		Annotation[] classAnnotations = actGenerator.getClass()
-				.getAnnotations();
+	public static GeneratorType getGeneratorTypeAnnotation(Generator actGenerator) {
+		Annotation[] classAnnotations = actGenerator.getClass().getAnnotations();
 		// iterate over the annotations
 		for (Annotation a : classAnnotations) {
 			if (a instanceof GeneratorType) {
@@ -554,8 +550,11 @@ public final class Ejb3Utils {
 
 	/**
 	 * Returns a parameterless method.
-	 * @param name the name of the method
-	 * @param inClass in which class
+	 * 
+	 * @param name
+	 *            the name of the method
+	 * @param inClass
+	 *            in which class
 	 * @return the method if found or IllegalArgument exception
 	 */
 	public static Method getParameterlessMethodByName(String name, Class inClass) {
@@ -566,8 +565,8 @@ public final class Ejb3Utils {
 			}
 		}
 
-		throw new IllegalArgumentException("Method (" + name
-				+ ") with name not fould in class (" + inClass.getName() + ")");
+		throw new IllegalArgumentException("Method (" + name + ") with name not fould in class ("
+				+ inClass.getName() + ")");
 	}
 
 	/**
