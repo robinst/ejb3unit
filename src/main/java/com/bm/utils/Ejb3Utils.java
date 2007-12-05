@@ -112,7 +112,7 @@ public final class Ejb3Utils {
 		urlSt = urlSt.substring("file:/".length(), urlSt.indexOf("!"));
 		// under linux, solaris we need an absolute path
 		int os = getOs();
-		if (os == OSTYPE_LINUX || os == OSTYPE_SOLARIS || os == OSTYPE_SUN) {
+		if (os == OSTYPE_LINUX || os == OSTYPE_SOLARIS || os == OSTYPE_SUN || os == OSTYPE_MAC) {
 			urlSt = "/" + urlSt;
 		}
 		return urlSt;
