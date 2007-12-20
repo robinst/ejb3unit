@@ -145,8 +145,9 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		// delete all objects (faster than shutdown and restart everything)
 		final EntityManager em = this.getEntityManager();
 		if (this.initalDataSets != null) {
-			for (InitialDataSet current : this.initalDataSets) {
-				current.cleanup(em);
+			// tear down in reverse order, otherwise foreign key constraints may be violated 
+			for (int i = this.initalDataSets.length -1; i >= 0; i--) {
+				this.initalDataSets[i].cleanup(em);
 			}
 		}
 

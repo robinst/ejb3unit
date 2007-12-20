@@ -80,4 +80,11 @@ public class EmbeddedClassIntrospector<T> extends AbstractPersistentClassIntrosp
 		return attibuteName;
 	}
 
+	/**
+	 * Returns the logger for this class.
+	 * @return
+	 */
+	protected Logger getLogger() {
+		return log;
+	}
 }

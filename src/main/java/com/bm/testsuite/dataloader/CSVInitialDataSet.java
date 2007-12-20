@@ -9,11 +9,13 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -24,6 +26,7 @@ import com.bm.introspectors.EmbeddedClassIntrospector;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.PersistentPropertyInfo;
 import com.bm.introspectors.Property;
+import com.bm.introspectors.relations.EntityReleationInfo;
 import com.bm.utils.BasicDataSource;
 import com.bm.utils.Ejb3Utils;
 import com.bm.utils.SQLUtils;
@@ -65,9 +68,9 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * Constructor.
 	 * 
 	 * @param entityBeanClass -
-	 *            the corresponding enetity bean class
+	 *            the corresponding entity bean class
 	 * @param propertyMapping -
-	 *            a string array whith the meaning the first column of the cvs
+	 *            a string array with the meaning the first column of the cvs
 	 *            file belongs to the property with the name
 	 *            <code>propertyMapping[0]</code>
 	 * @param isCompressed -
@@ -75,7 +78,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @param useSchemaName
 	 *            the schema name will be used for sql generation
 	 * @param csvFileName -
-	 *            the name of the cvs file
+	 *            the name of the csv file
 	 */
 	public CSVInitialDataSet(
 			Class<T> entityBeanClass,
@@ -100,15 +103,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * Constructor.
 	 * 
 	 * @param entityBeanClass -
-	 *            the corresponding enetity bean class
+	 *            the corresponding entity bean class
 	 * @param propertyMapping -
-	 *            a string array whith the meaning the first column of the cvs
+	 *            a string array with the meaning the first column of the csv
 	 *            file belongs to the property with the name
 	 *            <code>propertyMapping[0]</code>
 	 * @param isCompressed -
 	 *            true if compressed (zip)
 	 * @param csvFileName -
-	 *            the name of the cvs file
+	 *            the name of the csv file
 	 */
 	public CSVInitialDataSet(
 			Class<T> entityBeanClass,
@@ -122,13 +125,13 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * Constructor.
 	 * 
 	 * @param entityBeanClass -
-	 *            the corresponding enetity bean class
+	 *            the corresponding entity bean class
 	 * @param propertyMapping -
-	 *            a string array whith the meaning the first column of the cvs
+	 *            a string array with the meaning the first column of the csv
 	 *            file belongs to the property with the name
 	 *            <code>propertyMapping[0]</code>
 	 * @param csvFileName -
-	 *            the name of the cvs file
+	 *            the name of the csv file
 	 */
 	public CSVInitialDataSet(
 			Class<T> entityBeanClass,
@@ -163,8 +166,6 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			List<Class<? extends Object>> usedBeans = new ArrayList<Class<? extends Object>>();
 			usedBeans.add(entityBeanClass);
 			Ejb3UnitCfg.addEntytiesToTest(usedBeans);
-			// call the factory to create the tables
-			Ejb3UnitCfg.getConfiguration().getEntityManagerFactory();
 		}
 		this.propertyMapping = propertyMapping;
 		this.propertyInfo = new Property[propertyMapping.length];
@@ -174,7 +175,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	/**
 	 * Returns the insert SQL.
 	 * 
-	 * @return the inser SQL
+	 * @return the insert SQL
 	 */
 	public String buildInsertSQL() {
 		StringBuilder insertSQL = new StringBuilder();
@@ -381,7 +382,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * Sets the value (using the right type) in the prepared statement.
 	 * 
 	 * @param index -
-	 *            the index inside the premared statement
+	 *            the index inside the prepared statement
 	 * @param statement -
 	 *            the prepared statement itself
 	 * @param prop -
@@ -395,15 +396,62 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			PreparedStatement statement,
 			Property prop,
 			String value) throws SQLException {
-		// convert to nonprimitive if primitive
-		Class type = Ejb3Utils.getNonPrimitiveType(prop.getType());
 
+		// First, check whether this property denotes a relation
+		PersistentPropertyInfo persistentFieldInfo = this.introspector.getPresistentFieldInfo(prop);
+		if (persistentFieldInfo.isReleation()) {
+			EntityReleationInfo relationInfo = persistentFieldInfo.getEntityReleationInfo();
+			// Must determine the type of the primary key of the class that is referenced by the relation.
+			Set<Property> targetKeyProps = relationInfo.getTargetKeyProperty();
+			if (targetKeyProps == null) {
+				// This can happen with relation types that we do not yet support
+				throw new IllegalArgumentException("Can't determine key type of relation target - relation type not yet supported?");
+			}
+			if (targetKeyProps.size() > 1) {
+				throw new IllegalArgumentException("Composite foreign keys are not yet supported.");
+			}
+			for (Property keyProp: targetKeyProps) {	// Because of the check above, this will loop at most once
+				Class foreignKeyType = Ejb3Utils.getNonPrimitiveType(keyProp.getType());
+				setPreparedStatement(index, statement, foreignKeyType, value);
+			}
+		}
+		else {
+			// convert to non-primitive if primitive
+			Class type = Ejb3Utils.getNonPrimitiveType(prop.getType());
+			setPreparedStatement(index, statement, type, value);
+		}
+	}
+
+	/**
+	 * Sets the value (using the right type) in the prepared statement. Supports only simple types
+	 * @param index
+	 * 				the index of the value in the prepared statement
+	 * @param statement
+	 * 				the prepared statement in which values are set
+	 * @param type
+	 * 				the type of the property
+	 * @param value
+	 * 				the value to set
+	 * @throws SQLException
+	 */
+	private void setPreparedStatement(int index, PreparedStatement statement, Class type, String value) throws SQLException
+	{
 		if (type.equals(String.class)) {
 			statement.setString(index, value);
 		} else if (type.equals(Integer.class)) {
-			statement.setInt(index, ((value.equals("")) ? 0 : Integer.valueOf(value)));
+			if (value == null || value.equals("") || value.equals("null")) {
+				statement.setNull(index, Types.INTEGER);
+			}
+			else {
+				statement.setInt(index, ((value.equals("")) ? 0 : Integer.valueOf(value)));
+			}
 		} else if (type.equals(Long.class)) {
-			statement.setLong(index, ((value.equals("")) ? 0 : Long.valueOf(value)));
+			if (value == null || value.equals("") || value.equals("null")) {
+				statement.setNull(index, Types.BIGINT);
+			}
+			else {			
+				statement.setLong(index, ((value.equals("")) ? 0 : Long.valueOf(value)));
+			}
 		} else if (type.equals(Boolean.class)) {
 			final boolean result = (value != null && value.equals("True") ? true : false);
 			statement.setBoolean(index, result);
@@ -425,7 +473,6 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			// so that it is also possible to have enums by literal name
 			statement.setInt(index, Integer.valueOf(value));
 		}
-
 	}
 
 	private void parseAndSetDate(int index, String value, PreparedStatement statement)

@@ -2,6 +2,8 @@ package com.bm.introspectors;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -10,6 +12,10 @@ import javax.persistence.Table;
 
 import org.apache.log4j.Logger;
 
+import com.bm.introspectors.relations.EntityReleationInfo;
+import com.bm.introspectors.relations.GlobalPrimaryKeyStore;
+import com.bm.introspectors.relations.GlobalRelationStore;
+import com.bm.introspectors.relations.ManyToOneReleation;
 import com.bm.utils.AccessType;
 import com.bm.utils.AccessTypeFinder;
 import com.bm.utils.IdClassInstanceGen;
@@ -105,6 +111,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 			this.processAccessTypeProperty(toInspect);
 		}
 
+		postProcessRelationProperties();
 	}
 
 	/**
@@ -267,4 +274,41 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 
 	}
 
+	/**
+	 * Returns the logger for this class.
+	 * @return
+	 */
+	protected Logger getLogger() {
+		return log;
+	}
+	
+	/**
+	 * Perform post processing on relation properties. Has to be done after the 
+	 * EntityBeanIntrospectors have processed all properties, to avoid cyclic
+	 * dependencies.
+	 */
+	private void postProcessRelationProperties() {
+
+		for (Entry<Property, PersistentPropertyInfo> entry: fieldInfo.entrySet()) {
+			if (entry.getValue().isReleation()) {
+				EntityReleationInfo relation = entry.getValue().getEntityReleationInfo();
+				// TODO (Pd): see if we can generalize this, to other relation types
+				if (relation instanceof ManyToOneReleation) {
+					Class targetClass = ((ManyToOneReleation) relation).getTargetClass();
+					Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
+					((ManyToOneReleation) relation).setTargetKeyProperty(keyProps);
+					// Check that database name is set (it's explicitly unset while processing the 
+					// ManyToOne annotation, to be able to recognize the case when it's not 
+					// specified by a Column annotation)
+					if (entry.getValue().getDbName() == null) {
+						// Currently, only single key columns are supported
+						String keyName = keyProps.iterator().next().getName();
+						String dbName = entry.getKey().getName() + "_" + keyName;
+						entry.getValue().setDbName(dbName);
+						log.debug("No db name set for relation; using default " + entry.getValue().getDbName());
+					}
+				}
+			}
+		}
+	}
 }

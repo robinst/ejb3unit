@@ -18,16 +18,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
-import org.apache.commons.beanutils.PropertyUtilsBean;
 
+import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.apache.log4j.Logger;
+
+import com.bm.introspectors.relations.GlobalPrimaryKeyStore;
 import com.bm.introspectors.relations.GlobalRelationStore;
 import com.bm.introspectors.relations.ManyToOneReleation;
 import com.bm.introspectors.relations.OneToManyReleation;
 import com.bm.introspectors.relations.RelationPropertyResolver;
 
 /**
- * This class implements the common methodes for all concrete inspectors.
+ * This class implements the common methods for all concrete inspectors.
  * 
  * @author Daniel Wiese
  * @param <T> -
@@ -49,7 +53,7 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
     private final List<Property> transientFields = new ArrayList<Property>();
 
     /** holds the meta information for persistent fields * */
-    private final Map<Property, PersistentPropertyInfo> fieldInfo = new HashMap<Property, PersistentPropertyInfo>();
+    protected final Map<Property, PersistentPropertyInfo> fieldInfo = new HashMap<Property, PersistentPropertyInfo>();
 
     /** holds the pk fileds of the class * */
     private final Set<Property> pkFields = new HashSet<Property>();
@@ -213,7 +217,7 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
     }
 
     /**
-     * Anylse the annotation of a (field or getterMethod)
+     * Analyse the annotation of a (field or getterMethod)
      * 
      * @param aktProperty -
      *            the property
@@ -225,8 +229,9 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
     private void processAnnotations(Class<T> classToInspect, Property aktProperty,
             Annotation[] propertyAnnotations) {
         boolean isTransient = false;
-
-        // create a isntance if the file is a peristent field
+        String joinColumnName = null;
+        
+        // create a instance if the file is a persistent field
         final PersistentPropertyInfo aktFieldInfo = new PersistentPropertyInfo();
         // initial name
         aktFieldInfo.setDbName(aktProperty.getName());
@@ -254,6 +259,7 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
                 PrimaryKeyInfo info = new PrimaryKeyInfo(((Id) a));
                 this.extractGenerator(propertyAnnotations, info);
                 this.pkFieldInfo.put(aktProperty, info);
+                GlobalPrimaryKeyStore.getStore().put(classToInspect, pkFieldInfo);
             }
 
             if (a instanceof EmbeddedId) {
@@ -269,7 +275,7 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
                 this.pkFieldInfo.put(aktProperty, info);
             }
 
-            // releations
+            // relations
             if (a instanceof OneToMany) {
                 final OneToMany aC = (OneToMany) a;
                 // put this property to the global store
@@ -298,16 +304,22 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
                 GlobalRelationStore.getStore().put(classToInspect, aktProperty);
 
                 Property relProp = RelationPropertyResolver.findAttributeForRelationAtOtherSide(aktProperty);
-                // the one side > the target class is decaring class
+                // the one side > the target class is declaring class
                 final ManyToOneReleation o2mReleation = new ManyToOneReleation(classToInspect, relProp
                         .getDeclaringClass(), aktProperty, relProp, aC);
 
                 aktFieldInfo.setEntityReleationInfo(o2mReleation);
+                if (joinColumnName == null) {
+                	// No JoinColumn annotation seen (yet), set default 
+                	// Mark as being not set, by setting it explicitly to null,
+                	// Note that this value might be overwritten by a JoinColumn annotation.
+                	aktFieldInfo.setDbName(null);
+                }
             } else if (a instanceof JoinColumn) {
-                //TODO fix that
-            	//final JoinColumn jC = (JoinColumn) a;
+            	JoinColumn joinColumnAnnotation = (JoinColumn) a;
+            	joinColumnName = joinColumnAnnotation.name();
                 // put this property to the global store
-                GlobalRelationStore.getStore().put(classToInspect, aktProperty);
+                GlobalRelationStore.getStore().put(classToInspect, aktProperty); // I guess this is useless...
             }
 
             // TODO create one2one introspection
@@ -318,6 +330,22 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
             final Property toAdd = aktProperty;
             this.persitentProperties.add(toAdd);
             this.fieldInfo.put(toAdd, aktFieldInfo);
+        }
+        
+        if (joinColumnName != null) {
+        	// Must pass join column info to relation info; can't be done while processing the
+        	// JoinColumn annotation, as it might be processed before the ManyToOne.
+        	if (aktFieldInfo.getEntityReleationInfo() != null) {
+        		if (aktFieldInfo.getEntityReleationInfo() instanceof ManyToOneReleation)  { // TODO (Pd): unify this later with other relation types
+        			aktFieldInfo.setDbName(joinColumnName);
+        		}
+        	}
+        	else {
+        		// Later, this should be an exception, but as long as we do not process all relation types (correctly),
+        		// just log as warning.
+        		getLogger().warn("Detected joinColumn annotation without relation annotation (joinColumn="
+        				+ joinColumnName + ")");
+        	}
         }
     }
 
@@ -339,4 +367,9 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
         }
     }
 
+	/**
+	 * Returns the logger for this class.
+	 * @return
+	 */
+	abstract protected Logger getLogger();
 }

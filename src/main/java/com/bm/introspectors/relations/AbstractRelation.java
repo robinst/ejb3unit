@@ -1,5 +1,7 @@
 package com.bm.introspectors.relations;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 
@@ -151,5 +153,14 @@ public abstract class AbstractRelation implements EntityReleationInfo {
         
         return back;
     }
+
+    /**
+     * Returns the primary key property (or properties, in case of a composite key) for the 
+     * class that is target of the relation
+     * @return	primary key property / properties.
+     */
+	public Set<Property> getTargetKeyProperty() {
+		return null;
+	}
 
 }

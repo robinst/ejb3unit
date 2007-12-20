@@ -1,17 +1,21 @@
 package com.bm.introspectors.relations;
 
+import java.util.Set;
+
 import javax.persistence.ManyToOne;
 
 import com.bm.introspectors.Property;
 
 /**
- * Represents a ManyToOne relelation.
+ * Represents a ManyToOne relation.
  * 
  * @author Daniel Wiese
  * 
  */
 public class ManyToOneReleation extends AbstractRelation implements
 		EntityReleationInfo {
+
+	Set<Property> targetKeyProperty;
 
 	/**
 	 * Default constructor.
@@ -45,4 +49,19 @@ public class ManyToOneReleation extends AbstractRelation implements
 		return RelationType.ManyToOne;
 	}
 
+	/**
+	 * Returns the primary key properties of the target class
+	 * @return the primary key properties of the target class
+	 */
+	public Set<Property> getTargetKeyProperty() {
+		return targetKeyProperty;
+	}
+
+	/**
+	 * Sets the primary key properties of the target class
+	 * @param targetKeyProp
+	 */
+	public void setTargetKeyProperty(Set<Property> targetKeyProp) {
+		this.targetKeyProperty = targetKeyProp;
+	}
 }
