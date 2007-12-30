@@ -97,7 +97,7 @@ public final class Ejb3Utils {
 	private static int type = OSTYPE_UNKNOWN;
 
 	private Ejb3Utils() {
-		// intentinally left blank
+		// intentionally left blank
 	}
 
 	/**
@@ -212,7 +212,9 @@ public final class Ejb3Utils {
 				}
 			} else if (osname.indexOf("linux") != -1 || osname.indexOf("bsd") != -1) {
 				type = OSTYPE_LINUX;
-			} else if (osname.indexOf("mac os") != -1 || osname.indexOf("macos") != -1) {
+			} else if (osname.indexOf("mac os") != -1 || osname.indexOf("macos") != -1
+						// SoyLatte JDK returns "darwin" on Mac OSX 
+						|| osname.indexOf("darwin") != -1) {
 				type = OSTYPE_MAC;
 			} else if (osname.indexOf("solaris") != -1) {
 				type = OSTYPE_SOLARIS; // could also be old freebsd version
@@ -231,7 +233,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Dump the contents of a JarArchive to the dpecified destination.
+	 * Dump the contents of a JarArchive to the specified destination.
 	 * 
 	 * @param in -
 	 *            the jar archive as input stream
@@ -304,7 +306,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Extract the first enry in the jar file to an output stream.
+	 * Extract the first entry in the jar file to an output stream.
 	 * 
 	 * @param in -
 	 *            the jar archive as input stream
@@ -411,7 +413,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * This method will do the transformation of primitive types if neccessary.
+	 * This method will do the transformation of primitive types if necessary.
 	 * 
 	 * @param aktField -
 	 *            the field to inspect
@@ -423,7 +425,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * This method will do the transformation of primitive types if neccessary.
+	 * This method will do the transformation of primitive types if necessary.
 	 * It also transform all collection types (List, etc to Collection)
 	 * 
 	 * @param aktField -
@@ -456,7 +458,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Chacks if the current class inherits form the specified class.
+	 * Checks if the current class inherits form the specified class.
 	 * 
 	 * @param toCheck
 	 *            the class to check
@@ -485,13 +487,13 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Returns a generator type for a givven generator.
+	 * Returns a generator type for a given generator.
 	 * 
 	 * @author Daniel Wiese
 	 * @since 17.04.2006
 	 * @param actGenerator -
-	 *            given genrator
-	 * @return returns a given genrator type
+	 *            given generator
+	 * @return returns a given generator type
 	 */
 	public static GeneratorType getGeneratorTypeAnnotation(Generator actGenerator) {
 		Annotation[] classAnnotations = actGenerator.getClass().getAnnotations();
@@ -506,11 +508,11 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Returns the riht collection type for the given property.
+	 * Returns the right collection type for the given property.
 	 * 
 	 * @param forProperty -
 	 *            for which property
-	 * @return - the rigt collection type
+	 * @return - the right collection type
 	 */
 	public static Collection getRightCollectionType(Property forProperty) {
 		if (forProperty.getType().equals(List.class)) {
@@ -590,7 +592,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Retrun a short class name. E.g. java.util.StringTokenizer will be
+	 * Return a short class name. E.g. java.util.StringTokenizer will be
 	 * StringTokenizer
 	 * 
 	 * @param longClassName -
@@ -608,11 +610,11 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Retrun a short class name. E.g. java.util.StringTokenizer will be
+	 * Return a short class name. E.g. java.util.StringTokenizer will be
 	 * StringTokenizer
 	 * 
 	 * @param longClassName -
-	 *            the long fully qualified calss name
+	 *            the long fully qualified class name
 	 * @return - short class name
 	 */
 	public static String getPackageName(String longClassName) {
@@ -631,10 +633,10 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Retrurns the root package directory e.g com.ejb3unit.eg --> returns com.
+	 * Returns the root package directory e.g com.ejb3unit.eg --> returns com.
 	 * 
 	 * @param location -
-	 *            the location of th epackage
+	 *            the location of the package
 	 * 
 	 * @param longPackageName -
 	 *            the long fully qualified class name
@@ -651,7 +653,7 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Retrun a short class name. E.g. java.util.StringTokenizer will be
+	 * Return a short class name. E.g. java.util.StringTokenizer will be
 	 * StringTokenizer
 	 * 
 	 * @param clazz -
