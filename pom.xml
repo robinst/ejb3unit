@@ -64,18 +64,6 @@
 				<artifactId>maven-site-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-					</includes>
-					<!-- <forkMode>none</forkMode>-->
-					<argLine>-Xmx300m</argLine>
-					<printSummary>true</printSummary>
-					<reportFormat>plain</reportFormat>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>

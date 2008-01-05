@@ -1,14 +1,13 @@
 package com.bm.testsuite.fixture;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 import junit.framework.TestCase;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3data.bo.Department;
 import com.bm.ejb3data.bo.Employee;
-import com.bm.testsuite.dataloader.CSVInitialDataSet;
+import com.bm.testsuite.dataloader.CSVInitialDataRelationSet;
 
 /**
  * Test class for data sets that contain relations. 
@@ -19,25 +18,25 @@ import com.bm.testsuite.dataloader.CSVInitialDataSet;
  */
 public class EmployeeRelationsTest extends TestCase {
 
-	private final CSVInitialDataSet employeeData1 = new CSVInitialDataSet<Employee>(
+	private final CSVInitialDataRelationSet employeeData1 = new CSVInitialDataRelationSet<Employee>(
 			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department1");
 
-	private final CSVInitialDataSet employeeData2 = new CSVInitialDataSet<Employee>(
+	private final CSVInitialDataRelationSet employeeData2 = new CSVInitialDataRelationSet<Employee>(
 			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department2");
 
-	private final CSVInitialDataSet employeeData3 = new CSVInitialDataSet<Employee>(
+	private final CSVInitialDataRelationSet employeeData3 = new CSVInitialDataRelationSet<Employee>(
 			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department3");
 	
-	private final CSVInitialDataSet employeeData4 = new CSVInitialDataSet<Employee>(
+	private final CSVInitialDataRelationSet employeeData4 = new CSVInitialDataRelationSet<Employee>(
 			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department4");
 	
-	private final CSVInitialDataSet employeeData5 = new CSVInitialDataSet<Employee>(
+	private final CSVInitialDataRelationSet employeeData5 = new CSVInitialDataRelationSet<Employee>(
 			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department5");
 	
-	private final CSVInitialDataSet employeeData6 = new CSVInitialDataSet<Employee>(
+	private final CSVInitialDataRelationSet employeeData6 = new CSVInitialDataRelationSet<Employee>(
 			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department6");
 	
-	private final CSVInitialDataSet departmentData = new CSVInitialDataSet<Department>(
+	private final CSVInitialDataRelationSet departmentData = new CSVInitialDataRelationSet<Department>(
 			Department.class, "departmentData.csv", "deptId", "name");
 
 	private EntityManager entityManager;

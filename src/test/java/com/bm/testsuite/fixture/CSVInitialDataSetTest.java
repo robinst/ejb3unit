@@ -3,6 +3,7 @@ package com.bm.testsuite.fixture;
 import junit.framework.TestCase;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3data.bo.EmbeddedExampleBo;
 import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.ejb3data.bo.StockWKNBoWithShema;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
@@ -15,16 +16,19 @@ import com.bm.testsuite.dataloader.CSVInitialDataSet;
  */
 public class CSVInitialDataSetTest extends TestCase {
 
-	private final CSVInitialDataSet toTest = new CSVInitialDataSet<StockWKNBo>(
-			StockWKNBo.class, "allstatData.csv", "wkn", "aktienName", "isin", "symbol",
-			"kaufModus", "branchenCode", "branche", "transaktionenProTag",
-			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");
+	private final CSVInitialDataSet toTest = new CSVInitialDataSet<StockWKNBo>(StockWKNBo.class,
+			"allstatData.csv", "wkn", "aktienName", "isin", "symbol", "kaufModus", "branchenCode",
+			"branche", "transaktionenProTag", "zumHandelZugelassen", "volatilitaet",
+			"durchschnittskaufkurs");
 
 	private final CSVInitialDataSet toTestWithSchema = new CSVInitialDataSet<StockWKNBoWithShema>(
-			StockWKNBoWithShema.class, "allstatData.csv", false, true, "wkn",
-			"aktienName", "isin", "symbol", "kaufModus", "branchenCode", "branche",
-			"transaktionenProTag", "zumHandelZugelassen", "volatilitaet",
-			"durchschnittskaufkurs");
+			StockWKNBoWithShema.class, "allstatData.csv", false, true, "wkn", "aktienName", "isin",
+			"symbol", "kaufModus", "branchenCode", "branche", "transaktionenProTag",
+			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");
+
+	private static final CSVInitialDataSet<EmbeddedExampleBo> toTestWithEmbedded = new CSVInitialDataSet<EmbeddedExampleBo>(
+			EmbeddedExampleBo.class, "trades.csv", "wkn", "day", "framenr", "price", "volume",
+			"transactions");
 
 	/**
 	 * @see junit.framework.TestCase#tearDown()
@@ -39,8 +43,15 @@ public class CSVInitialDataSetTest extends TestCase {
 	/**
 	 * Testmethod.
 	 */
-	public void testRead_happyPath() {
+	public void testWrite_simpleCSV_happyPath() {
 		toTest.create();
+	}
+
+	/**
+	 * Testmethod.
+	 */
+	public void testWrite_embeddedCSV_happyPath() {
+		toTestWithEmbedded.create();
 	}
 
 	/**
