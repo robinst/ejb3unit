@@ -398,7 +398,7 @@ public class CSVInitialDataRelationSet<T> implements InitialDataSet {
 			String value) throws SQLException {
 
 		// First, check whether this property denotes a relation
-		PersistentPropertyInfo persistentFieldInfo = this.introspector.getPresistentFieldInfo(prop);
+		PersistentPropertyInfo persistentFieldInfo = getPersistentFieldInfo(prop.getPropertyName());
 		if (persistentFieldInfo.isReleation()) {
 			EntityReleationInfo relationInfo = persistentFieldInfo.getEntityReleationInfo();
 			// Must determine the type of the primary key of the class that is referenced by the relation.
