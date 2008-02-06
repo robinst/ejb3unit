@@ -6,27 +6,27 @@ import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3data.bo.EmbeddedExampleBo;
 import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.ejb3data.bo.StockWKNBoWithShema;
-import com.bm.testsuite.dataloader.CSVInitialDataSet;
+import com.bm.testsuite.dataloader.CSVInitialDataNoRelationalSet;
 
 /**
- * Testclass for the CSVInitialDataSet.
+ * Testclass for the CSVInitialDataNoRelationalSet.
  * 
  * @author Daniel Wiese
  * @since 17.04.2006
  */
 public class CSVInitialDataSetTest extends TestCase {
 
-	private final CSVInitialDataSet toTest = new CSVInitialDataSet<StockWKNBo>(StockWKNBo.class,
+	private final CSVInitialDataNoRelationalSet toTest = new CSVInitialDataNoRelationalSet<StockWKNBo>(StockWKNBo.class,
 			"allstatData.csv", "wkn", "aktienName", "isin", "symbol", "kaufModus", "branchenCode",
 			"branche", "transaktionenProTag", "zumHandelZugelassen", "volatilitaet",
 			"durchschnittskaufkurs");
 
-	private final CSVInitialDataSet toTestWithSchema = new CSVInitialDataSet<StockWKNBoWithShema>(
+	private final CSVInitialDataNoRelationalSet toTestWithSchema = new CSVInitialDataNoRelationalSet<StockWKNBoWithShema>(
 			StockWKNBoWithShema.class, "allstatData.csv", false, true, "wkn", "aktienName", "isin",
 			"symbol", "kaufModus", "branchenCode", "branche", "transaktionenProTag",
 			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");
 
-	private static final CSVInitialDataSet<EmbeddedExampleBo> toTestWithEmbedded = new CSVInitialDataSet<EmbeddedExampleBo>(
+	private static final CSVInitialDataNoRelationalSet<EmbeddedExampleBo> toTestWithEmbedded = new CSVInitialDataNoRelationalSet<EmbeddedExampleBo>(
 			EmbeddedExampleBo.class, "trades.csv", "wkn", "day", "framenr", "price", "volume",
 			"transactions");
 

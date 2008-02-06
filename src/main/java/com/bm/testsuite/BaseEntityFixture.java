@@ -4,7 +4,6 @@ import java.sql.DataTruncation;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,7 +18,6 @@ import com.bm.datagen.Generator;
 import com.bm.datagen.relation.EntityRelation;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
-import com.bm.utils.BasicDataSource;
 import com.bm.utils.BeanEqualsTester;
 import com.bm.utils.NullableSetter;
 import com.bm.utils.SimpleGetterSetterTest;
@@ -281,7 +279,9 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			tx.commit();
 
 		} catch (RuntimeException e) {
-			tx.rollback();
+			if (tx.isActive()) {
+				tx.rollback();
+			}
 			this.lastTestRollbacked = true;
 			// throwan error only in an unknown exception case
 			if (!this.analyseException(e, created)) {
