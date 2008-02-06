@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3data.bo.StockWKNBo;
-import com.bm.testsuite.dataloader.CSVInitialDataNoRelationalSet;
+import com.bm.testsuite.dataloader.CSVInitialDataSet;
 
 /**
  * Testclass for the CSVInitialDataNoRelationalSet.
@@ -14,7 +14,7 @@ import com.bm.testsuite.dataloader.CSVInitialDataNoRelationalSet;
  */
 public class CompressedCSVInitialDataSetTest extends TestCase {
 	
-	private final CSVInitialDataNoRelationalSet toTest = new CSVInitialDataNoRelationalSet<StockWKNBo>(
+	private final CSVInitialDataSet<StockWKNBo> toTest = new CSVInitialDataSet<StockWKNBo>(
 			StockWKNBo.class, "allstatData.csv.zip", true, "wkn",
 			"aktienName", "isin", "symbol", "kaufModus", "branchenCode",
 			"branche", "transaktionenProTag", "zumHandelZugelassen",

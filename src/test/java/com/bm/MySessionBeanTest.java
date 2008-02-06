@@ -9,7 +9,7 @@ import com.bm.ejb3data.bo.ExpertiseAreas;
 import com.bm.ejb3data.bo.MySessionBean;
 import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
-import com.bm.testsuite.dataloader.CSVInitialDataNoRelationalSet;
+import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 
 /**
@@ -22,7 +22,7 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 
 	private static final Class[] usedBeans = { StockWKNBo.class, ExpertiseAreas.class };
 
-	private static final CSVInitialDataNoRelationalSet CSV_SET = new CSVInitialDataNoRelationalSet<StockWKNBo>(
+	private static final CSVInitialDataSet<StockWKNBo> CSV_SET = new CSVInitialDataSet<StockWKNBo>(
 			StockWKNBo.class, "allstatData.csv", "wkn", "aktienName", "isin", "symbol",
 			"kaufModus", "branchenCode", "branche", "transaktionenProTag",
 			"zumHandelZugelassen", "volatilitaet", "durchschnittskaufkurs");

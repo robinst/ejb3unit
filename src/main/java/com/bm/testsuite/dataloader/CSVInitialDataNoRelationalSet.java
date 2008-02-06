@@ -38,6 +38,7 @@ import com.bm.utils.csv.CSVParser;
  * @author Daniel Wiese
  * @author Istvan Devai
  * @author Peter Doornbosch
+ * @deprecated will be deleted soon
  * @since 17.04.2006
  */
 public class CSVInitialDataNoRelationalSet<T> implements InitialDataSet {
