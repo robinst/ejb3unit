@@ -198,7 +198,24 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 				questionMarks.append(", ");
 			}
 		}
-		insertSQL.append(") ").append("VALUES (").append(questionMarks.toString()).append(")");
+		// If entity uses single table inheritance, insert a discriminator value
+		// (which must be present)
+		if (this.introspector.usesSingleTableInheritance()) {
+			insertSQL.append(", ").append(this.introspector.getDiscriminatorName())
+				.append(") ").append("VALUES (").append(questionMarks.toString()).append(", ");
+			Class discriminatorType = this.introspector.getDiscriminatorType();
+			if (discriminatorType.equals(Integer.class)) {
+				insertSQL.append(this.introspector.getDiscriminatorValue());
+			}
+			else {
+				insertSQL.append("'").append(this.introspector.getDiscriminatorValue()).append("'");
+			}
+			insertSQL.append(")");
+		}
+		else {
+			// Normal case: just insert the values.
+			insertSQL.append(") ").append("VALUES (").append(questionMarks.toString()).append(")");
+		}
 
 		return insertSQL.toString();
 	}

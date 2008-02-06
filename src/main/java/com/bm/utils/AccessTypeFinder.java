@@ -4,7 +4,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 /**
  * This class will find out a access type (FIELD, METHOD).
@@ -18,7 +20,7 @@ public final class AccessTypeFinder {
 			.getLogger(AccessTypeFinder.class);
 
 	/**
-	 * Consructor.
+	 * Constructor.
 	 */
 	private AccessTypeFinder() {
 		// intentionally left blank
@@ -32,7 +34,7 @@ public final class AccessTypeFinder {
 	 * @return the accesstype
 	 */
 	public static AccessType findAccessType(Class toFind) {
-		AccessType back = AccessType.METHOD;
+		AccessType back = null;
 
 		Field[] fields = toFind.getDeclaredFields();
 		for (Field aktField : fields) {
@@ -49,7 +51,22 @@ public final class AccessTypeFinder {
 				}
 			}
 		}
-		// default access type
+		
+		if (back == null) {
+			// Not found: try super class (if entity inheritance is used).
+			// Specification 2.1.1: "A single access type applies to an entity hierarchy"
+			Class superClass = toFind.getSuperclass();
+			if (superClass != null && (superClass.getAnnotation(Entity.class) != null 
+					                   || superClass.getAnnotation(MappedSuperclass.class) != null)) {
+				return findAccessType(superClass);
+			}
+		}
+		
+		if (back == null) {
+			// default access type
+			back = AccessType.METHOD;
+		}
+		
 		log.debug("Accesstype: " + back);
 		return back;
 	}
