@@ -41,7 +41,8 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @param usedEntityBeans -
 	 *            the used entity bens
 	 */
-	public PoJoFixture(Class[] usedEntityBeans) {
+	public PoJoFixture(
+			Class[] usedEntityBeans) {
 		super();
 		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
 		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
@@ -62,7 +63,9 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	public PoJoFixture(Class[] usedEntityBeans, InitialDataSet... initialData) {
+	public PoJoFixture(
+			Class[] usedEntityBeans,
+			InitialDataSet... initialData) {
 		this(usedEntityBeans);
 		this.initalDataSet = initialData;
 	}
@@ -77,8 +80,7 @@ public abstract class PoJoFixture extends BaseTest {
 		super.setUp();
 		this.jndiBinder.bind();
 		log.info("Creating entity manager instance for POJO test");
-		entityManager = this.configuration.getEntityManagerFactory()
-				.createEntityManager();
+		entityManager = this.configuration.getEntityManagerFactory().createEntityManager();
 
 		if (this.initalDataSet != null) {
 			EntityManager em = this.getEntityManager();
@@ -153,7 +155,11 @@ public abstract class PoJoFixture extends BaseTest {
 				persited.add(manager.merge(order));
 			}
 		} finally {
-			tx.commit();
+			if (tx.getRollbackOnly()) {
+				log.warn("Not committing because we are in rollback-only mode");
+			} else {
+				tx.commit();
+			}
 		}
 
 		return persited;

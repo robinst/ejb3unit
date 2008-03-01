@@ -21,6 +21,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import org.apache.commons.lang.BooleanUtils;
+
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.introspectors.EmbeddedClassIntrospector;
 import com.bm.introspectors.EntityBeanIntrospector;
@@ -91,7 +93,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		initialize(entityBeanClass, propertyMapping);
 		final URL tmp = Thread.currentThread().getContextClassLoader().getResource(csvFileName);
 		if (tmp == null) {
-			throw new IllegalArgumentException("Can´t find the CVS file named (" + csvFileName
+			throw new IllegalArgumentException("Can't find the CVS file named (" + csvFileName
 					+ ")");
 		}
 
@@ -201,18 +203,16 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		// If entity uses single table inheritance, insert a discriminator value
 		// (which must be present)
 		if (this.introspector.usesSingleTableInheritance()) {
-			insertSQL.append(", ").append(this.introspector.getDiscriminatorName())
-				.append(") ").append("VALUES (").append(questionMarks.toString()).append(", ");
+			insertSQL.append(", ").append(this.introspector.getDiscriminatorName()).append(") ")
+					.append("VALUES (").append(questionMarks.toString()).append(", ");
 			Class discriminatorType = this.introspector.getDiscriminatorType();
 			if (discriminatorType.equals(Integer.class)) {
 				insertSQL.append(this.introspector.getDiscriminatorValue());
-			}
-			else {
+			} else {
 				insertSQL.append("'").append(this.introspector.getDiscriminatorValue()).append("'");
 			}
 			insertSQL.append(")");
-		}
-		else {
+		} else {
 			// Normal case: just insert the values.
 			insertSQL.append(") ").append("VALUES (").append(questionMarks.toString()).append(")");
 		}
@@ -418,21 +418,25 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		PersistentPropertyInfo persistentFieldInfo = getPersistentFieldInfo(prop.getPropertyName());
 		if (persistentFieldInfo.isReleation()) {
 			EntityReleationInfo relationInfo = persistentFieldInfo.getEntityReleationInfo();
-			// Must determine the type of the primary key of the class that is referenced by the relation.
+			// Must determine the type of the primary key of the class that is
+			// referenced by the relation.
 			Set<Property> targetKeyProps = relationInfo.getTargetKeyProperty();
 			if (targetKeyProps == null) {
-				// This can happen with relation types that we do not yet support
-				throw new IllegalArgumentException("Can't determine key type of relation target - relation type not yet supported?");
+				// This can happen with relation types that we do not yet
+				// support
+				throw new IllegalArgumentException(
+						"Can't determine key type of relation target - relation type not yet supported?");
 			}
 			if (targetKeyProps.size() > 1) {
 				throw new IllegalArgumentException("Composite foreign keys are not yet supported.");
 			}
-			for (Property keyProp: targetKeyProps) {	// Because of the check above, this will loop at most once
+			for (Property keyProp : targetKeyProps) { // Because of the check
+														// above, this will loop
+														// at most once
 				Class foreignKeyType = Ejb3Utils.getNonPrimitiveType(keyProp.getType());
 				setPreparedStatement(index, statement, foreignKeyType, value);
 			}
-		}
-		else {
+		} else {
 			// convert to non-primitive if primitive
 			Class type = Ejb3Utils.getNonPrimitiveType(prop.getType());
 			setPreparedStatement(index, statement, type, value);
@@ -440,37 +444,39 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	}
 
 	/**
-	 * Sets the value (using the right type) in the prepared statement. Supports only simple types
+	 * Sets the value (using the right type) in the prepared statement. Supports
+	 * only simple types
+	 * 
 	 * @param index
-	 * 				the index of the value in the prepared statement
+	 *            the index of the value in the prepared statement
 	 * @param statement
-	 * 				the prepared statement in which values are set
+	 *            the prepared statement in which values are set
 	 * @param type
-	 * 				the type of the property
+	 *            the type of the property
 	 * @param value
-	 * 				the value to set
+	 *            the value to set
 	 * @throws SQLException
 	 */
-	private void setPreparedStatement(int index, PreparedStatement statement, Class type, String value) throws SQLException
-	{
+	private void setPreparedStatement(int index,
+			PreparedStatement statement,
+			Class type,
+			String value) throws SQLException {
 		if (type.equals(String.class)) {
 			statement.setString(index, value);
 		} else if (type.equals(Integer.class)) {
 			if (value == null || value.equals("") || value.equals("null")) {
 				statement.setNull(index, Types.INTEGER);
-			}
-			else {
+			} else {
 				statement.setInt(index, ((value.equals("")) ? 0 : Integer.valueOf(value)));
 			}
 		} else if (type.equals(Long.class)) {
 			if (value == null || value.equals("") || value.equals("null")) {
 				statement.setNull(index, Types.BIGINT);
-			}
-			else {			
+			} else {
 				statement.setLong(index, ((value.equals("")) ? 0 : Long.valueOf(value)));
 			}
 		} else if (type.equals(Boolean.class)) {
-			final boolean result = (value != null && value.equals("True") ? true : false);
+			final boolean result = BooleanUtils.toBoolean(value);
 			statement.setBoolean(index, result);
 		} else if (type.equals(Short.class)) {
 			statement.setShort(index, ((value.equals("")) ? 0 : Short.valueOf(value)));
