@@ -2,6 +2,7 @@ package com.bm.testsuite;
 
 import java.sql.DataTruncation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -60,12 +61,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *            the entity to test
 	 */
 	public BaseEntityFixture(Class<T> entityToTest) {
-		final List<Class<? extends Object>> entitiesToTest = new ArrayList<Class<? extends Object>>();
-		entitiesToTest.add(entityToTest);
-		this.initEntityManagerFactory(entitiesToTest);
-		this.baseClass = entityToTest;
-		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
-		this.creator = new EntityBeanCreator<T>(intro, this.baseClass);
+		this(entityToTest, null, null);
 	}
 
 	/**
@@ -78,18 +74,40 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 */
 	@SuppressWarnings("unchecked")
 	public BaseEntityFixture(Class<T> entityToTest, Generator[] additionalGenerators) {
-		final List<Class<? extends Object>> entitiesToTest = new ArrayList<Class<? extends Object>>();
-		// add the currenbt class
+		this(entityToTest, additionalGenerators, null);
+	}
+
+	/**
+	 * Additional constructor.
+	 * 
+	 * @param entityToTest -
+	 *            the entity to test
+	 * @param additionalGenerators
+	 *            -additional generators (plug in)
+	 * @param referencedEntities
+	 *            referenced persitence classes
+	 */
+	@SuppressWarnings("unchecked")
+	public BaseEntityFixture(Class<T> entityToTest, Generator[] additionalGenerators,
+			Class<?>[] referencedEntities) {
+		final List<Class<?>> entitiesToTest = new ArrayList<Class<?>>();
+		// add the current class
 		entitiesToTest.add(entityToTest);
+		if (referencedEntities != null && referencedEntities.length > 0) {
+			entitiesToTest.addAll(Arrays.asList(referencedEntities));
+		}
 
 		// register additional generators
-		final List<Generator> currentGenList = new ArrayList<Generator>();
-		for (Generator aktGen : additionalGenerators) {
-			currentGenList.add(aktGen);
-			// look for additional, releated entity beans
-			if (aktGen instanceof EntityRelation) {
-				final EntityRelation<Object> er = (EntityRelation<Object>) aktGen;
-				entitiesToTest.add(er.getUsedBeans());
+		List<Generator> currentGenList = null;
+		if (additionalGenerators != null && additionalGenerators.length > 0) {
+			currentGenList = new ArrayList<Generator>();
+			for (Generator aktGen : additionalGenerators) {
+				currentGenList.add(aktGen);
+				// look for additional, related entity beans
+				if (aktGen instanceof EntityRelation) {
+					final EntityRelation<Object> er = (EntityRelation<Object>) aktGen;
+					entitiesToTest.add(er.getUsedBeans());
+				}
 			}
 		}
 
@@ -101,7 +119,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 	}
 
-	private void initEntityManagerFactory(Collection<Class<? extends Object>> entitiesToTest) {
+	private void initEntityManagerFactory(
+			Collection<Class<? extends Object>> entitiesToTest) {
 		Ejb3UnitCfg.addEntytiesToTest(entitiesToTest);
 	}
 
