@@ -1,7 +1,7 @@
 package com.bm.datagen;
 
 /**
- * This intrface represents a base generator contract.
+ * This interface represents a base generator contract.
  * 
  * @author Daniel Wiese
  * @param <T> -

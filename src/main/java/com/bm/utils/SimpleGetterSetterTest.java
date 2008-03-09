@@ -32,9 +32,9 @@ public class SimpleGetterSetterTest extends Assert {
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(SimpleGetterSetterTest.class);
 
-	private static final List<Generator> DEFAULT_GENERATORS = new ArrayList<Generator>();
+	private static final List<Generator<?>> DEFAULT_GENERATORS = new ArrayList<Generator<?>>();
 
-	private final Class toTestClass;
+	private final Class<?> toTestClass;
 
 	private final PropertyUtilsBean propUtils = new PropertyUtilsBean();
 
@@ -76,9 +76,9 @@ public class SimpleGetterSetterTest extends Assert {
 		for (PropertyDescriptor current : properties) {
 			if (current.getWriteMethod() != null
 					&& current.getReadMethod() != null) {
-				Class[] params = current.getWriteMethod().getParameterTypes();
+				Class<?>[] params = current.getWriteMethod().getParameterTypes();
 				if (params.length == 1 && params[0] != null) {
-					Class toCreate = Ejb3Utils.getNonPrimitiveType(params[0]);
+					Class<?> toCreate = Ejb3Utils.getNonPrimitiveType(params[0]);
 					Object[] value = new Object[1];
 					value[0] = this.getValue(toCreate);
 					if (value[0] != null) {
@@ -128,9 +128,9 @@ public class SimpleGetterSetterTest extends Assert {
 		}
 	}
 
-	private Object getValue(Class type) {
+	private Object getValue(Class<?> type) {
 		Object back = null;
-		for (Generator current : DEFAULT_GENERATORS) {
+		for (Generator<?> current : DEFAULT_GENERATORS) {
 			final GeneratorType gType = Ejb3Utils
 					.getGeneratorTypeAnnotation(current);
 			if (type.equals(Ejb3Utils.getNonPrimitiveType(gType.className()))) {

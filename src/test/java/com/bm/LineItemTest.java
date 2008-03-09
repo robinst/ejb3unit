@@ -15,7 +15,7 @@ import com.bm.testsuite.BaseEntityFixture;
  */
 public class LineItemTest extends BaseEntityFixture<LineItem> {
 
-	private static final Generator[] SPECIAL_GENERATORS = { new MyOrderCreator() };
+	private static final Generator<?>[] SPECIAL_GENERATORS = { new MyOrderCreator() };
 
 	/**
 	 * Default constructor.

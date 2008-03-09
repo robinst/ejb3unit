@@ -20,6 +20,7 @@ import com.bm.datagen.relation.EntityRelation;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.utils.BeanEqualsTester;
+import com.bm.utils.Ejb3Utils;
 import com.bm.utils.NullableSetter;
 import com.bm.utils.SimpleGetterSetterTest;
 import com.bm.utils.UndoScriptGenerator;
@@ -45,14 +46,16 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 	private final EntityBeanIntrospector<T> intro;
 
-	private final EntityBeanCreator<T> creator;
+	private EntityBeanCreator<T> creator;
 
-	/** this field is setted before every test * */
+	/** this field is set before every test * */
 	private UndoScriptGenerator<T> undo = null;
 
 	private EntityManager manager = null;
 
 	private boolean lastTestRollbacked = false;
+
+	private final List<Generator<?>> currentGenList;
 
 	/**
 	 * Default constructor.
@@ -88,8 +91,9 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *            referenced persitence classes
 	 */
 	@SuppressWarnings("unchecked")
-	public BaseEntityFixture(Class<T> entityToTest, Generator[] additionalGenerators,
+	public BaseEntityFixture(Class<T> entityToTest, Generator<?>[] additionalGenerators,
 			Class<?>[] referencedEntities) {
+		currentGenList = new ArrayList<Generator<?>>();
 		final List<Class<?>> entitiesToTest = new ArrayList<Class<?>>();
 		// add the current class
 		entitiesToTest.add(entityToTest);
@@ -98,9 +102,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		}
 
 		// register additional generators
-		List<Generator> currentGenList = null;
 		if (additionalGenerators != null && additionalGenerators.length > 0) {
-			currentGenList = new ArrayList<Generator>();
 			for (Generator aktGen : additionalGenerators) {
 				currentGenList.add(aktGen);
 				// look for additional, related entity beans
@@ -114,8 +116,6 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		this.initEntityManagerFactory(entitiesToTest);
 		this.baseClass = entityToTest;
 		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
-
-		this.creator = new EntityBeanCreator<T>(intro, this.baseClass, currentGenList);
 
 	}
 
@@ -135,6 +135,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		this.undo = new UndoScriptGenerator<T>(intro);
 		this.manager = emf.createEntityManager();
 		this.lastTestRollbacked = false;
+		this.creator = new EntityBeanCreator<T>(this.manager, intro, this.baseClass,
+				currentGenList);
 		this.creator.prepare();
 	}
 
@@ -229,9 +231,17 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 * 
 	 */
 	public void testGetterSetter() {
-		T created = creator.createBeanInstance();
-		final SimpleGetterSetterTest test = new SimpleGetterSetterTest(created);
-		test.testGetterSetter();
+		EntityTransaction tx = manager.getTransaction();
+		T created = null;
+		try {
+			tx.begin();
+			created = creator.createBeanInstance();
+			final SimpleGetterSetterTest test = new SimpleGetterSetterTest(created);
+			test.testGetterSetter();
+			tx.rollback();
+		} finally {
+			this.manager.close();
+		}
 	}
 
 	/**

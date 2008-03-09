@@ -5,12 +5,11 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceContext;
 
 import org.apache.log4j.Logger;
 
-import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
 import com.bm.datagen.annotations.ForInstance;
@@ -39,11 +38,9 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 
 	private static Logger log = Logger.getLogger(SingleBeanGenerator.class);
 
-	private static EntityManagerFactory emf;
-
 	private final EntityBeanIntrospector<T> intro;
 
-	private final EntityBeanCreator<T> creator;
+	private EntityBeanCreator<T> creator;
 
 	private final Class<T> beanType;
 
@@ -57,6 +54,11 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 
 	@UsedIntrospector
 	private Introspector<Object> introspector;
+	
+	@PersistenceContext
+	private EntityManager manager;
+	
+	final List<Generator<?>> currentGenList;
 
 	/**
 	 * Contructor using additional generator (for this generator).
@@ -66,16 +68,15 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 	 * @param additionalGenerators -
 	 *            if the beand creation sould have some special rules (creators)
 	 */
-	public SingleBeanGenerator(Class<T> beanToCreate, Generator[] additionalGenerators) {
+	public SingleBeanGenerator(Class<T> beanToCreate, Generator<?>[] additionalGenerators) {
 		this.beanType = beanToCreate;
 		// register additional generators
-		final List<Generator> currentGenList = new ArrayList<Generator>();
-		for (Generator aktGen : additionalGenerators) {
+		currentGenList = new ArrayList<Generator<?>>();
+		for (Generator<?> aktGen : additionalGenerators) {
 			currentGenList.add(aktGen);
 		}
 
 		this.intro = new EntityBeanIntrospector<T>(beanToCreate);
-		this.creator = new EntityBeanCreator<T>(intro, beanToCreate, currentGenList);
 	}
 
 	/**
@@ -87,7 +88,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 	public SingleBeanGenerator(Class<T> beanToCreate) {
 		this.beanType = beanToCreate;
 		this.intro = new EntityBeanIntrospector<T>(beanToCreate);
-		this.creator = new EntityBeanCreator<T>(intro, beanToCreate);
+		currentGenList = new ArrayList<Generator<?>>();
 	}
 
 	/**
@@ -95,11 +96,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 	 */
 	@PrepareGenerator
 	public void preCreate() {
-		// init the entity manager lazy
-		// we can ensure that the configuration is being initialized erlier
-		if (emf == null) {
-			this.initEntityManagerFactory();
-		}
+		this.creator = new EntityBeanCreator<T>(manager, intro, beanType, currentGenList);
 		createdBean = this.creator.createBeanInstance();
 		this.persist(createdBean);
 	}
@@ -163,7 +160,6 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 	}
 
 	private void persist(T toPersist) {
-		final EntityManager manager = emf.createEntityManager();
 		EntityTransaction tx = manager.getTransaction();
 		try {
 			log.debug("Pre-Test-Persist: Need to persist ONE Entiy-Bean of type"
@@ -174,13 +170,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 			tx.commit();
 		} catch (RuntimeException e) {
 			tx.rollback();
-		} finally {
-			manager.close();
-		}
+		} 
 
-	}
-
-	private void initEntityManagerFactory() {
-		emf = Ejb3UnitCfg.getConfiguration().getEntityManagerFactory();
 	}
 }

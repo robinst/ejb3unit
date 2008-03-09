@@ -20,7 +20,7 @@ import com.bm.testsuite.dataloader.EntityInitialDataSet;
  */
 public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 
-	private static final Class[] usedBeans = { StockWKNBo.class, ExpertiseAreas.class };
+	private static final Class<?>[] usedBeans = { StockWKNBo.class, ExpertiseAreas.class };
 
 	private static final CSVInitialDataSet<StockWKNBo> CSV_SET = new CSVInitialDataSet<StockWKNBo>(
 			StockWKNBo.class, "allstatData.csv", "wkn", "aktienName", "isin", "symbol",
@@ -55,7 +55,7 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 		final MySessionBean toTest = this.getBeanToTest();
 		tx.begin();
 		final EntityBeanCreator<ExpertiseAreas> expAreasCreator = new EntityBeanCreator<ExpertiseAreas>(
-				ExpertiseAreas.class);
+				this.getEntityManager(), ExpertiseAreas.class);
 		toTest.saveEntityBean(expAreasCreator.createBeanInstance());
 		tx.commit();
 	}

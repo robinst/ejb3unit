@@ -3,6 +3,8 @@ package com.bm.creators;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+
 import org.apache.log4j.Logger;
 
 import com.bm.datagen.Generator;
@@ -30,13 +32,15 @@ public class EntityBeanCreator<T> {
 
 	private static final Logger log = Logger.getLogger(EntityBeanCreator.class);
 
-	private static final List<Generator> DEFAULT_GENERATORS = new ArrayList<Generator>();
+	private static final List<Generator<?>> DEFAULT_GENERATORS = new ArrayList<Generator<?>>();
 
-	private final EntityBeanIntrospector intro;
+	private final EntityBeanIntrospector<T> intro;
 
 	private final EntityInstanceCreator<T> baseCreator;
 
-	private final List<Generator> currentGeneratorList = new ArrayList<Generator>();
+	private final List<Generator<?>> currentGeneratorList = new ArrayList<Generator<?>>();
+
+	private final EntityManager em;
 
 	static {
 		// dafault configuration
@@ -57,28 +61,34 @@ public class EntityBeanCreator<T> {
 	 * @param toCreate -
 	 *            the class to create
 	 */
-	public EntityBeanCreator(Class<T> toCreate) {
-		this(new EntityBeanIntrospector<T>(toCreate), toCreate);
+	public EntityBeanCreator(EntityManager em, Class<T> toCreate) {
+		this(em, new EntityBeanIntrospector<T>(toCreate), toCreate);
 	}
 
 	/**
 	 * Deafult constructor.
 	 * 
+	 * @param em
+	 *            the current entity manager.
 	 * @param intro -
 	 *            a isntance of bean introspection
 	 * @param toCreate -
 	 *            the class to create
 	 */
-	public EntityBeanCreator(EntityBeanIntrospector<T> intro, Class<T> toCreate) {
+	public EntityBeanCreator(EntityManager em, EntityBeanIntrospector<T> intro,
+			Class<T> toCreate) {
+		this.em = em;
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
-		this.baseCreator = new EntityInstanceCreator<T>(intro, toCreate,
+		this.baseCreator = new EntityInstanceCreator<T>(em, intro, toCreate,
 				this.currentGeneratorList);
 	}
 
 	/**
 	 * Constructor with special generator list.
 	 * 
+	 * @param em
+	 *            the current entity manager.
 	 * @param intro -
 	 *            a isntance of bean introspection
 	 * @param toCreate -
@@ -86,14 +96,15 @@ public class EntityBeanCreator<T> {
 	 * @param additionalGenerators -
 	 *            additional generators
 	 */
-	public EntityBeanCreator(
-			EntityBeanIntrospector<T> intro,
-			Class<T> toCreate,
-			List<Generator> additionalGenerators) {
+	public EntityBeanCreator(EntityManager em, EntityBeanIntrospector<T> intro,
+			Class<T> toCreate, List<Generator<?>> additionalGenerators) {
+		this.em = em;
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
-		this.currentGeneratorList.addAll(additionalGenerators);
-		this.baseCreator = new EntityInstanceCreator<T>(intro, toCreate,
+		if (additionalGenerators != null) {
+			this.currentGeneratorList.addAll(additionalGenerators);
+		}
+		this.baseCreator = new EntityInstanceCreator<T>(this.em, intro, toCreate,
 				this.currentGeneratorList);
 	}
 
@@ -127,8 +138,8 @@ public class EntityBeanCreator<T> {
 			try {
 				final EmbeddedClassIntrospector emInspector = this.intro
 						.getEmbeddedPKClass();
-				final EntityInstanceCreator embCreator = new EntityInstanceCreator(
-						emInspector, emInspector.getEmbeddedClassName(),
+				final EntityInstanceCreator<T> embCreator = new EntityInstanceCreator<T>(
+						em, emInspector, emInspector.getEmbeddedClassName(),
 						this.currentGeneratorList);
 				final Object embeddedInstance = embCreator.createInstance();
 				this.intro
