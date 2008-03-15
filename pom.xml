@@ -130,9 +130,9 @@
 		</dependency>
 		<!-- for guice -->
 		<dependency>
-			<groupId>aopalliance</groupId>
-			<artifactId>aopalliance</artifactId>
-			<version>1.0</version>
+			<groupId>com.bm</groupId>
+			<artifactId>ejb3guice</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 		<!-- for mock testing -->
 		<dependency>
