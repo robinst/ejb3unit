@@ -1,6 +1,6 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.AnnotationVisitor;
+import org.ejb3unit.asm.jar.AnnotationVisitor;
 
 /**
  * This class manages the handling of single type like String name().

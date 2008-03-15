@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
-import org.ejb3unit.asm.ClassReader;
+import org.ejb3unit.asm.jar.ClassReader;
 
 import com.bm.ejb3metadata.annotations.analyzer.ScanClassVisitor;
 import com.bm.ejb3metadata.annotations.exceptions.ResolverException;

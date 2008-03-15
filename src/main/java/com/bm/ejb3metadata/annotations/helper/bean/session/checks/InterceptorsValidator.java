@@ -25,6 +25,10 @@
 
 package com.bm.ejb3metadata.annotations.helper.bean.session.checks;
 
+import java.util.List;
+
+import org.ejb3unit.asm.jar.Opcodes;
+
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.exceptions.InterceptorsValidationException;
 import com.bm.ejb3metadata.annotations.impl.JInterceptors;
@@ -32,10 +36,6 @@ import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
-import static org.ejb3unit.asm.Opcodes.ACC_FINAL;
-import static org.ejb3unit.asm.Opcodes.ACC_STATIC;
-
-import java.util.List;
 
 /**
  * This class ensures that the interceptors have the correct signature.
@@ -224,9 +224,9 @@ public final class InterceptorsValidator {
 						className);
 
 				// No final or static method
-				ensureNoAccess(ACC_FINAL, method.getJMethod(), "Final",
+				ensureNoAccess(Opcodes.ACC_FINAL, method.getJMethod(), "Final",
 						className);
-				ensureNoAccess(ACC_STATIC, method.getJMethod(), "Static",
+				ensureNoAccess(Opcodes.ACC_STATIC, method.getJMethod(), "Static",
 						className);
 			}
 

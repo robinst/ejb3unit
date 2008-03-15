@@ -25,7 +25,7 @@
 
 package com.bm.ejb3metadata.annotations.helper.bean.mdb;
 
-import static org.ejb3unit.asm.Opcodes.ACC_PUBLIC;
+import org.ejb3unit.asm.jar.Opcodes;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
@@ -41,7 +41,7 @@ public final class MDBListenerBusinessMethodResolver {
     /**
      * onMessage method.
      */
-    private static final JMethod ONMESSAGE_METHOD = new JMethod(ACC_PUBLIC, "onMessage", "(Ljavax/jms/Message;)V", null, null);
+    private static final JMethod ONMESSAGE_METHOD = new JMethod(Opcodes.ACC_PUBLIC, "onMessage", "(Ljavax/jms/Message;)V", null, null);
 
     /**
      * Helper class, no public constructor.

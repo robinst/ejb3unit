@@ -1,7 +1,7 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.AnnotationVisitor;
-import org.ejb3unit.asm.MethodVisitor;
+import org.ejb3unit.asm.jar.AnnotationVisitor;
+import org.ejb3unit.asm.jar.MethodVisitor;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.analyzer.method.JavaxAnnotationPostConstructVisitor;

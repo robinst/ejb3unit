@@ -26,10 +26,11 @@
 package com.bm.ejb3metadata.annotations.helper.bean.session;
 
 import static com.bm.ejb3metadata.annotations.helper.bean.InheritanceInterfacesHelper.JAVA_LANG_OBJECT;
-import static org.ejb3unit.asm.Opcodes.ACC_PUBLIC;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.ejb3unit.asm.jar.Opcodes;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.impl.JAnnotationResource;
@@ -53,31 +54,27 @@ public final class SessionBeanInterface {
 	/**
 	 * setSessionContext() method.
 	 */
-	private static final JMethod SETSESSIONCONTEXT_METHOD = new JMethod(
-			ACC_PUBLIC, "setSessionContext", "(Ljavax/ejb/SessionContext;)V",
-			null, new String[] { "javax/ejb/EJBException",
-					"java/rmi/RemoteException" });
+	private static final JMethod SETSESSIONCONTEXT_METHOD = new JMethod(Opcodes.ACC_PUBLIC,
+			"setSessionContext", "(Ljavax/ejb/SessionContext;)V", null, new String[] {
+					"javax/ejb/EJBException", "java/rmi/RemoteException" });
 
 	/**
 	 * ejbRemove() method.
 	 */
-	private static final JMethod EJBREMOVE_METHOD = new JMethod(ACC_PUBLIC,
-			"ejbRemove", "()V", null, new String[] { "javax/ejb/EJBException",
-					"java/rmi/RemoteException" });
+	private static final JMethod EJBREMOVE_METHOD = new JMethod(Opcodes.ACC_PUBLIC, "ejbRemove",
+			"()V", null, new String[] { "javax/ejb/EJBException", "java/rmi/RemoteException" });
 
 	/**
 	 * ejbActivate() method.
 	 */
-	private static final JMethod EJBACTIVATE_METHOD = new JMethod(ACC_PUBLIC,
-			"ejbActivate", "()V", null, new String[] {
-					"javax/ejb/EJBException", "java/rmi/RemoteException" });
+	private static final JMethod EJBACTIVATE_METHOD = new JMethod(Opcodes.ACC_PUBLIC, "ejbActivate", "()V",
+			null, new String[] { "javax/ejb/EJBException", "java/rmi/RemoteException" });
 
 	/**
 	 * ejbPassivate() method.
 	 */
-	private static final JMethod EJBPASSIVATE_METHOD = new JMethod(ACC_PUBLIC,
-			"ejbPassivate", "()V", null, new String[] {
-					"javax/ejb/EJBException", "java/rmi/RemoteException" });
+	private static final JMethod EJBPASSIVATE_METHOD = new JMethod(Opcodes.ACC_PUBLIC, "ejbPassivate",
+			"()V", null, new String[] { "javax/ejb/EJBException", "java/rmi/RemoteException" });
 
 	/**
 	 * Helper class, no public constructor.
@@ -106,29 +103,26 @@ public final class SessionBeanInterface {
 			setCtxMethod.setJAnnotationResource(jAnnotationResource);
 
 			// ejbRemove() method
-			MethodAnnotationMetadata ejbRemoveMethod = getMethod(sessionBean,
-					EJBREMOVE_METHOD, true);
+			MethodAnnotationMetadata ejbRemoveMethod = getMethod(sessionBean, EJBREMOVE_METHOD,
+					true);
 			ejbRemoveMethod.setPreDestroy(true);
-			if (!sessionBean.getPreDestroyMethodsMetadata().contains(
-					ejbRemoveMethod)) {
+			if (!sessionBean.getPreDestroyMethodsMetadata().contains(ejbRemoveMethod)) {
 				sessionBean.addPreDestroyMethodMetadata(ejbRemoveMethod);
 			}
 
 			// ejbActivate() method
-			MethodAnnotationMetadata ejbActivateMethod = getMethod(sessionBean,
-					EJBACTIVATE_METHOD, true);
+			MethodAnnotationMetadata ejbActivateMethod = getMethod(sessionBean, EJBACTIVATE_METHOD,
+					true);
 			ejbRemoveMethod.setPostActivate(true);
-			if (!sessionBean.getPostActivateMethodsMetadata().contains(
-					ejbActivateMethod)) {
+			if (!sessionBean.getPostActivateMethodsMetadata().contains(ejbActivateMethod)) {
 				sessionBean.addPostActivateMethodMetadata(ejbActivateMethod);
 			}
 
 			// ejbPassivate() method
-			MethodAnnotationMetadata ejbPassivateMethod = getMethod(
-					sessionBean, EJBPASSIVATE_METHOD, true);
+			MethodAnnotationMetadata ejbPassivateMethod = getMethod(sessionBean,
+					EJBPASSIVATE_METHOD, true);
 			ejbRemoveMethod.setPrePassivate(true);
-			if (!sessionBean.getPrePassivateMethodsMetadata().contains(
-					ejbPassivateMethod)) {
+			if (!sessionBean.getPrePassivateMethodsMetadata().contains(ejbPassivateMethod)) {
 				sessionBean.addPrePassivateMethodMetadata(ejbPassivateMethod);
 			}
 
@@ -147,15 +141,13 @@ public final class SessionBeanInterface {
 	 *            get the correct method in super class, not inherited
 	 * @return the method metadata, else exception
 	 */
-	private static MethodAnnotationMetadata getMethod(
-			final ClassAnnotationMetadata sessionBean, final JMethod jMethod,
+	private static MethodAnnotationMetadata getMethod(final ClassAnnotationMetadata sessionBean,
+			final JMethod jMethod,
 			final boolean inherited) {
-		MethodAnnotationMetadata method = sessionBean
-				.getMethodAnnotationMetadata(jMethod);
+		MethodAnnotationMetadata method = sessionBean.getMethodAnnotationMetadata(jMethod);
 		if (method == null) {
-			throw new IllegalStateException("Bean '" + sessionBean
-					+ "' implements " + SESSION_BEAN_INTERFACE + " but no "
-					+ jMethod + " method found in metadata");
+			throw new IllegalStateException("Bean '" + sessionBean + "' implements "
+					+ SESSION_BEAN_INTERFACE + " but no " + jMethod + " method found in metadata");
 		}
 		// gets the correct method on the correct level. (not the inherited
 		// method) if we don't want the inherited method.
@@ -163,8 +155,7 @@ public final class SessionBeanInterface {
 			String superClassName = sessionBean.getSuperName();
 			// loop while class is not java.lang.Object
 			while (!JAVA_LANG_OBJECT.equals(superClassName)) {
-				ClassAnnotationMetadata superMetaData = sessionBean
-						.getEjbJarAnnotationMetadata()
+				ClassAnnotationMetadata superMetaData = sessionBean.getEjbJarAnnotationMetadata()
 						.getClassAnnotationMetadata(superClassName);
 				// If the method is found in the super class and is not
 				// inherited, use this one
@@ -193,8 +184,7 @@ public final class SessionBeanInterface {
 	 *            the metadata to analyze.
 	 * @return the list of interfaces from a given class.
 	 */
-	public static List<String> getAllInterfacesFromClass(
-			final ClassAnnotationMetadata sessionBean) {
+	public static List<String> getAllInterfacesFromClass(final ClassAnnotationMetadata sessionBean) {
 		// build list
 		List<String> allInterfaces = new ArrayList<String>();
 
@@ -203,9 +193,8 @@ public final class SessionBeanInterface {
 
 		// loop while class is not java.lang.Object
 		while (!JAVA_LANG_OBJECT.equals(className)) {
-			ClassAnnotationMetadata metaData = sessionBean
-					.getEjbJarAnnotationMetadata().getClassAnnotationMetadata(
-							className);
+			ClassAnnotationMetadata metaData = sessionBean.getEjbJarAnnotationMetadata()
+					.getClassAnnotationMetadata(className);
 			// find metadata, all interfaces found
 			if (metaData != null) {
 				String[] interfaces = metaData.getInterfaces();

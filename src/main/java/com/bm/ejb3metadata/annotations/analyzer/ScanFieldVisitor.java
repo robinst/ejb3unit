@@ -1,6 +1,6 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.FieldVisitor;
+import org.ejb3unit.asm.jar.FieldVisitor;
 
 import com.bm.ejb3metadata.annotations.JField;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;

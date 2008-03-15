@@ -1,6 +1,6 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.Type;
+import org.objectweb.asm.Type;
 
 import com.bm.ejb3metadata.annotations.impl.JAnnotationResource;
 import com.bm.ejb3metadata.annotations.metadata.interfaces.IAnnotationResource;

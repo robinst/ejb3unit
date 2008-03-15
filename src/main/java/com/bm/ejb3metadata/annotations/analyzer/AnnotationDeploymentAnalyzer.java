@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import org.ejb3unit.asm.ClassReader;
+import org.ejb3unit.asm.jar.ClassReader;
 
 import com.bm.ejb3metadata.annotations.exceptions.AnalyzerException;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;

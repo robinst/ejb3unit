@@ -3,8 +3,8 @@ package com.bm.ejb3metadata.annotations.analyzer;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ejb3unit.asm.AnnotationVisitor;
-import org.ejb3unit.asm.commons.EmptyVisitor;
+import org.ejb3unit.asm.jar.AnnotationVisitor;
+import org.ejb3unit.asm.jar.commons.EmptyVisitor;
 
 import com.bm.ejb3metadata.annotations.metadata.interfaces.ISharedMetadata;
 

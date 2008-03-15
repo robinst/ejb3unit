@@ -3,7 +3,7 @@ package com.bm.ejb3metadata.annotations.analyzer;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ejb3unit.asm.AnnotationVisitor;
+import org.ejb3unit.asm.jar.AnnotationVisitor;
 
 /**
  * This class manages the handling of Array[] type like String[] value().
