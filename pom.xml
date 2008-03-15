@@ -1,9 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bm</groupId>
 	<artifactId>ejb3unit</artifactId>
 	<name>ejb3unit</name>
-	<version>1.2.0-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<description>Out of Container Testing of EJB 3.0</description>
 	<url>http://ejb3unit.sourceforge.net/</url>
 	<ciManagement>
@@ -46,8 +48,12 @@
 	</licenses>
 	<scm>
 		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit</url>
-		<connection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</connection>
-		<developerConnection>scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit</developerConnection>
+		<connection>
+			scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit
+		</connection>
+		<developerConnection>
+			scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit
+		</developerConnection>
 	</scm>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -90,6 +96,58 @@
 					<skip>false</skip>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>
+								${project.build.directory}/liblocation
+							</outputDirectory>
+							<overWriteReleases>false</overWriteReleases>
+							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>jarjar</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<ant antfile="build.xml" target="jarjar"
+									inheritrefs="true">
+									<property name="project.build.directory"
+										value="${project.build.directory}" />
+									<property name="project.build.finalName"
+										value="${project.build.finalName}" />
+								</ant>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>jarjar</groupId>
+						<artifactId>jarjar</artifactId>
+						<version>1.0rc6</version>
+					</dependency>
+
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
 	<repositories>
@@ -100,7 +158,7 @@
 		</repository>
 	</repositories>
 	<dependencies>
-	   <!-- ejb3guice has the same dependency -->
+		<!-- ejb3guice has the same dependency -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -112,50 +170,59 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.13</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- commons dependencies -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.7.0</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 			<version>1.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.3</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- for guice -->
 		<dependency>
 			<groupId>com.bm</groupId>
 			<artifactId>ejb3guice</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- for mock testing -->
 		<dependency>
 			<groupId>jmock</groupId>
 			<artifactId>jmock</artifactId>
 			<version>1.0.1</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
 			<version>3.2.1.ga</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate</artifactId>
 			<version>3.2.1.ga</version>
+			<scope>provided</scope>
 		</dependency>
 		<!-- for in momory database -->
 		<dependency>
 			<groupId>hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>1.8.0.1</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<reporting>
