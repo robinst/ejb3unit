@@ -5,20 +5,30 @@
                                     ------
                                     2007
 
-Roadmap for Ejb3Unit
+Roadmap for Ejb3Unit 2.0
 
-  With EJB3Unit you can create and test entity beans outside the container. We are always trying to improve the framwork. Here is the current roadmap.
+  Exiting News Ejb3Unit 2.0 is comming soon
 
-  <<Feature list for next 1.2.0 Version>>
+  <<Feature list for next 2.0 Version>>
   
   * Major features
       
-      * Support for Transactions.
-
-      * Support for out of container testing for J2EE (EJB 2.x) Specification
+      * No dependencies - on jar thats it!! (only log4j.jar and optional JMock.jar [for mocked tests]
+        will be required). 
+        This will ease the developent in large projects because less dependencies are reqired
       
-  * Minor feature
+      * Support for peristence.xml no need to specify your persistence objects for every test 
+
+      * Completely refactored EntityManger life cycle handling - will speed up your testing!
+      
+      * Improved feedback for failing test cases
+      
+      * Lots of bug fixes
+      
+  * Not in this feature
   
+      * Transaction Handling
+      
       * Better relation ship support for automatead entity bean test: 
         Unidirectional 1:N, Multidirectional n:m and one2one. Currently only bi-directional 
         1:n is supported
