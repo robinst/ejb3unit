@@ -79,7 +79,7 @@ public abstract class PoJoFixture extends BaseTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.jndiBinder.bind();
-		log.info("Creating entity manager instance for POJO test");
+		log.debug("Creating entity manager instance for POJO test");
 		entityManager = this.configuration.getEntityManagerFactory().createEntityManager();
 
 		if (this.initalDataSet != null) {
@@ -114,7 +114,7 @@ public abstract class PoJoFixture extends BaseTest {
 	protected <T> List<T> findAll(Class<T> clazz) {
 		EntityManager manager = this.getEntityManager();
 		Query query = manager.createQuery("select c from " + clazz.getName() + " c");
-		return (List<T>) query.getResultList();
+		return query.getResultList();
 	}
 
 	/**
