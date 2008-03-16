@@ -17,6 +17,7 @@ import javax.persistence.EntityTransaction;
 
 import com.bm.ejb3guice.annotations.InjectedIn;
 import com.bm.ejb3guice.annotations.NotifyOnInject;
+import com.bm.ejb3guice.inject.Provider;
 
 /**
  * @author Daniel Wiese
@@ -27,7 +28,7 @@ public class MockedTimerService implements TimerService {
 	private Object caller;
 
 	@Resource
-	private EntityManager entityManager;
+	private Provider<EntityManager> entityManager;
 
 	private final Collection<TimerMock> timers = new ArrayList<TimerMock>();
 
@@ -42,7 +43,7 @@ public class MockedTimerService implements TimerService {
 	public Timer createTimer(long l, Serializable info)
 			throws IllegalArgumentException, IllegalStateException,
 			EJBException {
-		final Class callerClass = caller.getClass();
+		final Class<?> callerClass = caller.getClass();
 
 		TimerMock t = new TimerMock(l, info) {
 			public void timerExpired() {
@@ -50,7 +51,7 @@ public class MockedTimerService implements TimerService {
 				for (Method m : methods) {
 					if (m.isAnnotationPresent(Timeout.class)) {
 						try {
-							EntityTransaction t = entityManager
+							EntityTransaction t = entityManager.get()
 									.getTransaction();
 							t.begin();
 							m.invoke(caller, this);

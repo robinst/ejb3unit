@@ -5,6 +5,8 @@ import javax.persistence.EntityTransaction;
 
 import com.bm.creators.SessionBeanFactory;
 import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Injector;
+import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.IIntrospector;
 import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
@@ -35,7 +37,9 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	private Ejb3UnitJndiBinder jndiBinder;
 
 	@Inject
-	private EntityManager em;
+	private Provider<EntityManager> emProv;
+
+	private final Injector injector;
 
 	/**
 	 * Constructor.
@@ -63,7 +67,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 */
 	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class<?>[] usedEntityBeans) {
 		super();
-		InternalInjector.createInternalInjector(usedEntityBeans).injectMembers(this);
+		injector = InternalInjector.createInternalInjector(usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
 
 	}
@@ -83,7 +87,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest, IIntrospector<T> intro,
 			Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
 		super();
-		InternalInjector.createInternalInjector(usedEntityBeans).injectMembers(this);
+		injector = InternalInjector.createInternalInjector(usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
 		this.initalDataSets = initialData;
 	}
@@ -106,22 +110,26 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		injector.injectMembers(this);
 		this.jndiBinder.bind();
-		// the creation process is expensive, do it once per test
-		if (this.beanToTest == null) {
-			this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
-		}
+		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
 
 		if (this.initalDataSets != null) {
 			for (InitialDataSet current : this.initalDataSets) {
 				// insert entity manager
+				EntityManager em = emProv.get();
 				if (current instanceof EntityInitialDataSet) {
 					EntityInitialDataSet<?> curentEntDs = (EntityInitialDataSet<?>) current;
 					curentEntDs.setEntityManager(em);
 					EntityTransaction tx = em.getTransaction();
-					tx.begin();
-					current.create();
-					tx.commit();
+					try {
+						tx.begin();
+						current.create();
+						tx.commit();
+					} catch (Exception e) {
+						tx.rollback();
+						throw e;
+					}
 				} else {
 					current.create();
 				}
@@ -137,11 +145,9 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-
-		// delete all objects (faster than shutdown and restart everything)
-		final EntityManager em = this.getEntityManager();
+		EntityManager em = emProv.get();
+		em.clear();
 		if (this.initalDataSets != null) {
-			// tear down in reverse order, otherwise foreign key constraints may
 			// be violated
 			for (int i = this.initalDataSets.length - 1; i >= 0; i--) {
 				this.initalDataSets[i].cleanup(em);
@@ -176,7 +182,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @return - a instance of an entity manager
 	 */
 	public EntityManager getEntityManager() {
-		return em;
+		return emProv.get();
 	}
 
 	/**

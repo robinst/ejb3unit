@@ -18,6 +18,12 @@ public final class Ejb3UnitCfg {
 	public static final String EJB3UNIT_PROPERTIES_NAME = "ejb3unit.properties";
 
 	/** Konfiguration key. * */
+	public static final String KEY_LOAD_PERSISTENMCE_XML = "ejb3unit.loadPersistenceXML";
+
+	/** Konfiguration key. * */
+	public static final String KEY_PERSISTENCE_UNIT_NAME = "ejb3unit.persistenceUnit.name";
+
+	/** Konfiguration key. * */
 	public static final String KEY_AUTOMATIC_SCHEMA_UPDATE = "ejb3unit.schema.update";
 
 	/** Konfiguration key. * */
@@ -59,7 +65,6 @@ public final class Ejb3UnitCfg {
 	private final Properties config;
 
 	private boolean inMemory = true;
-
 
 	private Ejb3UnitCfg() {
 		try {
@@ -140,8 +145,9 @@ public final class Ejb3UnitCfg {
 	 * @return the ddl
 	 */
 	public String getSchemaGenScript(DBDialect dialect) {
-		String[] generateSchemaCreationScript = this.getEJB3Configuration().getHibernateConfiguration()
-				.generateSchemaCreationScript(dialect.getDialect());
+		String[] generateSchemaCreationScript = this.getEJB3Configuration()
+				.getHibernateConfiguration().generateSchemaCreationScript(
+						dialect.getDialect());
 		final StringBuilder sb = new StringBuilder();
 		for (String ddl : generateSchemaCreationScript) {
 			sb.append(ddl).append("\n");
@@ -161,6 +167,15 @@ public final class Ejb3UnitCfg {
 	 */
 	public String getValue(String key) {
 		return this.config.getProperty(key);
+	}
+
+	/**
+	 * True is the persistence xml should be loaded
+	 */
+	public boolean isLoadPeristenceXML() {
+		final String isPersistenceXML = this.config
+				.getProperty(KEY_LOAD_PERSISTENMCE_XML);
+		return (isPersistenceXML != null && isPersistenceXML.equalsIgnoreCase("true"));
 	}
 
 	/**

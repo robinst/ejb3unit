@@ -12,6 +12,8 @@ import com.bm.ejb3guice.inject.Injector;
 public final class InternalInjector extends AbstractModule {
 
 	private final EntityManagerProvider prov;
+	private final static EntityManagerProvider entityManagerProvider = new EntityManagerProvider();
+	private static Injector injector;
 
 	private InternalInjector(EntityManagerProvider prov) {
 		this.prov = prov;
@@ -41,9 +43,13 @@ public final class InternalInjector extends AbstractModule {
 	 *            the current test case entities
 	 * @return the injector
 	 */
-	public static Injector createInternalInjector(Collection<Class<?>> entyties) {
-		Injector injector = Ejb3Guice.createInjector(new InternalInjector(
-				new EntityManagerProvider(entyties)));
+	public static synchronized Injector createInternalInjector(
+			Collection<Class<?>> entyties) {
+		if (entityManagerProvider.addPersistenceClasses(entyties) || injector == null){
+			injector = Ejb3Guice.createInjector(new InternalInjector(
+					entityManagerProvider));
+		}
+		
 		return injector;
 	}
 }

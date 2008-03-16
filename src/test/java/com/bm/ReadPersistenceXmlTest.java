@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 public class ReadPersistenceXmlTest extends TestCase {
 
 	public void testGetClasses() throws Exception {
-		Class<?>[] classesLoaded = PersistenceXml.getClasses();
+		Class<?>[] classesLoaded = PersistenceXml.getClasses("ejb3unit");
 		assertTrue("Found/Loaded no classes derived from the persistence.xml",
 				classesLoaded.length > 0);
 		final Set<Class<?>> allLoaded = new HashSet<Class<?>>(Arrays

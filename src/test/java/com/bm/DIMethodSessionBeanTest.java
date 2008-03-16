@@ -1,6 +1,5 @@
 package com.bm;
 
-import com.bm.ejb3data.bo.AnnotatedFieldsSessionBean;
 import com.bm.ejb3data.bo.AnnotatedMethodsSessionBean;
 import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.testsuite.BaseSessionBeanFixture;
@@ -43,7 +42,7 @@ public class DIMethodSessionBeanTest extends
 	}
 	
 	/**
-	 * Test the dpendency injection.
+	 * Test the dependency injection.
 	 * 
 	 * @author Daniel Wiese
 	 * @since 08.11.2005

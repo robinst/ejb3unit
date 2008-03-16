@@ -10,6 +10,8 @@ import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Injector;
+import com.bm.ejb3guice.inject.Provider;
 import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
@@ -34,10 +36,12 @@ public abstract class PoJoFixture extends BaseTest {
 	private final Ejb3UnitCfg configuration;
 
 	@Inject
-	private EntityManager entityManager;
-	
+	private Provider<EntityManager> entityManagerProv;
+
 	@Inject
 	private Ejb3UnitJndiBinder jndiBinder;
+
+	private final Injector injector;
 
 	/**
 	 * Constructor.
@@ -45,10 +49,9 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @param usedEntityBeans -
 	 *            the used entity beans
 	 */
-	public PoJoFixture(
-			Class<?>[] usedEntityBeans) {
+	public PoJoFixture(Class<?>[] usedEntityBeans) {
 		super();
-		InternalInjector.createInternalInjector(usedEntityBeans).injectMembers(this);
+		injector = InternalInjector.createInternalInjector(usedEntityBeans);
 		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
 
 		for (Class<? extends Object> akt : usedEntityBeans) {
@@ -66,9 +69,7 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @param initialData -
 	 *            the initial data to create in the db
 	 */
-	public PoJoFixture(
-			Class<?>[] usedEntityBeans,
-			InitialDataSet... initialData) {
+	public PoJoFixture(Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
 		this(usedEntityBeans);
 		this.initalDataSet = initialData;
 	}
@@ -81,6 +82,7 @@ public abstract class PoJoFixture extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		injector.injectMembers(this);
 		this.jndiBinder.bind();
 		log.debug("Creating entity manager instance for POJO test");
 		if (this.initalDataSet != null) {
@@ -174,11 +176,11 @@ public abstract class PoJoFixture extends BaseTest {
 	@Override
 	protected void tearDown() throws Exception {
 		if (this.initalDataSet != null) {
+			EntityManager entityManager = entityManagerProv.get();
 			for (InitialDataSet current : this.initalDataSet) {
 				current.cleanup(entityManager);
 			}
 		}
-		this.entityManager = null;
 		super.tearDown();
 
 	}
@@ -200,7 +202,7 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @return - a instance of an entity manager
 	 */
 	public EntityManager getEntityManager() {
-		return this.entityManager;
+		return this.entityManagerProv.get();
 	}
 
 }

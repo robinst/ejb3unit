@@ -7,7 +7,6 @@ import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -21,7 +20,6 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 @Entity
 @Table(name = "stocks",  schema = "foo")
-@NamedQuery(name = "StockWKNBo.allStocks", query = "from com.bm.data.bo.StockWKNBo")
 public class StockWKNBoWithShema implements Comparable, Serializable {
     private static final long serialVersionUID = 1L;
 

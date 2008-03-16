@@ -16,6 +16,7 @@ import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
 import com.bm.datagen.relation.EntityRelation;
 import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
@@ -53,9 +54,11 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 	private final List<Generator<?>> currentGenList;
 
+	private final Injector injector;
+
 	@Inject
 	private Provider<EntityManager> manager;
-
+	
 	/**
 	 * Default constructor.
 	 * 
@@ -112,7 +115,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			}
 		}
 
-		InternalInjector.createInternalInjector(entitiesToTest).injectMembers(this);
+		injector = InternalInjector.createInternalInjector(entitiesToTest);
 		this.baseClass = entityToTest;
 		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
 
@@ -124,6 +127,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		injector.injectMembers(this);
 		log.debug("Setting up BaseEntityTest");
 		this.undo = new UndoScriptGenerator<T>(intro);
 		this.lastTestRollbacked = false;
@@ -140,11 +144,11 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		super.tearDown();
 		this.creator.cleanup();
 		log.debug("Cleaning database from previous test");
-
 		try {
 			// only delete objects if the test was not rollbacked
 			if (!this.lastTestRollbacked) {
 				EntityManager entityManager = manager.get();
+				entityManager.clear();
 				if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
 					this.undo.deleteAllDataInAllUsedTables(entityManager);
 				} else {

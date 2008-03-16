@@ -19,7 +19,7 @@ import com.bm.testsuite.BaseEntityFixture;
  *            (com.ibm.xtools.transform.uml2.java5.internal.UML2JavaTransform)"
  */
 public class ServiceTest extends BaseEntityFixture<Service> {
-	private static final Generator[] SPECIAL_GENERATORS = {
+	private static final Generator<?>[] SPECIAL_GENERATORS = {
 			new EtablissementCreator(), new SocieteCreator() };
 
 	/**

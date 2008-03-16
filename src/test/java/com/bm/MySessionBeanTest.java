@@ -50,14 +50,19 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 	/**
 	 * Test persistence.
 	 */
-	public void testPersistABean() {
+	public void testPersistABean() throws Exception {
 		EntityTransaction tx = this.getEntityManager().getTransaction();
 		final MySessionBean toTest = this.getBeanToTest();
-		tx.begin();
-		final EntityBeanCreator<ExpertiseAreas> expAreasCreator = new EntityBeanCreator<ExpertiseAreas>(
-				this.getEntityManager(), ExpertiseAreas.class);
-		toTest.saveEntityBean(expAreasCreator.createBeanInstance());
-		tx.commit();
+		try {
+			tx.begin();
+			final EntityBeanCreator<ExpertiseAreas> expAreasCreator = new EntityBeanCreator<ExpertiseAreas>(
+					this.getEntityManager(), ExpertiseAreas.class);
+			toTest.saveEntityBean(expAreasCreator.createBeanInstance());
+			tx.commit();
+		} catch (Exception e) {
+			tx.rollback();
+			throw e;
+		}
 	}
 
 	/**
