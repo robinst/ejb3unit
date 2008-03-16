@@ -42,14 +42,15 @@ public final class MetadataAnalyzer {
 		return analyzeClasses(classes, className);
 	}
 
-	private static synchronized EjbJarAnnotationMetadata analyzeClasses(List<String> classes,
-			String className) {
+	private static synchronized EjbJarAnnotationMetadata analyzeClasses(
+			List<String> classes, String className) {
 		EjbJarAnnotationMetadata toReturn = null;
 		try {
-			toReturn = MetadataAnalyzer.analyze(Thread.currentThread().getContextClassLoader(),
-					classes, null);
+			toReturn = MetadataAnalyzer.analyze(Thread.currentThread()
+					.getContextClassLoader(), classes, null);
 		} catch (ResolverException e) {
-			throw new RuntimeException("Class (" + className + ") can´t be resolved");
+			throw new RuntimeException("Class (" + className
+					+ ") can´t be resolved");
 		}
 		return toReturn;
 	}
@@ -68,10 +69,11 @@ public final class MetadataAnalyzer {
 	 *             in error case
 	 */
 	private static EjbJarAnnotationMetadata analyze(final ClassLoader loader,
-			final List<String> classesToAnalyze,
-			final Map<String, Object> map) throws ResolverException {
+			final List<String> classesToAnalyze, final Map<String, Object> map)
+			throws ResolverException {
 		EjbJarAnnotationMetadata ejbJarAnnotationMetadata = new EjbJarAnnotationMetadata();
-		ScanClassVisitor scanVisitor = new ScanClassVisitor(ejbJarAnnotationMetadata);
+		ScanClassVisitor scanVisitor = new ScanClassVisitor(
+				ejbJarAnnotationMetadata);
 		// logger.info("ClassLoader used = (" + loader + ")");
 		for (String clazz : classesToAnalyze) {
 			read(clazz, loader, scanVisitor, ejbJarAnnotationMetadata);
@@ -94,8 +96,7 @@ public final class MetadataAnalyzer {
 	 * @param ejbJarAnnotationMetadata
 	 *            the structure containing class metadata
 	 */
-	private static void read(final String className,
-			final ClassLoader loader,
+	private static void read(final String className, final ClassLoader loader,
 			final ScanClassVisitor scanVisitor,
 			final EjbJarAnnotationMetadata ejbJarAnnotationMetadata) {
 		String readingClass = className;
@@ -104,11 +105,15 @@ public final class MetadataAnalyzer {
 		}
 
 		InputStream is = loader.getResourceAsStream(readingClass);
-
+		//class is not in classpath
+		if (is == null) {
+			return;
+		}
 		try {
 			new ClassReader(is).accept(scanVisitor, ClassReader.SKIP_CODE);
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot read the given class '" + className + "'.", e);
+			throw new RuntimeException("Cannot read the given class '"
+					+ className + "'.", e);
 		}
 
 		// get the class parsed
@@ -121,8 +126,9 @@ public final class MetadataAnalyzer {
 		try {
 			is.close();
 		} catch (IOException e) {
-			throw new RuntimeException("Cannot close the input stream for class '" + className
-					+ "'.", e);
+			throw new RuntimeException(
+					"Cannot close the input stream for class '" + className
+							+ "'.", e);
 		}
 
 	}

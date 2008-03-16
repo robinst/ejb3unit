@@ -19,7 +19,7 @@
 			<zipfileset src="${project.build.directory}/liblocation/commons-lang-2.3.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/commons-logging-1.1.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/dom4j-1.6.1.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/hsqldb-1.8.0.1.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hsqldb-1.8.0.7.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/persistence-api-1.0.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/servlet-api-2.3.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/jta-1.0.1B.jar" />

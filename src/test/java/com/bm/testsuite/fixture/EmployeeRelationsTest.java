@@ -51,8 +51,7 @@ public class EmployeeRelationsTest extends TestCase {
 
 	@Override
 	public void setUp() {
-		Ejb3UnitCfg.addEntytiesToTest(Employee.class);
-		Ejb3UnitCfg.addEntytiesToTest(Department.class);
+		Ejb3UnitCfg.addEntytiesToTest(Employee.class, Department.class);
 		entityManager = Ejb3UnitCfg.getConfiguration().getEntityManagerFactory().createEntityManager();
 	}
 
