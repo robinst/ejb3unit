@@ -20,7 +20,6 @@ import com.bm.datagen.relation.EntityRelation;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.utils.BeanEqualsTester;
-import com.bm.utils.Ejb3Utils;
 import com.bm.utils.NullableSetter;
 import com.bm.utils.SimpleGetterSetterTest;
 import com.bm.utils.UndoScriptGenerator;
@@ -181,7 +180,10 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			log.error("-----------SQL Script begin-----------------");
 			StringBuilder sb = new StringBuilder();
 			sb.append("\n");
-			for (String sql : this.undo.getSQLUndoStatements()) {
+			List<String> undoStatements = (Ejb3UnitCfg.getConfiguration()
+					.isInMemory()) ? this.undo.getOneDeleteAllStatement()
+							: this.undo.getSQLUndoStatements();
+			for (String sql : undoStatements) {
 				sb.append(sql).append("\n");
 			}
 			log.error(sb.toString());
