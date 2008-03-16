@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import org.hibernate.cache.NoCacheProvider;
+import org.hibernate.dialect.HSQLDialect;
 import org.hibernate.ejb.Ejb3Configuration;
+import org.hibernate.transaction.JDBCTransactionFactory;
+import org.hsqldb.jdbcDriver;
 
 /**
  * This class reads and holds the ejb3unit configuration.
@@ -46,15 +50,6 @@ public final class Ejb3UnitCfg {
 
 	/** Konfiguration key. * */
 	public static final String KEY_SQL_DIALECT = "ejb3unit.dialect";
-
-	/** Konfiguration key. * */
-	public static final String KEY_CACHE_PROVIDER = "ejb3unit.cache_provider";
-
-	/** Konfiguration key. * */
-	public static final String KEY_USE_SECOND_LEVEL_CACHE = "ejb3unit.use_second_level_cache";
-
-	/** Konfiguration key. * */
-	public static final String KEY_USE_QUERY_CACHE = "ejb3unit.use_query_cache";
 
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(Ejb3UnitCfg.class);
@@ -101,12 +96,11 @@ public final class Ejb3UnitCfg {
 			this
 					.setProperty(prop, "hibernate.connection.url",
 							"jdbc:hsqldb:mem:ejb3unit");
-			this.setProperty(prop, "hibernate.connection.driver_class",
-					"org.hsqldb.jdbcDriver");
+			this.setProperty(prop, "hibernate.connection.driver_class", jdbcDriver.class
+					.getName());
 			this.setProperty(prop, "hibernate.connection.username", "sa");
 			this.setProperty(prop, "hibernate.connection.password", "");
-			this.setProperty(prop, "hibernate.dialect",
-					"org.hibernate.dialect.HSQLDialect");
+			this.setProperty(prop, "hibernate.dialect", HSQLDialect.class.getName());
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", "create-drop");
 		} else {
 			this.inMemory = false;
@@ -123,17 +117,15 @@ public final class Ejb3UnitCfg {
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", this.config
 					.getProperty(KEY_AUTOMATIC_SCHEMA_UPDATE));
 		}
-		this.setProperty(prop, "hibernate.cache.provider_class", this.config
-				.getProperty(KEY_CACHE_PROVIDER));
+		this.setProperty(prop, "hibernate.cache.provider_class", NoCacheProvider.class
+				.getName());
 		this.setProperty(prop, "hibernate.show_sql", this.config
 				.getProperty(KEY_SHOW_SQL));
-		this.setProperty(prop, "hibernate.cache.use_second_level_cache", this.config
-				.getProperty(KEY_USE_SECOND_LEVEL_CACHE));
-		this.setProperty(prop, "hibernate.cache.use_query_cache", this.config
-				.getProperty(KEY_USE_QUERY_CACHE));
+		this.setProperty(prop, "hibernate.cache.use_second_level_cache", "false");
+		this.setProperty(prop, "hibernate.cache.use_query_cache", "false");
 		// static properties
 		this.setProperty(prop, "hibernate.transaction.factory_class",
-				"org.hibernate.transaction.JDBCTransactionFactory");
+				JDBCTransactionFactory.class.getName());
 		return cfg;
 	}
 
