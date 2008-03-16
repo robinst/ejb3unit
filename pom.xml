@@ -39,15 +39,33 @@
 			<timezone />
 		</developer>
 	</developers>
+	<contributors>
+		<contributor>
+			<name>Peter Doornbosch</name>
+			<email>peter.doornbosch(at)luminis.nl</email>
+			<organization>Luminis</organization>
+			<timezone />
+		</contributor>
+		<contributor>
+			<name>Andrew Hughes</name>
+			<email>ahhughes(at)gmail.com</email>
+			<organization>Private</organization>
+			<timezone />
+		</contributor>
+	</contributors>
 	<licenses>
 		<license>
-			<name>ejb3unit: GNU Lesser General Public License (LGPL)</name>
+			<name>
+				ejb3unit: GNU Lesser General Public License (LGPL)
+			</name>
 			<url>http://www.gnu.org/licenses/lgpl.html</url>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
 	<scm>
-		<url>http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit</url>
+		<url>
+			http://svn.sourceforge.net/viewcvs.cgi/ejb3unit/trunk/ejb3unit
+		</url>
 		<connection>
 			scm:svn:https://ejb3unit.svn.sourceforge.net/svnroot/ejb3unit/trunk/ejb3unit
 		</connection>
@@ -111,7 +129,9 @@
 								${project.build.directory}/liblocation
 							</outputDirectory>
 							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>false</overWriteSnapshots>
+							<overWriteSnapshots>
+								false
+							</overWriteSnapshots>
 							<overWriteIfNewer>true</overWriteIfNewer>
 							<stripVersion>true</stripVersion>
 						</configuration>
@@ -131,9 +151,11 @@
 							<tasks>
 								<ant antfile="build.xml" target="jarjar"
 									inheritrefs="true">
-									<property name="project.build.directory"
+									<property
+										name="project.build.directory"
 										value="${project.build.directory}" />
-									<property name="project.build.finalName"
+									<property
+										name="project.build.finalName"
 										value="${project.build.finalName}" />
 								</ant>
 							</tasks>
@@ -248,7 +270,9 @@
 				</reportSets>
 			</plugin>
 			<plugin>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<artifactId>
+					maven-project-info-reports-plugin
+				</artifactId>
 			</plugin>
 
 			<plugin>
@@ -281,7 +305,9 @@
 	<distributionManagement>
 		<site>
 			<id>ejb3unit-site</id>
-			<url>scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs</url>
+			<url>
+				scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs
+			</url>
 		</site>
 		<repository>
 			<id>ejb3unit-repo</id>
