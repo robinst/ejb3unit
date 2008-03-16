@@ -26,7 +26,6 @@
 			<zipfileset src="${project.build.directory}/liblocation/javassist-3.3.ga.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/jboss-archive-browsing-5.0.0alpha-200607201-119.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/jmock-1.0.1.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/log4j-1.2.13.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/logkit-1.0.1.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/ehcache-1.2.3.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hibernate-annotations-3.2.1.ga.jar" />
@@ -37,7 +36,9 @@
 			<zipfileset src="${project.build.directory}/${project.build.finalName}.tmp" />
 			<rule pattern="org.hibernate.**" result="org.ejb3unit.hibernate.@1" />
 			<rule pattern="org.objectweb.asm.**" result="org.ejb3unit.hibernate.asm.@1" />
-			<rule pattern="org.apache.**" result="org.ejb3unit.apache.@1" />
+			<rule pattern="org.apache.commons.**" result="org.ejb3unit.apache.commons.@1" />
+			<rule pattern="org.apache.avalon.**" result="org.ejb3unit.apache.avalon.@1" />
+			<rule pattern="org.apache.log.**" result="org.ejb3unit.apache.log.@1" />
 			<rule pattern="org.dom4j.**" result="org.ejb3unit.dom4j.@1" />
 			<rule pattern="org.hsqldb.**" result="org.ejb3unit.hsqldb.@1" />
 			<rule pattern="org.jboss.util.**" result="org.ejb3unit.util.@1" />

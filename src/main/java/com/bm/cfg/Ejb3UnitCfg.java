@@ -4,10 +4,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -64,7 +62,7 @@ public final class Ejb3UnitCfg {
 
 	private final Properties config;
 
-	private Set<Class<?>> currentEntytiesToTest;
+	private Collection<Class<? extends Object>> currentEntytiesToTest;
 
 	private EntityManagerFactory entityManagerFactory = null;
 
@@ -73,14 +71,14 @@ public final class Ejb3UnitCfg {
 	private Ejb3Configuration cfg;
 
 	private Ejb3UnitCfg() {
-		this.currentEntytiesToTest = new HashSet<Class<? extends Object>>();
+		this.currentEntytiesToTest = new ArrayList<Class<? extends Object>>();
 		try {
-			final InputStream inStr = Thread.currentThread()
-					.getContextClassLoader().getResourceAsStream(
-							EJB3UNIT_PROPERTIES_NAME);
+			final InputStream inStr = Thread.currentThread().getContextClassLoader()
+					.getResourceAsStream(EJB3UNIT_PROPERTIES_NAME);
 			config = new Properties();
 			if (inStr != null) {
 				config.load(inStr);
+
 			} else {
 				// run the system in memory if no config if found
 				System.setProperty(KEY_IN_MEMORY_TEST, "true");
@@ -97,30 +95,30 @@ public final class Ejb3UnitCfg {
 	 * 
 	 * @return hibernate entity manager Ejb3Configuration
 	 */
-	private Ejb3Configuration getEJB3Configuration() {
+	public Ejb3Configuration getEJB3Configuration() {
 		Ejb3Configuration cfg = new Ejb3Configuration();
 		// tranform the ejb3unit configuration to the hibernate
 		// configuration
 		final Properties prop = cfg.getProperties();
-		if (Boolean
-				.valueOf(this.config.getProperty(KEY_IN_MEMORY_TEST, "true"))) {
+		if (Boolean.valueOf(this.config.getProperty(KEY_IN_MEMORY_TEST, "true"))) {
 			// configuration for in memory db
 			this.inMemory = true;
-			this.setProperty(prop, "hibernate.connection.url",
-					"jdbc:hsqldb:mem:ejb3unit");
+			this
+					.setProperty(prop, "hibernate.connection.url",
+							"jdbc:hsqldb:mem:ejb3unit");
 			this.setProperty(prop, "hibernate.connection.driver_class",
-					org.hsqldb.jdbcDriver.class.getName());
+					"org.hsqldb.jdbcDriver");
 			this.setProperty(prop, "hibernate.connection.username", "sa");
 			this.setProperty(prop, "hibernate.connection.password", "");
 			this.setProperty(prop, "hibernate.dialect",
-					org.hibernate.dialect.HSQLDialect.class.getName());
+					"org.hibernate.dialect.HSQLDialect");
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", "create-drop");
 		} else {
 			this.inMemory = false;
 			this.setProperty(prop, "hibernate.connection.url", this.config
 					.getProperty(KEY_CONNECTION_URL));
-			this.setProperty(prop, "hibernate.connection.driver_class",
-					this.config.getProperty(KEY_CONNECTION_DRIVER_CLASS));
+			this.setProperty(prop, "hibernate.connection.driver_class", this.config
+					.getProperty(KEY_CONNECTION_DRIVER_CLASS));
 			this.setProperty(prop, "hibernate.connection.username", this.config
 					.getProperty(KEY_CONNECTION_USERNAME));
 			this.setProperty(prop, "hibernate.connection.password", this.config
@@ -134,14 +132,13 @@ public final class Ejb3UnitCfg {
 				.getProperty(KEY_CACHE_PROVIDER));
 		this.setProperty(prop, "hibernate.show_sql", this.config
 				.getProperty(KEY_SHOW_SQL));
-		this.setProperty(prop, "hibernate.cache.use_second_level_cache",
-				this.config.getProperty(KEY_USE_SECOND_LEVEL_CACHE));
+		this.setProperty(prop, "hibernate.cache.use_second_level_cache", this.config
+				.getProperty(KEY_USE_SECOND_LEVEL_CACHE));
 		this.setProperty(prop, "hibernate.cache.use_query_cache", this.config
 				.getProperty(KEY_USE_QUERY_CACHE));
 		// static properties
 		this.setProperty(prop, "hibernate.transaction.factory_class",
-				org.hibernate.transaction.JDBCTransactionFactory.class
-						.getName());
+				"org.hibernate.transaction.JDBCTransactionFactory");
 		return cfg;
 	}
 
@@ -229,8 +226,7 @@ public final class Ejb3UnitCfg {
 	 * @param entytiesToTest -
 	 *            the used entity beans
 	 */
-	public static synchronized void addEntytiesToTest(
-			Class<?>... entytiesToTest) {
+	public static synchronized void addEntytiesToTest(Class<?>... entytiesToTest) {
 		addEntytiesToTest(Arrays.asList(entytiesToTest));
 	}
 
@@ -240,33 +236,15 @@ public final class Ejb3UnitCfg {
 	 * @param entytiesToTest -
 	 *            the used entity beans
 	 */
-	public static synchronized void addEntytiesToTest(
-			Collection<Class<?>> entytiesToTest) {
+	public static synchronized void addEntytiesToTest(Collection<Class<?>> entytiesToTest) {
 		// init only if the entits for the test change or not initialized at all
 		if (singelton == null) {
 			singelton = new Ejb3UnitCfg();
 		}
 
-		boolean resetFactory = false;
-		if (singelton.currentEntytiesToTest != null) {
-			if (singelton.currentEntytiesToTest.isEmpty()) {
-				resetFactory = true;
-			}
-			for (Class<?> entity : entytiesToTest) {
-				if (!singelton.currentEntytiesToTest.contains(entity)) {
-					resetFactory = true;
-					break;
-				}
-			}
-		} else {
-			resetFactory = true;
-		}
-		if (resetFactory) {
-			singelton.currentEntytiesToTest.clear();
-			singelton.currentEntytiesToTest.addAll(entytiesToTest);
-			// reset the factory (if already created) because we have new beans
-			singelton.entityManagerFactory = null;
-		}
+		singelton.currentEntytiesToTest.addAll(entytiesToTest);
+		// reset the factory (if already created) because we have new beans
+		singelton.entityManagerFactory = null;
 	}
 
 	/**
@@ -316,8 +294,8 @@ public final class Ejb3UnitCfg {
 	 *            die klasse die eingelesen werden soll
 	 * @return - eine Liste mit gelesenen NestedProperty Objekten.
 	 */
-	private static <T extends NestedProperty> List<T> getNestedProperty(
-			String key, Class<T> toRead) {
+	private static <T extends NestedProperty> List<T> getNestedProperty(String key,
+			Class<T> toRead) {
 		try {
 			final List<T> back = new ArrayList<T>();
 			boolean continueRead = true;
@@ -351,12 +329,10 @@ public final class Ejb3UnitCfg {
 			return back;
 		} catch (InstantiationException e) {
 			log.error("Can´t instantiate class: " + toRead);
-			throw new IllegalArgumentException("Can´t instantiate class: "
-					+ toRead);
+			throw new IllegalArgumentException("Can´t instantiate class: " + toRead);
 		} catch (IllegalAccessException e) {
 			log.error("Can´t instantiate class: " + toRead);
-			throw new IllegalArgumentException("Can´t instantiate class: "
-					+ toRead);
+			throw new IllegalArgumentException("Can´t instantiate class: " + toRead);
 		}
 	}
 
