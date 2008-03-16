@@ -4,13 +4,14 @@ import javax.persistence.EntityManager;
 
 import junit.framework.TestCase;
 
-import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3data.bo.Department;
 import com.bm.ejb3data.bo.Employee;
+import com.bm.ejb3guice.inject.Inject;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
+import com.bm.utils.injectinternal.InternalInjector;
 
 /**
- * Test class for data sets that contain relations. 
+ * Test class for data sets that contain relations.
  * 
  * @author Peter Doornbosch
  * @see com.bm.ejb3data.bo.Employee
@@ -18,29 +19,36 @@ import com.bm.testsuite.dataloader.CSVInitialDataSet;
  */
 public class EmployeeRelationsTest extends TestCase {
 
-	private final CSVInitialDataSet employeeData1 = new CSVInitialDataSet<Employee>(
-			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department1");
+	private final CSVInitialDataSet<Employee> employeeData1 = new CSVInitialDataSet<Employee>(
+			Employee.class, "employeeData.csv", "empId", "name", "fullname",
+			"department1");
 
-	private final CSVInitialDataSet employeeData2 = new CSVInitialDataSet<Employee>(
-			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department2");
+	private final CSVInitialDataSet<Employee> employeeData2 = new CSVInitialDataSet<Employee>(
+			Employee.class, "employeeData.csv", "empId", "name", "fullname",
+			"department2");
 
-	private final CSVInitialDataSet employeeData3 = new CSVInitialDataSet<Employee>(
-			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department3");
-	
-	private final CSVInitialDataSet employeeData4 = new CSVInitialDataSet<Employee>(
-			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department4");
-	
-	private final CSVInitialDataSet employeeData5 = new CSVInitialDataSet<Employee>(
-			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department5");
-	
-	private final CSVInitialDataSet employeeData6 = new CSVInitialDataSet<Employee>(
-			Employee.class, "employeeData.csv", "empId", "name", "fullname", "department6");
-	
-	private final CSVInitialDataSet departmentData = new CSVInitialDataSet<Department>(
+	private final CSVInitialDataSet<Employee> employeeData3 = new CSVInitialDataSet<Employee>(
+			Employee.class, "employeeData.csv", "empId", "name", "fullname",
+			"department3");
+
+	private final CSVInitialDataSet<Employee> employeeData4 = new CSVInitialDataSet<Employee>(
+			Employee.class, "employeeData.csv", "empId", "name", "fullname",
+			"department4");
+
+	private final CSVInitialDataSet<Employee> employeeData5 = new CSVInitialDataSet<Employee>(
+			Employee.class, "employeeData.csv", "empId", "name", "fullname",
+			"department5");
+
+	private final CSVInitialDataSet<Employee> employeeData6 = new CSVInitialDataSet<Employee>(
+			Employee.class, "employeeData.csv", "empId", "name", "fullname",
+			"department6");
+
+	private final CSVInitialDataSet<Department> departmentData = new CSVInitialDataSet<Department>(
 			Department.class, "departmentData.csv", "deptId", "name");
 
+	@Inject
 	private EntityManager entityManager;
-	
+
 	public EmployeeRelationsTest() {
 		super();
 	}
@@ -49,10 +57,14 @@ public class EmployeeRelationsTest extends TestCase {
 		super(name);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void setUp() {
-		Ejb3UnitCfg.addEntytiesToTest(Employee.class, Department.class);
-		entityManager = Ejb3UnitCfg.getConfiguration().getEntityManagerFactory().createEntityManager();
+	protected void setUp() throws Exception {
+		InternalInjector.createInternalInjector(Employee.class, Department.class)
+				.injectMembers(this);
+		super.setUp();
 	}
 
 	/**
@@ -61,14 +73,20 @@ public class EmployeeRelationsTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		employeeData1.cleanup(entityManager);
+		employeeData2.cleanup(entityManager);
+		employeeData3.cleanup(entityManager);
+		employeeData4.cleanup(entityManager);
+		employeeData5.cleanup(entityManager);
+		employeeData6.cleanup(entityManager);
 		departmentData.cleanup(entityManager);
 	}
-	
+
 	/**
-	 *	Test SQL for department1 relation
+	 * Test SQL for department1 relation
 	 */
 	public void testDepartment1SQL() {
-		assertEquals("INSERT INTO EMPLOYEE (empId, name, fullname, department1_deptId) VALUES (?, ?, ?, ?)", 
+		assertEquals(
+				"INSERT INTO EMPLOYEE (empId, name, fullname, department1_deptId) VALUES (?, ?, ?, ?)",
 				employeeData1.buildInsertSQL());
 	}
 
@@ -84,43 +102,49 @@ public class EmployeeRelationsTest extends TestCase {
 		assertNotNull(dept);
 		assertEquals("IT", dept.name);
 	}
+
 	/**
-	 *	Test SQL for department2 relation
+	 * Test SQL for department2 relation
 	 */
 	public void testDepartment2SQL() {
-		assertEquals("INSERT INTO EMPLOYEE (empId, name, fullname, dept2) VALUES (?, ?, ?, ?)", 
+		assertEquals(
+				"INSERT INTO EMPLOYEE (empId, name, fullname, dept2) VALUES (?, ?, ?, ?)",
 				employeeData2.buildInsertSQL());
 	}
-	
+
 	/**
-	 *	Test SQL for department3 relation
+	 * Test SQL for department3 relation
 	 */
 	public void testDepartment3SQL() {
-		assertEquals("INSERT INTO EMPLOYEE (empId, name, fullname, dept3) VALUES (?, ?, ?, ?)", 
+		assertEquals(
+				"INSERT INTO EMPLOYEE (empId, name, fullname, dept3) VALUES (?, ?, ?, ?)",
 				employeeData3.buildInsertSQL());
 	}
 
 	/**
-	 *	Test SQL for department4 relation
+	 * Test SQL for department4 relation
 	 */
 	public void testDepartment4SQL() {
-		assertEquals("INSERT INTO EMPLOYEE (empId, name, fullname, department4_deptId) VALUES (?, ?, ?, ?)", 
+		assertEquals(
+				"INSERT INTO EMPLOYEE (empId, name, fullname, department4_deptId) VALUES (?, ?, ?, ?)",
 				employeeData4.buildInsertSQL());
 	}
 
 	/**
-	 *	Test SQL for department5 relation
+	 * Test SQL for department5 relation
 	 */
 	public void testDepartment5SQL() {
-		assertEquals("INSERT INTO EMPLOYEE (empId, name, fullname, dept5) VALUES (?, ?, ?, ?)", 
+		assertEquals(
+				"INSERT INTO EMPLOYEE (empId, name, fullname, dept5) VALUES (?, ?, ?, ?)",
 				employeeData5.buildInsertSQL());
 	}
-	
+
 	/**
-	 *	Test SQL for department6 relation
+	 * Test SQL for department6 relation
 	 */
 	public void testDepartment6SQL() {
-		assertEquals("INSERT INTO EMPLOYEE (empId, name, fullname, dept6) VALUES (?, ?, ?, ?)", 
+		assertEquals(
+				"INSERT INTO EMPLOYEE (empId, name, fullname, dept6) VALUES (?, ?, ?, ?)",
 				employeeData6.buildInsertSQL());
 	}
 }

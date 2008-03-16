@@ -2,12 +2,8 @@ package com.bm.cfg;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
-
-import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.ejb.Ejb3Configuration;
 
@@ -62,16 +58,10 @@ public final class Ejb3UnitCfg {
 
 	private final Properties config;
 
-	private Collection<Class<? extends Object>> currentEntytiesToTest;
-
-	private EntityManagerFactory entityManagerFactory = null;
-
 	private boolean inMemory = true;
 
-	private Ejb3Configuration cfg;
 
 	private Ejb3UnitCfg() {
-		this.currentEntytiesToTest = new ArrayList<Class<? extends Object>>();
 		try {
 			final InputStream inStr = Thread.currentThread().getContextClassLoader()
 					.getResourceAsStream(EJB3UNIT_PROPERTIES_NAME);
@@ -143,28 +133,6 @@ public final class Ejb3UnitCfg {
 	}
 
 	/**
-	 * Returns the entityManagerFactory.
-	 * 
-	 * @return Returns the entityManagerFactory.
-	 */
-	public EntityManagerFactory getEntityManagerFactory() {
-		// lazy initialization
-		if (this.entityManagerFactory == null) {
-			cfg = this.getEJB3Configuration();
-			// add anotated entity beans (to test)
-			if (this.currentEntytiesToTest != null) {
-				for (Class<? extends Object> entityToTest : this.currentEntytiesToTest) {
-					cfg.addAnnotatedClass(entityToTest);
-				}
-			}
-			// fix later for now it´s working
-			this.entityManagerFactory = cfg.createEntityManagerFactory();
-		}
-
-		return this.entityManagerFactory;
-	}
-
-	/**
 	 * Returns the schema gen script.
 	 * 
 	 * @param dialect
@@ -172,7 +140,7 @@ public final class Ejb3UnitCfg {
 	 * @return the ddl
 	 */
 	public String getSchemaGenScript(DBDialect dialect) {
-		String[] generateSchemaCreationScript = cfg.getHibernateConfiguration()
+		String[] generateSchemaCreationScript = this.getEJB3Configuration().getHibernateConfiguration()
 				.generateSchemaCreationScript(dialect.getDialect());
 		final StringBuilder sb = new StringBuilder();
 		for (String ddl : generateSchemaCreationScript) {
@@ -218,33 +186,6 @@ public final class Ejb3UnitCfg {
 		if (key != null && value != null) {
 			prop.setProperty(key, value);
 		}
-	}
-
-	/**
-	 * Add entities to test to the configuration.
-	 * 
-	 * @param entytiesToTest -
-	 *            the used entity beans
-	 */
-	public static synchronized void addEntytiesToTest(Class<?>... entytiesToTest) {
-		addEntytiesToTest(Arrays.asList(entytiesToTest));
-	}
-
-	/**
-	 * Add entities to test to the configuration.
-	 * 
-	 * @param entytiesToTest -
-	 *            the used entity beans
-	 */
-	public static synchronized void addEntytiesToTest(Collection<Class<?>> entytiesToTest) {
-		// init only if the entits for the test change or not initialized at all
-		if (singelton == null) {
-			singelton = new Ejb3UnitCfg();
-		}
-
-		singelton.currentEntytiesToTest.addAll(entytiesToTest);
-		// reset the factory (if already created) because we have new beans
-		singelton.entityManagerFactory = null;
 	}
 
 	/**

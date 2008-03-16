@@ -18,7 +18,7 @@ public final class IntrospectorFactory {
 	 * @return the introspector for the class.
 	 */
 	@SuppressWarnings("unchecked")
-	public static AbstractIntrospector<?> createIntrospector(Class forClass) {
+	public static IIntrospector<?> createIntrospector(Class forClass) {
 		if (SessionBeanIntrospector.accept(forClass)) {
 			return new SessionBeanIntrospector<Object>(forClass);
 		} else if (MDBIntrospector.accept(forClass)) {

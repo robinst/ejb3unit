@@ -146,7 +146,6 @@
 						<artifactId>jarjar</artifactId>
 						<version>1.0rc6</version>
 					</dependency>
-
 				</dependencies>
 			</plugin>
 		</plugins>
@@ -156,6 +155,11 @@
 			<id>ejb3unit</id>
 			<name>Ejb3UnitRepo</name>
 			<url>http://ejb3unit.sourceforge.net/maven2</url>
+		</repository>
+		<repository>
+			<id>ejb3unit-snap</id>
+			<name>Ejb3UnitRepo</name>
+			<url>http://ejb3unit.sourceforge.net/maven2-snap</url>
 		</repository>
 	</repositories>
 	<dependencies>

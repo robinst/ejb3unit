@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -67,7 +66,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	private String discriminatorValue;
 
 	/** the type of the discriminator (if a single-table inheritance strategy is used) */
-	private Class discriminatorType;
+	private Class<?> discriminatorType;
 
 	/**
 	 * Constructor with the class to inspect.
@@ -270,7 +269,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 *            the clss name
 	 * @return - the JSR 220 default table name
 	 */
-	private String generateDefautTableName(Class clazz, Entity entityAnnotation) {
+	private String generateDefautTableName(Class<?> clazz, Entity entityAnnotation) {
 
 		if (entityAnnotation != null && !entityAnnotation.name().equals("")) {
 			return entityAnnotation.name().toUpperCase();
@@ -313,7 +312,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 				EntityReleationInfo relation = entry.getValue().getEntityReleationInfo();
 				// TODO (Pd): see if we can generalize this, to other relation types
 				if (relation instanceof ManyToOneReleation) {
-					Class targetClass = ((ManyToOneReleation) relation).getTargetClass();
+					Class<?> targetClass = ((ManyToOneReleation) relation).getTargetClass();
 					Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
 					((ManyToOneReleation) relation).setTargetKeyProperty(keyProps);
 					// Check that database name is set (it's explicitly unset while processing the 
@@ -423,7 +422,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 * or null if not used.
 	 * @return		one of Integer.class, String.class or Character.class
 	 */
-	public Class getDiscriminatorType() {
+	public Class<?> getDiscriminatorType() {
 		return discriminatorType;
 	}
 }

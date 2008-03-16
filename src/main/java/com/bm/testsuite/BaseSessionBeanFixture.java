@@ -4,11 +4,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import com.bm.creators.SessionBeanFactory;
-import com.bm.introspectors.AbstractIntrospector;
-import com.bm.introspectors.SessionBeanIntrospector;
+import com.bm.ejb3guice.inject.Inject;
+import com.bm.introspectors.IIntrospector;
 import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
+import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * This is the base class for all JUnit test - testing stateless/statefull
@@ -21,32 +22,20 @@ import com.bm.testsuite.dataloader.InitialDataSet;
  */
 public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 
-	private final SessionBeanFactory<T> sbFactory;
-
-	private final Ejb3UnitJndiBinder jndiBinder;
-
 	private final Class<T> beanClass;
 
 	private T beanToTest = null;
 
 	private InitialDataSet[] initalDataSets = null;
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param sessionBeanToTest -
-	 *            the class of the session bean to test
-	 * @param usedEntityBeans -
-	 *            the used entity bens
-	 */
-	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class[] usedEntityBeans) {
-		super();
-		AbstractIntrospector<T> intro = new SessionBeanIntrospector<T>(sessionBeanToTest);
-		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
-		this.beanClass = sessionBeanToTest;
-		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
+	@Inject
+	private SessionBeanFactory<T> sbFactory;
 
-	}
+	@Inject
+	private Ejb3UnitJndiBinder jndiBinder;
+
+	@Inject
+	private EntityManager em;
 
 	/**
 	 * Constructor.
@@ -58,12 +47,25 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	public BaseSessionBeanFixture(
-			Class<T> sessionBeanToTest,
-			Class[] usedEntityBeans,
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class<?>[] usedEntityBeans,
 			InitialDataSet... initialData) {
 		this(sessionBeanToTest, usedEntityBeans);
 		this.initalDataSets = initialData;
+	}
+
+	/**
+	 * Constructor.
+	 * 
+	 * @param sessionBeanToTest -
+	 *            the class of the session bean to test
+	 * @param usedEntityBeans -
+	 *            the used entity bens
+	 */
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class<?>[] usedEntityBeans) {
+		super();
+		InternalInjector.createInternalInjector(usedEntityBeans).injectMembers(this);
+		this.beanClass = sessionBeanToTest;
+
 	}
 
 	/**
@@ -78,16 +80,12 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	protected BaseSessionBeanFixture(
-			Class<T> sessionBeanToTest,
-			AbstractIntrospector<T> intro,
-			Class[] usedEntityBeans,
-			InitialDataSet... initialData) {
+	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest, IIntrospector<T> intro,
+			Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
 		super();
-		this.sbFactory = new SessionBeanFactory<T>(intro, usedEntityBeans);
+		InternalInjector.createInternalInjector(usedEntityBeans).injectMembers(this);
 		this.beanClass = sessionBeanToTest;
 		this.initalDataSets = initialData;
-		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
 	}
 
 	/**
@@ -115,12 +113,10 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		}
 
 		if (this.initalDataSets != null) {
-			EntityManager em = this.getEntityManager();
-
 			for (InitialDataSet current : this.initalDataSets) {
 				// insert entity manager
 				if (current instanceof EntityInitialDataSet) {
-					EntityInitialDataSet curentEntDs = (EntityInitialDataSet) current;
+					EntityInitialDataSet<?> curentEntDs = (EntityInitialDataSet<?>) current;
 					curentEntDs.setEntityManager(em);
 					EntityTransaction tx = em.getTransaction();
 					tx.begin();
@@ -145,8 +141,9 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		// delete all objects (faster than shutdown and restart everything)
 		final EntityManager em = this.getEntityManager();
 		if (this.initalDataSets != null) {
-			// tear down in reverse order, otherwise foreign key constraints may be violated 
-			for (int i = this.initalDataSets.length -1; i >= 0; i--) {
+			// tear down in reverse order, otherwise foreign key constraints may
+			// be violated
+			for (int i = this.initalDataSets.length - 1; i >= 0; i--) {
 				this.initalDataSets[i].cleanup(em);
 			}
 		}
@@ -179,7 +176,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @return - a instance of an entity manager
 	 */
 	public EntityManager getEntityManager() {
-		return this.sbFactory.getEntityManager();
+		return em;
 	}
 
 	/**

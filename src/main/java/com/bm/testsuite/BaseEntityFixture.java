@@ -3,11 +3,9 @@ package com.bm.testsuite;
 import java.sql.DataTruncation;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
@@ -17,12 +15,15 @@ import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
 import com.bm.datagen.relation.EntityRelation;
+import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.utils.BeanEqualsTester;
 import com.bm.utils.NullableSetter;
 import com.bm.utils.SimpleGetterSetterTest;
 import com.bm.utils.UndoScriptGenerator;
+import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * This class is the base executes for all entity beans the automated test
@@ -39,8 +40,6 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 	private static final int BEANS_TO_CREATE = 50;
 
-	private static EntityManagerFactory emf;
-
 	private Class<T> baseClass;
 
 	private final EntityBeanIntrospector<T> intro;
@@ -50,11 +49,12 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	/** this field is set before every test * */
 	private UndoScriptGenerator<T> undo = null;
 
-	private EntityManager manager = null;
-
 	private boolean lastTestRollbacked = false;
 
 	private final List<Generator<?>> currentGenList;
+
+	@Inject
+	private Provider<EntityManager> manager;
 
 	/**
 	 * Default constructor.
@@ -112,15 +112,10 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			}
 		}
 
-		this.initEntityManagerFactory(entitiesToTest);
+		InternalInjector.createInternalInjector(entitiesToTest).injectMembers(this);
 		this.baseClass = entityToTest;
 		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
 
-	}
-
-	private void initEntityManagerFactory(
-			Collection<Class<? extends Object>> entitiesToTest) {
-		Ejb3UnitCfg.addEntytiesToTest(entitiesToTest);
 	}
 
 	/**
@@ -130,12 +125,10 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		log.debug("Setting up BaseEntityTest");
-		emf = Ejb3UnitCfg.getConfiguration().getEntityManagerFactory();
 		this.undo = new UndoScriptGenerator<T>(intro);
-		this.manager = emf.createEntityManager();
 		this.lastTestRollbacked = false;
-		this.creator = new EntityBeanCreator<T>(this.manager, intro, this.baseClass,
-				currentGenList);
+		this.creator = new EntityBeanCreator<T>(this.manager.get(), intro,
+				this.baseClass, currentGenList);
 		this.creator.prepare();
 	}
 
@@ -147,24 +140,21 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		super.tearDown();
 		this.creator.cleanup();
 		log.debug("Cleaning database from previous test");
-		// check if the manager is open
-		if (this.manager == null || !this.manager.isOpen()) {
-			this.manager = emf.createEntityManager();
-		}
 
 		try {
 			// only delete objects if the test was not rollbacked
 			if (!this.lastTestRollbacked) {
+				EntityManager entityManager = manager.get();
 				if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
-					this.undo.deleteAllDataInAllUsedTables(manager);
+					this.undo.deleteAllDataInAllUsedTables(entityManager);
 				} else {
 					// delete all beans in one single transaction
-					EntityTransaction tx = manager.getTransaction();
+					EntityTransaction tx = entityManager.getTransaction();
 					tx.begin();
 					List<Object> createdObjects = this.undo.getCreatedObjects();
 					for (Object beanToDelete : createdObjects) {
-						Object attached = this.manager.merge(beanToDelete);
-						this.manager.remove(attached);
+						Object attached = entityManager.merge(beanToDelete);
+						entityManager.remove(attached);
 					}
 
 					// the transaction must be committed
@@ -190,8 +180,6 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			log.error("-----------SQL Script end-------------------");
 			// rethrow the error
 			throw e;
-		} finally {
-			manager.close();
 		}
 	}
 
@@ -202,14 +190,15 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *             in an error case
 	 */
 	public void testWrite() throws Exception {
-		EntityTransaction tx = manager.getTransaction();
+		EntityManager entityManager = this.manager.get();
+		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
 		try {
 			tx.begin();
 
 			for (int i = 0; i < BEANS_TO_CREATE; i++) {
 				created = creator.createBeanInstance();
-				manager.persist(created);
+				entityManager.persist(created);
 				undo.protokollCreate(created);
 			}
 
@@ -222,8 +211,6 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			if (!this.analyseException(e, created)) {
 				throw e;
 			}
-		} finally {
-			this.manager.close();
 		}
 
 	}
@@ -233,17 +220,18 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 * 
 	 */
 	public void testGetterSetter() {
-		EntityTransaction tx = manager.getTransaction();
+		EntityManager entityManager = this.manager.get();
+		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
 		try {
 			tx.begin();
 			created = creator.createBeanInstance();
 			final SimpleGetterSetterTest test = new SimpleGetterSetterTest(created);
 			test.testGetterSetter();
-			tx.rollback();
 		} finally {
-			this.manager.close();
+			tx.rollback();
 		}
+
 	}
 
 	/**
@@ -254,7 +242,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *             in an error case
 	 */
 	public void disabled_testWriteWithNullFields() throws Exception {
-		EntityTransaction tx = manager.getTransaction();
+		EntityManager entityManager = this.manager.get();
+		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
 		try {
 			tx.begin();
@@ -262,7 +251,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			for (int i = 0; i < BEANS_TO_CREATE; i++) {
 				created = creator.createBeanInstance();
 				NullableSetter.setFieldsToNull(created, this.intro);
-				manager.persist(created);
+				entityManager.persist(created);
 				undo.protokollCreate(created);
 			}
 
@@ -275,8 +264,6 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			if (!this.analyseException(e, created)) {
 				throw e;
 			}
-		} finally {
-			this.manager.close();
 		}
 
 	}
@@ -292,7 +279,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *             in an error case
 	 */
 	public void testWriteRead() throws Exception {
-		EntityTransaction tx = manager.getTransaction();
+		EntityManager entityManager = this.manager.get();
+		EntityTransaction tx = entityManager.getTransaction();
 		final List<T> beansCreated = new ArrayList<T>();
 		final List<T> beansReaded = new ArrayList<T>();
 		T created = null;
@@ -301,7 +289,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 			for (int i = 0; i < BEANS_TO_CREATE; i++) {
 				created = creator.createBeanInstance();
-				manager.persist(created);
+				entityManager.persist(created);
 				undo.protokollCreate(created);
 				beansCreated.add(created);
 			}
@@ -318,31 +306,23 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			if (!this.analyseException(e, created)) {
 				throw e;
 			}
-		} finally {
-			this.manager.close();
 		}
 
 		// now read all the beans
-		try {
-			this.manager = emf.createEntityManager();
 
-			// now read the beans again from the database
-			for (T toRead : beansCreated) {
-				final T readed = this.manager.find(this.baseClass, this.intro
-						.getPrimaryKey(toRead));
-				beansReaded.add(readed);
-			}
-
-			// test if the readed collection is equal
-			BeanEqualsTester.testEqualsOnSize(beansCreated, beansReaded);
-			BeanEqualsTester.testEqualsOnPersistentFields(beansCreated, beansReaded,
-					this.intro);
-			BeanEqualsTester.testEqualsImplementationForEntityBeans(beansCreated,
-					beansReaded);
-
-		} finally {
-			this.manager.close();
+		// now read the beans again from the database
+		for (T toRead : beansCreated) {
+			final T readed = entityManager.find(this.baseClass, this.intro
+					.getPrimaryKey(toRead));
+			beansReaded.add(readed);
 		}
+
+		// test if the readed collection is equal
+		BeanEqualsTester.testEqualsOnSize(beansCreated, beansReaded);
+		BeanEqualsTester.testEqualsOnPersistentFields(beansCreated, beansReaded,
+				this.intro);
+		BeanEqualsTester
+				.testEqualsImplementationForEntityBeans(beansCreated, beansReaded);
 
 	}
 

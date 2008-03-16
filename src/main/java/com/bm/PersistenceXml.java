@@ -36,7 +36,7 @@ public class PersistenceXml {
 	 * @throws ClassNotFoundException
 	 *             when the xml points you to a non existant class
 	 */
-	public static Class[] getClasses() throws IOException, ClassNotFoundException {
+	public static Class<?>[] getClasses() throws IOException, ClassNotFoundException {
 		return getClasses(Thread.currentThread().getContextClassLoader());
 	}
 
@@ -53,7 +53,7 @@ public class PersistenceXml {
 	 * @throws ClassNotFoundException
 	 *             when the xml points you to a non existant class
 	 */
-	public static Class[] getClasses(ClassLoader cl) throws IOException, ClassNotFoundException {
+	public static Class<?>[] getClasses(ClassLoader cl) throws IOException, ClassNotFoundException {
 
 		URL[] persistenceUnits;
 
@@ -71,7 +71,7 @@ public class PersistenceXml {
 					"Unable to find any persistence.xml file on the classpath!!!");
 		}
 
-		Set<Class> classes = new HashSet<Class>();
+		Set<Class<?>> classes = new HashSet<Class<?>>();
 
 		for (URL url : persistenceUnits) {
 

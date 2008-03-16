@@ -4,13 +4,14 @@ import javax.persistence.EntityManager;
 
 import junit.framework.TestCase;
 
-import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3data.bo.FullTimeEmployee1;
 import com.bm.ejb3data.bo.FullTimeEmployee2;
 import com.bm.ejb3data.bo.FullTimeEmployee3;
+import com.bm.ejb3guice.inject.Inject;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.utils.AccessType;
 import com.bm.utils.AccessTypeFinder;
+import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * Test class for entity inheritance.
@@ -21,14 +22,17 @@ import com.bm.utils.AccessTypeFinder;
  */
 public class EmployeeInheritanceTest extends TestCase {
 
+	@Inject
 	private EntityManager entityManager;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void setUp() {
-		Ejb3UnitCfg.addEntytiesToTest(FullTimeEmployee1.class,
-				FullTimeEmployee3.class);
-		entityManager = Ejb3UnitCfg.getConfiguration()
-				.getEntityManagerFactory().createEntityManager();
+	protected void setUp() throws Exception {
+		InternalInjector.createInternalInjector(FullTimeEmployee1.class,
+				FullTimeEmployee3.class).injectMembers(this);
+		super.setUp();
 	}
 
 	public void testAccessTypeEntity() {
@@ -43,16 +47,16 @@ public class EmployeeInheritanceTest extends TestCase {
 
 	public void testInheritedFields() {
 		CSVInitialDataSet<FullTimeEmployee1> employeeData = new CSVInitialDataSet<FullTimeEmployee1>(
-				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId",
-				"name", "fullname", "salary");
+				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary");
 		assertNotNull(employeeData);
 		// No exception: ok.
 	}
 
 	public void testSql1() {
 		CSVInitialDataSet<FullTimeEmployee1> employeeData = new CSVInitialDataSet<FullTimeEmployee1>(
-				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId",
-				"name", "fullname", "salary");
+				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary");
 
 		assertEquals(
 				"INSERT INTO Employees (empId, name, fullname, salary, DTYPE) VALUES (?, ?, ?, ?, 'FT')",
@@ -61,8 +65,8 @@ public class EmployeeInheritanceTest extends TestCase {
 
 	public void testSql2() {
 		CSVInitialDataSet<FullTimeEmployee2> employeeData = new CSVInitialDataSet<FullTimeEmployee2>(
-				FullTimeEmployee2.class, "fulltimeEmployeeData.csv", "empId",
-				"name", "fullname", "salary");
+				FullTimeEmployee2.class, "fulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary");
 
 		assertEquals(
 				"INSERT INTO Employees (empId, name, fullname, salary) VALUES (?, ?, ?, ?)",
@@ -71,8 +75,8 @@ public class EmployeeInheritanceTest extends TestCase {
 
 	public void testSql3() {
 		CSVInitialDataSet<FullTimeEmployee3> employeeData = new CSVInitialDataSet<FullTimeEmployee3>(
-				FullTimeEmployee3.class, "fulltimeEmployeeData.csv", "empId",
-				"name", "fullname", "salary");
+				FullTimeEmployee3.class, "fulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary");
 
 		assertEquals(
 				"INSERT INTO Employees3 (empId, name, fullname, salary, type) VALUES (?, ?, ?, ?, 1)",
@@ -81,25 +85,31 @@ public class EmployeeInheritanceTest extends TestCase {
 
 	public void testInitialData1() {
 		CSVInitialDataSet<FullTimeEmployee1> employeeData = new CSVInitialDataSet<FullTimeEmployee1>(
-				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId",
-				"name", "fullname", "salary");
-		employeeData.create();
-		FullTimeEmployee1 employee = entityManager.find(
-				FullTimeEmployee1.class, 1);
-		assertNotNull(employee);
-		assertEquals("john", employee.getName());
-		assertEquals(new Integer(10000), employee.getSalary());
+				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary");
+		try {
+			employeeData.create();
+			FullTimeEmployee1 employee = entityManager.find(FullTimeEmployee1.class, 1);
+			assertNotNull(employee);
+			assertEquals("john", employee.getName());
+			assertEquals(new Integer(10000), employee.getSalary());
+		} finally {
+			employeeData.cleanup(entityManager);
+		}
 	}
 
 	public void testInitialData3() {
 		CSVInitialDataSet<FullTimeEmployee3> employeeData = new CSVInitialDataSet<FullTimeEmployee3>(
-				FullTimeEmployee3.class, "fulltimeEmployeeData.csv", "empId",
-				"name", "fullname", "salary");
-		employeeData.create();
-		FullTimeEmployee3 employee = entityManager.find(
-				FullTimeEmployee3.class, 1);
-		assertNotNull(employee);
-		assertEquals("john", employee.getName());
-		assertEquals(new Integer(10000), employee.getSalary());
+				FullTimeEmployee3.class, "fulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary");
+		try {
+			employeeData.create();
+			FullTimeEmployee3 employee = entityManager.find(FullTimeEmployee3.class, 1);
+			assertNotNull(employee);
+			assertEquals("john", employee.getName());
+			assertEquals(new Integer(10000), employee.getSalary());
+		} finally {
+			employeeData.cleanup(entityManager);
+		}
 	}
 }

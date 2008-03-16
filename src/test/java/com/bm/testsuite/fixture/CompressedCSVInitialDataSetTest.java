@@ -1,10 +1,13 @@
 package com.bm.testsuite.fixture;
 
+import javax.persistence.EntityManager;
+
 import junit.framework.TestCase;
 
-import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3data.bo.StockWKNBo;
+import com.bm.ejb3guice.inject.Inject;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
+import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * Testclass for the CSVInitialDataNoRelationalSet.
@@ -20,14 +23,25 @@ public class CompressedCSVInitialDataSetTest extends TestCase {
 			"branche", "transaktionenProTag", "zumHandelZugelassen",
 			"volatilitaet", "durchschnittskaufkurs");
 	
+	@Inject
+	private EntityManager em;
+	
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void setUp() throws Exception {
+		InternalInjector.createInternalInjector(StockWKNBo.class).injectMembers(this);
+		super.setUp();
+	}
+
 	/**
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
 	protected void tearDown() throws Exception {
-		Ejb3UnitCfg.addEntytiesToTest(StockWKNBo.class);
-		toTest.cleanup(Ejb3UnitCfg.getConfiguration().getEntityManagerFactory()
-				.createEntityManager());
+		toTest.cleanup(em);
 	}
 
 	/**

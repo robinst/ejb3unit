@@ -9,10 +9,12 @@ import javax.persistence.Query;
 import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.ejb3guice.inject.Inject;
 import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
 import com.bm.utils.BasicDataSource;
+import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * Supports entity manager and flat file db injection for pojos.
@@ -27,30 +29,31 @@ public abstract class PoJoFixture extends BaseTest {
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(PoJoFixture.class);
 
-	private final Ejb3UnitJndiBinder jndiBinder;
-
 	private InitialDataSet[] initalDataSet = null;
 
 	private final Ejb3UnitCfg configuration;
 
+	@Inject
 	private EntityManager entityManager;
+	
+	@Inject
+	private Ejb3UnitJndiBinder jndiBinder;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param usedEntityBeans -
-	 *            the used entity bens
+	 *            the used entity beans
 	 */
 	public PoJoFixture(
-			Class[] usedEntityBeans) {
+			Class<?>[] usedEntityBeans) {
 		super();
-		this.jndiBinder = new Ejb3UnitJndiBinder(usedEntityBeans);
+		InternalInjector.createInternalInjector(usedEntityBeans).injectMembers(this);
 		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
 
 		for (Class<? extends Object> akt : usedEntityBeans) {
 			usedEntityBeansC.add(akt);
 		}
-		Ejb3UnitCfg.addEntytiesToTest(usedEntityBeansC);
 		this.configuration = Ejb3UnitCfg.getConfiguration();
 
 	}
@@ -61,10 +64,10 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @param usedEntityBeans -
 	 *            the used entity beans
 	 * @param initialData -
-	 *            the inital data to create in the db
+	 *            the initial data to create in the db
 	 */
 	public PoJoFixture(
-			Class[] usedEntityBeans,
+			Class<?>[] usedEntityBeans,
 			InitialDataSet... initialData) {
 		this(usedEntityBeans);
 		this.initalDataSet = initialData;
@@ -80,15 +83,13 @@ public abstract class PoJoFixture extends BaseTest {
 		super.setUp();
 		this.jndiBinder.bind();
 		log.debug("Creating entity manager instance for POJO test");
-		entityManager = this.configuration.getEntityManagerFactory().createEntityManager();
-
 		if (this.initalDataSet != null) {
 			EntityManager em = this.getEntityManager();
 
 			for (InitialDataSet current : this.initalDataSet) {
 				// insert entity manager
 				if (current instanceof EntityInitialDataSet) {
-					EntityInitialDataSet curentEntDs = (EntityInitialDataSet) current;
+					EntityInitialDataSet<?> curentEntDs = (EntityInitialDataSet<?>) current;
 					curentEntDs.setEntityManager(em);
 					EntityTransaction tx = em.getTransaction();
 					tx.begin();

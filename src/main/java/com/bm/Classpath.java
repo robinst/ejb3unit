@@ -47,7 +47,7 @@ public final class Classpath {
 	@SuppressWarnings("unchecked")
 	public static URL[] search(ClassLoader cl, String prefix, String suffix) throws IOException {
 		Enumeration[] e = new Enumeration[] { cl.getResources(prefix),
-				cl.getResources(prefix + "MANIFEST.MF") };
+				cl.getResources(prefix + suffix) };
 		Set all = new LinkedHashSet();
 		URL url;
 		URLConnection conn;
@@ -123,7 +123,7 @@ public final class Classpath {
 			JarFile file,
 			String prefix,
 			String suffix) throws IOException {
-		Enumeration e = file.entries();
+		Enumeration<JarEntry> e = file.entries();
 		JarEntry entry;
 		String name;
 		while (e.hasMoreElements()) {

@@ -26,6 +26,17 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 	 * {@inheritDoc}
 	 */
 	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		deleteAll(LineItem.class);
+		deleteAll(Order.class);
+	}
+	
+	/**
+	 * Delets all data.
+	 * {@inheritDoc}
+	 */
+	@Override
 	protected void tearDown() throws Exception {
 		deleteAll(LineItem.class);
 		deleteAll(Order.class);

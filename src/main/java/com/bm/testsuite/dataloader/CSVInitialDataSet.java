@@ -163,12 +163,6 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 */
 	private void initialize(Class<T> entityBeanClass, String... propertyMapping) {
 		this.introspector = new EntityBeanIntrospector<T>(entityBeanClass);
-		// init configuration if not yet done
-		if (!Ejb3UnitCfg.isInitialized()) {
-			List<Class<? extends Object>> usedBeans = new ArrayList<Class<? extends Object>>();
-			usedBeans.add(entityBeanClass);
-			Ejb3UnitCfg.addEntytiesToTest(usedBeans);
-		}
 		this.propertyMapping = propertyMapping;
 		this.propertyInfo = new Property[propertyMapping.length];
 		this.insertSQLString = this.buildInsertSQL();
@@ -205,7 +199,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		if (this.introspector.usesSingleTableInheritance()) {
 			insertSQL.append(", ").append(this.introspector.getDiscriminatorName()).append(") ")
 					.append("VALUES (").append(questionMarks.toString()).append(", ");
-			Class discriminatorType = this.introspector.getDiscriminatorType();
+			Class<?> discriminatorType = this.introspector.getDiscriminatorType();
 			if (discriminatorType.equals(Integer.class)) {
 				insertSQL.append(this.introspector.getDiscriminatorValue());
 			} else {
@@ -433,12 +427,12 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			for (Property keyProp : targetKeyProps) { // Because of the check
 														// above, this will loop
 														// at most once
-				Class foreignKeyType = Ejb3Utils.getNonPrimitiveType(keyProp.getType());
+				Class<?> foreignKeyType = Ejb3Utils.getNonPrimitiveType(keyProp.getType());
 				setPreparedStatement(index, statement, foreignKeyType, value);
 			}
 		} else {
 			// convert to non-primitive if primitive
-			Class type = Ejb3Utils.getNonPrimitiveType(prop.getType());
+			Class<?> type = Ejb3Utils.getNonPrimitiveType(prop.getType());
 			setPreparedStatement(index, statement, type, value);
 		}
 	}
@@ -459,7 +453,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 */
 	private void setPreparedStatement(int index,
 			PreparedStatement statement,
-			Class type,
+			Class<?> type,
 			String value) throws SQLException {
 		if (type.equals(String.class)) {
 			statement.setString(index, value);

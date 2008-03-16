@@ -6,14 +6,14 @@ import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.persistence.EntityManager;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.cfg.JndiProperty;
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.SessionBeanFactory;
+import com.bm.ejb3guice.inject.Inject;
 import com.bm.ejb3guice.inject.Injector;
-import com.bm.introspectors.AbstractIntrospector;
-import com.bm.introspectors.SessionBeanIntrospector;
 import com.bm.utils.LifeCycleMethodExecuter;
 
 /**
@@ -32,16 +32,24 @@ public class Ejb3UnitJndiBinder {
 
 	private final List<JndiProperty> toBind;
 
-	private final Class[] usedEntityBeans;
-
 	private final LifeCycleMethodExecuter lifeCycleMethodExecuter = new LifeCycleMethodExecuter();
 
-	public Ejb3UnitJndiBinder(Class... usedEntityBeans) {
-		this.usedEntityBeans = usedEntityBeans;
+	private final EntityManager em;
+
+	/**
+	 * Constructor
+	 * 
+	 * @param em
+	 *            the entity manager.
+	 */
+	@Inject
+	public Ejb3UnitJndiBinder(EntityManager em) {
+		this.em = em;
 		try {
 			Hashtable<String, String> env = new Hashtable<String, String>();
-			env.put(Context.INITIAL_CONTEXT_FACTORY, MemoryContextFactory.class
-					.getName());
+			env
+					.put(Context.INITIAL_CONTEXT_FACTORY, MemoryContextFactory.class
+							.getName());
 			ctx = new InitialContext(env);
 			toBind = Ejb3UnitCfg.getJndiBindings();
 		} catch (NamingException e) {
@@ -79,18 +87,14 @@ public class Ejb3UnitJndiBinder {
 
 	private void bindSessionBean(JndiProperty current) {
 		Class<Object> sessionBean = loadClass(current);
-		final AbstractIntrospector<Object> intro = new SessionBeanIntrospector<Object>(
-				sessionBean);
-		final SessionBeanFactory<Object> sf = new SessionBeanFactory<Object>(
-				intro, usedEntityBeans);
+		final SessionBeanFactory<Object> sf = new SessionBeanFactory<Object>(em);
 		try {
 			BeanCreationListener createdbeans = new BeanCreationListener();
 			Injector injector = sf.getInjector(sessionBean, createdbeans);
 			final Object createdSessionBean = injector.getInstance(sessionBean);
 			// now inject other instances
 			for (Object created : createdbeans.getCreatedBeans()) {
-				lifeCycleMethodExecuter
-						.executeLifeCycleMethodsForCreate(created);
+				lifeCycleMethodExecuter.executeLifeCycleMethodsForCreate(created);
 			}
 			this.ctx.bind(current.getJndiName(), createdSessionBean);
 		} catch (NamingException e) {
@@ -102,11 +106,10 @@ public class Ejb3UnitJndiBinder {
 	private Class<Object> loadClass(JndiProperty current) {
 		Class<Object> classToLoad = null;
 		try {
-			classToLoad = (Class<Object>) Thread.currentThread()
-					.getContextClassLoader().loadClass(current.getClassName());
+			classToLoad = (Class<Object>) Thread.currentThread().getContextClassLoader()
+					.loadClass(current.getClassName());
 		} catch (ClassNotFoundException e) {
-			throw new IllegalArgumentException("The Class ("
-					+ current.getClassName()
+			throw new IllegalArgumentException("The Class (" + current.getClassName()
 					+ ") you wold like to bind to JNDI tree can't be found");
 		}
 		return classToLoad;
