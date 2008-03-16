@@ -128,6 +128,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		injector.injectMembers(this);
+		this.manager.get().clear();
 		log.debug("Setting up BaseEntityTest");
 		this.undo = new UndoScriptGenerator<T>(intro);
 		this.lastTestRollbacked = false;

@@ -83,6 +83,7 @@ public abstract class PoJoFixture extends BaseTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		injector.injectMembers(this);
+		entityManagerProv.get().clear();
 		this.jndiBinder.bind();
 		log.debug("Creating entity manager instance for POJO test");
 		if (this.initalDataSet != null) {
