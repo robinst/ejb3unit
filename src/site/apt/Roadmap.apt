@@ -13,23 +13,31 @@ Roadmap for Ejb3Unit 2.0
   
   * Major features
       
-      * No dependencies - on jar thats it!! (only log4j.jar and optional JMock.jar [for mocked tests]
+      * No dependencies - on jar thats it!! 
+        (only {{{http://logging.apache.org/log4j/}log4j.jar}} and optional {{{http://www.jmock.org/}jmock.jar [for mocked tests]}}
         will be required). 
-        This will ease the developent in large projects because less dependencies are reqired
+        This will ease the installation and development in large projects because less dependencies 
+        are required. No jar file conflicts anymore!
+        
+      * Support for relational CSV data loaders. Load your test data with references!
       
-      * Support for peristence.xml no need to specify your persistence objects for every test 
+      * Support for peristence.xml no need to specify your persistence objects for every test! 
 
       * Completely refactored EntityManger life cycle handling - will speed up your testing!
       
-      * Improved feedback for failing test cases
+      * Improved feedback for failing test cases!
       
-      * Lots of bug fixes
+      * Bug fixes!
       
-  * Not in this feature
+  * Sneak preview
+      * You can download the latest snapshot releases at 
+        {{{http://ejb3unit.sourceforge.net/maven2-snap/com/bm/ejb3unit/2.0.0-SNAPSHOT/} 2.0.0-SNAPSHOT}}
+      
+  * Currently not in the upcoming release
   
       * Transaction Handling
       
-      * Better relation ship support for automatead entity bean test: 
+      * Better relation ship support for automated entity bean test: 
         Unidirectional 1:N, Multidirectional n:m and one2one. Currently only bi-directional 
-        1:n is supported
+        1:n is supported. Use Pojo fixture for complex object graphs.
     
