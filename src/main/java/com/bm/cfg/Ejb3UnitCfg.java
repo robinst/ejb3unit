@@ -18,7 +18,7 @@ import org.hsqldb.jdbcDriver;
  */
 public final class Ejb3UnitCfg {
 
-	/** Konfiguration key. * */
+	/** Config file name. * */
 	public static final String EJB3UNIT_PROPERTIES_NAME = "ejb3unit.properties";
 
 	/** Konfiguration key. * */
@@ -276,10 +276,10 @@ public final class Ejb3UnitCfg {
 
 			return back;
 		} catch (InstantiationException e) {
-			log.error("Can´t instantiate class: " + toRead);
+			log.error("Can't instantiate class: " + toRead);
 			throw new IllegalArgumentException("Can´t instantiate class: " + toRead);
 		} catch (IllegalAccessException e) {
-			log.error("Can´t instantiate class: " + toRead);
+			log.error("Can't instantiate class: " + toRead);
 			throw new IllegalArgumentException("Can´t instantiate class: " + toRead);
 		}
 	}

@@ -9,9 +9,9 @@ Roadmap for Ejb3Unit 2.0
 
   Exiting News Ejb3Unit 2.0 is comming soon
 
-  <<Feature list for next 2.0 Version>>
+*Feature list for next 2.0 Version
   
-  * Major features
+  * <<Major features>>
       
       * No dependencies - on jar thats it!! 
         (only {{{http://logging.apache.org/log4j/}log4j.jar}} and optional {{{http://www.jmock.org/}jmock.jar [for mocked tests]}}
@@ -25,15 +25,18 @@ Roadmap for Ejb3Unit 2.0
 
       * Completely refactored EntityManger life cycle handling - will speed up your testing!
       
+      * Support of the new jMock2 framework!
+      
       * Improved feedback for failing test cases!
       
       * Bug fixes!
       
-  * Sneak preview
+* Sneak preview
+      
       * You can download the latest snapshot releases at 
         {{{http://ejb3unit.sourceforge.net/maven2-snap/com/bm/ejb3unit/2.0.0-SNAPSHOT/} 2.0.0-SNAPSHOT}}
       
-  * Currently not in the upcoming release
+* Currently not in the upcoming release
   
       * Transaction Handling
       
