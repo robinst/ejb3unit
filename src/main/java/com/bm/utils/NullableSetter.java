@@ -60,8 +60,9 @@ public final class NullableSetter {
 		for (Property aktProperty : fields) {
 			final PersistentPropertyInfo pfi = intro
 					.getPresistentFieldInfo(aktProperty);
-			// pk fields are by default not nullable
-			if (pfi.isNullable() && !intro.getPkFields().contains(aktProperty)) {
+			// pk fields and primitives are by default not nullable
+			if (pfi.isNullable() && !aktProperty.getType().isPrimitive()
+					&& !intro.getPkFields().contains(aktProperty)) {
 				try {
 					intro.setField(bean, aktProperty, null);
 				} catch (IllegalAccessException e) {

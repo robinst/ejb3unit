@@ -22,7 +22,7 @@ public abstract class BaseJbossServiceFixture<T> extends BaseSessionBeanFixture<
 	 *            used
 	 */
 	public BaseJbossServiceFixture(Class<T> sessionBeanToTest,
-			Class[] usedEntityBeans) {
+			Class<?>[] usedEntityBeans) {
 		super(sessionBeanToTest, new JbossServiceIntrospector<T>(
 				sessionBeanToTest), usedEntityBeans);
 	}
@@ -38,7 +38,7 @@ public abstract class BaseJbossServiceFixture<T> extends BaseSessionBeanFixture<
 	 *            the inital data to create in the db
 	 */
 	public BaseJbossServiceFixture(Class<T> sessionBeanToTest,
-			Class[] usedEntityBeans, InitialDataSet... initialData) {
+			Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
 		super(sessionBeanToTest, new JbossServiceIntrospector<T>(
 				sessionBeanToTest), usedEntityBeans, initialData);
 	}

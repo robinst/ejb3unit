@@ -241,12 +241,12 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 	/**
 	 * This test writes n random generated beans into the database - all
-	 * nullable fields are setted to null.
+	 * null-able fields are set to null.
 	 * 
 	 * @throws Exception -
 	 *             in an error case
 	 */
-	public void disabled_testWriteWithNullFields() throws Exception {
+	public void testWriteWithNullFields() throws Exception {
 		EntityManager entityManager = this.manager.get();
 		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
