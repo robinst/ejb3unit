@@ -10,14 +10,14 @@ import com.bm.ejb3data.bo.Order;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**
- * This test use getter/sette (properties) configuration for entity beans.
+ * This test use getter/setter (properties) configuration for entity beans.
  * 
  * @author Daniel Wiese
  * 
  */
 public class OrderTest extends BaseEntityFixture<Order> {
 
-	private static final Generator[] SPECIAL_GENERATORS = { new MyLineItemCreator() };
+	private static final Generator<?>[] SPECIAL_GENERATORS = { new MyLineItemCreator() };
 
 	/**
 	 * Default constructor.

@@ -14,6 +14,7 @@ import com.bm.datagen.random.RandomIntegerGenerator;
 import com.bm.datagen.random.RandomLongGenerator;
 import com.bm.datagen.random.RandomStringGenerator;
 import com.bm.datagen.random.primitive.PrimitiveRandomBooleanGenerator;
+import com.bm.datagen.random.primitive.PrimitiveRandomByteGenerator;
 import com.bm.datagen.random.primitive.PrimitiveRandomDoubleGenerator;
 import com.bm.datagen.random.primitive.PrimitiveRandomFloatGenerator;
 import com.bm.datagen.random.primitive.PrimitiveRandomShortGenerator;
@@ -50,6 +51,7 @@ public class EntityBeanCreator<T> {
 		DEFAULT_GENERATORS.add(new RandomLongGenerator());
 		DEFAULT_GENERATORS.add(new PrimitiveRandomFloatGenerator());
 		DEFAULT_GENERATORS.add(new PrimitiveRandomShortGenerator());
+		DEFAULT_GENERATORS.add(new PrimitiveRandomByteGenerator());
 		DEFAULT_GENERATORS.add(new RandomStringGenerator());
 		DEFAULT_GENERATORS.add(new PrimitiveRandomDoubleGenerator());
 		DEFAULT_GENERATORS.add(new EmptyCollection());

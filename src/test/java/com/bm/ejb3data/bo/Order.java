@@ -33,6 +33,8 @@ public class Order implements java.io.Serializable {
 	private int id;
 
 	private double total;
+	
+	private byte byteData;
 
 	private Collection<LineItem> lineItems;
 
@@ -110,6 +112,15 @@ public class Order implements java.io.Serializable {
 		item.setSubtotal(quantity * price);
 		lineItems.add(item);
 		total += quantity * price;
+	}
+	
+
+	public byte getByteData() {
+		return byteData;
+	}
+
+	public void setByteData(byte byteData) {
+		this.byteData = byteData;
 	}
 
 	/**

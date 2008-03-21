@@ -172,4 +172,8 @@ public final class BaseRandomDataGenerator {
 		return (short) random.nextInt(255);
 	}
 
+	public static byte getValueByte() {
+		return (byte) random.nextInt(255);
+	}
+
 }

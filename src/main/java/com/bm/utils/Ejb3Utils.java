@@ -395,12 +395,12 @@ public final class Ejb3Utils {
 	 *            the session bean /service to analyse
 	 * @return - the interfaces
 	 */
-	public static List<Class> getLocalRemoteInterfaces(Class toAnalyse) {
-		final List<Class> back = new ArrayList<Class>();
+	public static List<Class<?>> getLocalRemoteInterfaces(Class<?> toAnalyse) {
+		final List<Class<?>> back = new ArrayList<Class<?>>();
 		if (toAnalyse != null) {
-			Class[] interfaces = toAnalyse.getInterfaces();
+			Class<?>[] interfaces = toAnalyse.getInterfaces();
 			if (interfaces != null) {
-				for (Class<Object> interf : interfaces) {
+				for (Class<?> interf : interfaces) {
 					if (interf.getAnnotation(Local.class) != null
 							|| interf.getAnnotation(Remote.class) != null) {
 						back.add(interf);
@@ -419,7 +419,7 @@ public final class Ejb3Utils {
 	 *            the field to inspect
 	 * @return the declaring type (or primitive representant)
 	 */
-	public static Class getNonPrimitiveType(Property aktField) {
+	public static Class<?> getNonPrimitiveType(Property aktField) {
 		return getNonPrimitiveType(aktField.getType());
 
 	}
@@ -430,22 +430,22 @@ public final class Ejb3Utils {
 	 * 
 	 * @param aktField -
 	 *            the field to inspect
-	 * @return the declaring type (or primitive representant)
+	 * @return the declaring type (or primitive substitute)
 	 */
-	public static Class getNonPrimitiveType(Class aktField) {
+	public static Class<?> getNonPrimitiveType(Class<?> aktField) {
 		if (aktField == double.class) {
 			return Double.class;
 		} else if (aktField == float.class) {
 			return Float.class;
 		} else if (aktField == int.class) {
 			return Integer.class;
+		} else if (aktField == byte.class) {
+			return Byte.class;
 		} else if (aktField == boolean.class) {
 			return Boolean.class;
 		} else if (aktField == char.class) {
 			return Character.class;
-		} else if (aktField == byte[].class) {
-			return Byte.class;
-		} else if (aktField == long.class) {
+		}  else if (aktField == long.class) {
 			return Long.class;
 		} else if (aktField == short.class) {
 			return Short.class;
@@ -466,7 +466,7 @@ public final class Ejb3Utils {
 	 *            the superclass
 	 * @return true if a supeclass or interface
 	 */
-	public static boolean hasSuperclassOrInterface(Class toCheck, Class superclassOrInterface) {
+	public static boolean hasSuperclassOrInterface(Class<?> toCheck, Class<?> superclassOrInterface) {
 		if (toCheck == null) {
 			return false;
 		} else if (superclassOrInterface.equals(toCheck)) {
@@ -474,9 +474,9 @@ public final class Ejb3Utils {
 		} else if (toCheck.equals(Object.class)) {
 			return false;
 		} else {
-			Class[] interfaces = toCheck.getInterfaces();
+			Class<?>[] interfaces = toCheck.getInterfaces();
 			if (interfaces != null) {
-				for (Class current : interfaces) {
+				for (Class<?> current : interfaces) {
 					if (hasSuperclassOrInterface(current, superclassOrInterface)) {
 						return true;
 					}
@@ -495,7 +495,7 @@ public final class Ejb3Utils {
 	 *            given generator
 	 * @return returns a given generator type
 	 */
-	public static GeneratorType getGeneratorTypeAnnotation(Generator actGenerator) {
+	public static GeneratorType getGeneratorTypeAnnotation(Generator<?> actGenerator) {
 		Annotation[] classAnnotations = actGenerator.getClass().getAnnotations();
 		// iterate over the annotations
 		for (Annotation a : classAnnotations) {
@@ -514,32 +514,32 @@ public final class Ejb3Utils {
 	 *            for which property
 	 * @return - the right collection type
 	 */
-	public static Collection getRightCollectionType(Property forProperty) {
+	public static <T> Collection<T> getRightCollectionType(Property forProperty) {
 		if (forProperty.getType().equals(List.class)) {
-			return new ArrayList();
+			return new ArrayList<T>();
 		} else if (forProperty.getType().equals(Set.class)) {
-			return new HashSet();
+			return new HashSet<T>();
 		} else if (forProperty.getType().equals(LinkedList.class)) {
-			return new LinkedList();
+			return new LinkedList<T>();
 		} else if (forProperty.getType().equals(Vector.class)) {
-			return new Vector();
+			return new Vector<T>();
 		} else if (forProperty.getType().equals(Set.class)) {
-			return new HashSet();
+			return new HashSet<T>();
 		} else {
-			return new ArrayList();
+			return new ArrayList<T>();
 		}
 	}
 
 	/**
-	 * Returns all fields (including fields from all superclasses) of a class.
+	 * Returns all fields (including fields from all super classes) of a class.
 	 * 
 	 * @param forClass -
 	 *            for which class
 	 * @return - all fields
 	 */
-	public static Field[] getAllFields(Class forClass) {
+	public static Field[] getAllFields(Class<?> forClass) {
 		final List<Field> fields = new ArrayList<Field>();
-		Class aktClass = forClass;
+		Class<?> aktClass = forClass;
 		while (!aktClass.equals(Object.class)) {
 			Field[] tmp = aktClass.getDeclaredFields();
 			for (Field akt : tmp) {
@@ -559,7 +559,7 @@ public final class Ejb3Utils {
 	 *            in which class
 	 * @return the method if found or IllegalArgument exception
 	 */
-	public static Method getParameterlessMethodByName(String name, Class inClass) {
+	public static Method getParameterlessMethodByName(String name, Class<?> inClass) {
 		final Method[] all = getAllMethods(inClass);
 		for (Method current : all) {
 			if (current.getName().equals(name)) {
@@ -572,15 +572,15 @@ public final class Ejb3Utils {
 	}
 
 	/**
-	 * Returns all fields (including fields from all superclasses) of a class.
+	 * Returns all fields (including fields from all super classes) of a class.
 	 * 
 	 * @param forClass -
 	 *            for which class
 	 * @return - all fields
 	 */
-	public static Method[] getAllMethods(Class forClass) {
+	public static Method[] getAllMethods(Class<?> forClass) {
 		final List<Method> methods = new ArrayList<Method>();
-		Class aktClass = forClass;
+		Class<?> aktClass = forClass;
 		while (!aktClass.equals(Object.class)) {
 			Method[] tmp = aktClass.getDeclaredMethods();
 			for (Method akt : tmp) {
@@ -596,7 +596,7 @@ public final class Ejb3Utils {
 	 * StringTokenizer
 	 * 
 	 * @param longClassName -
-	 *            the long fully qualified calss name
+	 *            the long fully qualified class name
 	 * @return - short class name
 	 */
 	public static String getShortClassName(String longClassName) {
@@ -660,7 +660,7 @@ public final class Ejb3Utils {
 	 *            for class
 	 * @return - short class name
 	 */
-	public static String getShortClassName(Class clazz) {
+	public static String getShortClassName(Class<?> clazz) {
 		return getShortClassName(clazz.getName());
 	}
 
