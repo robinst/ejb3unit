@@ -8,6 +8,8 @@ import javax.persistence.PersistenceContext;
 
 import junit.framework.TestCase;
 
+import org.jmock.Mockery;
+
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.MockedDIModuleCreator;
 import com.bm.ejb3data.bo.AnnotatedFieldsSessionBean;
@@ -24,6 +26,8 @@ import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
  * 
  */
 public class DependencyInjectorTest extends TestCase {
+	
+	private final Mockery context = new Mockery();
 
 	@SuppressWarnings("unchecked")
 	private AnnotatedFieldsSessionBean createBeanIstance(Module module) {
@@ -44,7 +48,7 @@ public class DependencyInjectorTest extends TestCase {
 	 */
 	public void testInjector_injectMockObjects() {
 		MockedDIModuleCreator module = MetaDataCache
-				.getMockModuleCreator(AnnotatedFieldsSessionBean.class);
+				.getMockModuleCreator(AnnotatedFieldsSessionBean.class, context);
 		final AnnotatedFieldsSessionBean sessionBeanToTest = createBeanIstance(module);
 		assertNotNull(sessionBeanToTest.getDs());
 		assertNotNull(sessionBeanToTest.getEm());

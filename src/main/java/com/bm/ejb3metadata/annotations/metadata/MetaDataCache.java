@@ -4,6 +4,8 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
+import org.jmock.Mockery;
+
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.DynamicDIModuleCreator;
 import com.bm.creators.MockedDIModuleCreator;
@@ -27,7 +29,9 @@ public final class MetaDataCache {
 
 	/**
 	 * Adds explicit matadate form annotated classes to the ejb3unit framework
-	 * @param classes the list of classes
+	 * 
+	 * @param classes
+	 *            the list of classes
 	 */
 	public static void addClasses(String... classes) {
 		for (String s : classes) {
@@ -143,10 +147,10 @@ public final class MetaDataCache {
 	 *            the class to check
 	 * @return the module creator.
 	 */
-	public static MockedDIModuleCreator getMockModuleCreator(Class toCheck) {
+	public static MockedDIModuleCreator getMockModuleCreator(Class toCheck, Mockery context) {
 		// ensure the metadata is resolved for this jar (where toCheck is in)
 		getMetaData(toCheck);
-		final MockedDIModuleCreator mockedDIModuleCreator = new MockedDIModuleCreator();
+		final MockedDIModuleCreator mockedDIModuleCreator = new MockedDIModuleCreator(context);
 		// add mappings to the creator
 		mockedDIModuleCreator.addInteface2ImplMap(getInterface2implemantation());
 		return mockedDIModuleCreator;

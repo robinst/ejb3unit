@@ -25,7 +25,6 @@
 			<zipfileset src="${project.build.directory}/liblocation/jta.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/javassist.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/jboss-archive-browsing.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/jmock.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/logkit.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/ehcache.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hibernate-annotations.jar" />
@@ -42,7 +41,6 @@
 			<rule pattern="org.dom4j.**" result="org.ejb3unit.dom4j.@1" />
 			<rule pattern="org.hsqldb.**" result="org.ejb3unit.hsqldb.@1" />
 			<rule pattern="org.jboss.util.**" result="org.ejb3unit.util.@1" />
-			<rule pattern="org.jmock.**" result="org.ejb3unit.jmock.@1" />
 			<rule pattern="antlr.**" result="org.ejb3unit.antlr.@1" />
 			<rule pattern="javassist.**" result="org.ejb3unit.javassist.@1" />
 			<rule pattern="net.sf.**" result="org.ejb3unit.hibernate.cglib.@1" />

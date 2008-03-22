@@ -2,7 +2,8 @@ package com.bm.testsuite;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
-import org.jmock.MockObjectTestCase;
+
+import junit.framework.TestCase;
 
 import com.bm.introspectors.Property;
 import com.bm.utils.BeanEqualsTester;
@@ -14,7 +15,7 @@ import com.bm.utils.BeanEqualsTester;
  * @author Daniel Wiese
  * @since 09.02.2006
  */
-public class BaseTest extends MockObjectTestCase {
+public class BaseTest extends TestCase {
 
 	/**
 	 * Create an instance.

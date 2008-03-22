@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.persistence.PersistenceContext;
 
-import org.jmock.Mock;
+import org.jmock.Mockery;
 
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.MockedDIModuleCreator;
@@ -34,7 +34,9 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 
 	private T beanToTest = null;
 
-	private Map<Class<?>, Mock> controlls = null;
+	protected final Mockery context = new Mockery();
+
+	private Map<Class<?>, Object> mockedDependencies = null;
 
 	/**
 	 * Default constructor.
@@ -42,7 +44,8 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 	 * @param beanToTest -
 	 *            the bean to test.
 	 */
-	public MockedSessionBeanFixture(Class<T> beanToTest) {
+	public MockedSessionBeanFixture(
+			Class<T> beanToTest) {
 		this.beanUnderTestClass = beanToTest;
 	}
 
@@ -53,12 +56,22 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 	 *            the name of the property
 	 * @return - the mock controll
 	 */
-	protected Mock getMockControl(Class<?> interfaze) {
-		if (this.controlls != null) {
-			return this.controlls.get(interfaze);
+	@SuppressWarnings("unchecked")
+	protected <M> M getMock(Class<M> interfaze) {
+		if (this.mockedDependencies != null) {
+			return (M) this.mockedDependencies.get(interfaze);
 		} else {
 			return null;
 		}
+	}
+
+	/**
+	 * Returns the interface.
+	 * @param <M> the interface to mock
+	 * @return the mocked intance
+	 */
+	protected <M> M mock(Class<M> interfaze) {
+		return context.mock(interfaze);
 	}
 
 	/**
@@ -90,14 +103,10 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		MockedDIModuleCreator module = MetaDataCache
-				.getMockModuleCreator(beanUnderTestClass);
+		MockedDIModuleCreator module = MetaDataCache.getMockModuleCreator(beanUnderTestClass,
+				context);
 		this.beanToTest = createBeanIstance(module);
-		this.controlls = module.getInterfacesAndMockControlls();
-		// register the mock controlls;
-		for (Mock current : controlls.values()) {
-			registerToVerify(current);
-		}
+		this.mockedDependencies = module.getMocks();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -106,9 +115,9 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 		// final T back = Ejb3Utils.getNewInstance(toCreate);
 		Module[] mods = { module };
 		BeanCreationListener createdbeans = new BeanCreationListener();
-		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays
-				.asList(mods), Ejb3Guice.markerToArray(EJB.class,
-				Resource.class, PersistenceContext.class), createdbeans);
+		Injector injector = Ejb3Guice.createInjector(Stage.PRODUCTION, Arrays.asList(mods),
+				Ejb3Guice.markerToArray(EJB.class, Resource.class, PersistenceContext.class),
+				createdbeans);
 		final T instance = injector.getInstance(beanUnderTestClass);
 		return instance;
 	}
