@@ -33,6 +33,7 @@ package org.hsqldb.jdbc;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.RowIdLifetime;
 import java.sql.SQLException;
 
 import org.hsqldb.Column;
@@ -6452,5 +6453,43 @@ public class jdbcDatabaseMetaData implements DatabaseMetaData {
 	 */
 	private static boolean wantsIsNull(String s) {
 		return (s != null && s.length() == 0);
+	}
+
+	public boolean autoCommitFailureClosesAllResultSets() throws SQLException {
+		return false;
+	}
+
+	public ResultSet getClientInfoProperties() throws SQLException {
+		return null;
+	}
+
+	public ResultSet getFunctionColumns(String s, String s1, String s2,
+			String s3) throws SQLException {
+		return null;
+	}
+
+	public ResultSet getFunctions(String s, String s1, String s2)
+			throws SQLException {
+		return null;
+	}
+
+	public RowIdLifetime getRowIdLifetime() throws SQLException {
+		return null;
+	}
+
+	public ResultSet getSchemas(String s, String s1) throws SQLException {
+		return null;
+	}
+
+	public boolean supportsStoredFunctionsUsingCallSyntax() throws SQLException {
+		return false;
+	}
+
+	public boolean isWrapperFor(Class<?> iface) throws SQLException {
+		return false;
+	}
+
+	public <T> T unwrap(Class<T> iface) throws SQLException {
+		return null;
 	}
 }
