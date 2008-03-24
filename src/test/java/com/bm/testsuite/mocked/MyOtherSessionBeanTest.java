@@ -29,10 +29,10 @@ public class MyOtherSessionBeanTest extends
 	public void test_executeOperation() { 
 		AnnotatedFieldsSessionBean toTest = this.getBeanToTest();
 		assertNotNull(toTest);
-		final IMySessionBean mySessionBean = this.getMock(IMySessionBean.class);
+		final IMySessionBean mySessionBean = getMock(IMySessionBean.class);
 		assertNotNull(mySessionBean); 
 
-		final DataSource ds = mock(DataSource.class);
+		final DataSource ds = getMock(DataSource.class);
 
 		context.checking(new Expectations() {{
 			atLeast(1).of(mySessionBean).getDs();

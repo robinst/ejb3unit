@@ -50,7 +50,8 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 	}
 
 	/**
-	 * Returns the mock controll to the given property.
+	 * Returns the mock controll to the given property. If this is a dependency injection
+	 * field exactly this property will be injected to the session bean instance
 	 * 
 	 * @param interfaze -
 	 *            the name of the property
@@ -61,17 +62,8 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 		if (this.mockedDependencies != null) {
 			return (M) this.mockedDependencies.get(interfaze);
 		} else {
-			return null;
+			return context.mock(interfaze);
 		}
-	}
-
-	/**
-	 * Returns the interface.
-	 * @param <M> the interface to mock
-	 * @return the mocked intance
-	 */
-	protected <M> M mock(Class<M> interfaze) {
-		return context.mock(interfaze);
 	}
 
 	/**
