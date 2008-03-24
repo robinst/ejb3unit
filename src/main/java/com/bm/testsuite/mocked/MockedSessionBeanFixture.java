@@ -127,6 +127,7 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 	 */
 	@Override
 	protected void tearDown() throws Exception {
+		context.assertIsSatisfied();
 		super.tearDown();
 		this.beanToTest = null;
 	}
