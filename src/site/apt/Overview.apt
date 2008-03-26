@@ -29,9 +29,16 @@ Quick Overview
      
       * Of course you can add manual tests if you like
     
-    * OneToMany, ManyToOne and OneToOne supported
+   * Relations: OneToMany and ManyToOne supported
       
       * With Ejb3Unit it’s possible to Test this beans AND the relations (in a non transitive way!).
+    
+    * Limitations:  
+      
+        * ManyToMany relations, OneToOne relations and unidirectional relationships are curently not supported. For this or complex scenarios you can use the "PoJoFixture" which setups the infrastructure and gives you access to an
+entity manager which allows to persist your own object graph.
+
+	* Currently only the access type 'field' is supported (annotation are declared on the field). The access type 'property' (annotation are declared on the methods) is currently not supported.
 
 *  2. <<{{{Session-Bean.html}Session bean test}}>>
 
