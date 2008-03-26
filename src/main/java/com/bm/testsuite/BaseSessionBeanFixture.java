@@ -5,7 +5,6 @@ import javax.persistence.EntityTransaction;
 
 import com.bm.creators.SessionBeanFactory;
 import com.bm.ejb3guice.inject.Inject;
-import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.IIntrospector;
 import com.bm.jndi.Ejb3UnitJndiBinder;
@@ -39,8 +38,6 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Inject
 	private Provider<EntityManager> emProv;
 
-	private final Injector injector;
-
 	/**
 	 * Constructor.
 	 * 
@@ -51,8 +48,8 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class<?>[] usedEntityBeans,
-			InitialDataSet... initialData) {
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
+			Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
 		this(sessionBeanToTest, usedEntityBeans);
 		this.initalDataSets = initialData;
 	}
@@ -65,9 +62,15 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param usedEntityBeans -
 	 *            the used entity bens
 	 */
-	public BaseSessionBeanFixture(Class<T> sessionBeanToTest, Class<?>[] usedEntityBeans) {
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
+			Class<?>[] usedEntityBeans) {
 		super();
-		injector = InternalInjector.createInternalInjector(usedEntityBeans);
+		try {
+			injector = InternalInjector.createInternalInjector(usedEntityBeans);
+
+		} catch (EntityInitializationException e) {
+			initializationError = e;
+		}
 		this.beanClass = sessionBeanToTest;
 
 	}
@@ -84,8 +87,9 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 * @param initialData -
 	 *            the inital data to create in the db
 	 */
-	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest, IIntrospector<T> intro,
-			Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
+	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest,
+			IIntrospector<T> intro, Class<?>[] usedEntityBeans,
+			InitialDataSet... initialData) {
 		super();
 		injector = InternalInjector.createInternalInjector(usedEntityBeans);
 		this.beanClass = sessionBeanToTest;
@@ -102,6 +106,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 		this.initalDataSets = initalDataSets;
 	}
 
+	
 	/**
 	 * @author Daniel Wiese
 	 * @since 16.10.2005
@@ -110,6 +115,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		fireExceptionIfNotInitialized();
 		injector.injectMembers(this);
 		this.jndiBinder.bind();
 		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);

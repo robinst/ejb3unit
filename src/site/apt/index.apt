@@ -48,9 +48,14 @@ Ejb3Unit - out of container EJB 3.0 testing - Automate your ejb3 testing NOW!
      
       * Of course you can add manual tests if you like
     
-    * OneToMany, ManyToOne and OneToOne supported
+    * Relations: OneToMany, ManyToOne and OneToOne supported
       
       * With Ejb3Unit it’s possible to Test this beans AND the relations (in a non transitive way!).
+      
+      * ManyToMany relations and unidirectional relationships are curently not supported. For this or complex scenarios you can use the "PoJoFixture" which setups the infrastructure and gives you access to an
+entity manager which allows to persist your own object graph.
+   
+    * Currently only field access is supported. Annotations to methods are not currently not supported.
 
 **  2. <<{{{Session-Bean.html}Session bean test}}>>
 

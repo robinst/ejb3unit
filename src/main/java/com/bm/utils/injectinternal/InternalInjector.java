@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import com.bm.ejb3guice.inject.AbstractModule;
 import com.bm.ejb3guice.inject.Ejb3Guice;
 import com.bm.ejb3guice.inject.Injector;
+import com.bm.testsuite.EntityInitializationException;
 
 public final class InternalInjector extends AbstractModule {
 
@@ -32,7 +33,8 @@ public final class InternalInjector extends AbstractModule {
 	 *            the current test case entities
 	 * @return the injector
 	 */
-	public static Injector createInternalInjector(Class<?>... entytiesToTest) {
+	public static Injector createInternalInjector(Class<?>... entytiesToTest)
+			throws EntityInitializationException {
 		return createInternalInjector(Arrays.asList(entytiesToTest));
 	}
 
@@ -44,12 +46,14 @@ public final class InternalInjector extends AbstractModule {
 	 * @return the injector
 	 */
 	public static synchronized Injector createInternalInjector(
-			Collection<Class<?>> entyties) {
-		if (entityManagerProvider.addPersistenceClasses(entyties) || injector == null){
+			Collection<Class<?>> entyties) throws EntityInitializationException {
+
+		if (entityManagerProvider.addPersistenceClasses(entyties)
+				|| injector == null) {
 			injector = Ejb3Guice.createInjector(new InternalInjector(
 					entityManagerProvider));
 		}
-		
+
 		return injector;
 	}
 }

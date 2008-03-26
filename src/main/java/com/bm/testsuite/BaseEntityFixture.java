@@ -16,7 +16,6 @@ import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
 import com.bm.datagen.relation.EntityRelation;
 import com.bm.ejb3guice.inject.Inject;
-import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
@@ -54,11 +53,9 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 	private final List<Generator<?>> currentGenList;
 
-	private final Injector injector;
-
 	@Inject
 	private Provider<EntityManager> manager;
-	
+
 	/**
 	 * Default constructor.
 	 * 
@@ -78,7 +75,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *            -a dditional generators (plug in)
 	 */
 	@SuppressWarnings("unchecked")
-	public BaseEntityFixture(Class<T> entityToTest, Generator[] additionalGenerators) {
+	public BaseEntityFixture(Class<T> entityToTest,
+			Generator[] additionalGenerators) {
 		this(entityToTest, additionalGenerators, null);
 	}
 
@@ -93,8 +91,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *            referenced persitence classes
 	 */
 	@SuppressWarnings("unchecked")
-	public BaseEntityFixture(Class<T> entityToTest, Generator<?>[] additionalGenerators,
-			Class<?>[] referencedEntities) {
+	public BaseEntityFixture(Class<T> entityToTest,
+			Generator<?>[] additionalGenerators, Class<?>[] referencedEntities) {
 		currentGenList = new ArrayList<Generator<?>>();
 		final List<Class<?>> entitiesToTest = new ArrayList<Class<?>>();
 		// add the current class
@@ -115,11 +113,18 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			}
 		}
 
-		injector = InternalInjector.createInternalInjector(entitiesToTest);
+		try {
+			injector = InternalInjector.createInternalInjector(entitiesToTest);
+		} catch (EntityInitializationException e) {
+			initializationError = e;
+		}
+
 		this.baseClass = entityToTest;
 		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
 
 	}
+
+	
 
 	/**
 	 * @see junit.framework.TestCase#setUp()
@@ -127,6 +132,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		fireExceptionIfNotInitialized();
 		injector.injectMembers(this);
 		this.manager.get().clear();
 		log.debug("Setting up BaseEntityTest");
@@ -177,7 +183,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			sb.append("\n");
 			List<String> undoStatements = (Ejb3UnitCfg.getConfiguration()
 					.isInMemory()) ? this.undo.getOneDeleteAllStatement()
-							: this.undo.getSQLUndoStatements();
+					: this.undo.getSQLUndoStatements();
 			for (String sql : undoStatements) {
 				sb.append(sql).append("\n");
 			}
@@ -231,7 +237,8 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		try {
 			tx.begin();
 			created = creator.createBeanInstance();
-			final SimpleGetterSetterTest test = new SimpleGetterSetterTest(created);
+			final SimpleGetterSetterTest test = new SimpleGetterSetterTest(
+					created);
 			test.testGetterSetter();
 		} finally {
 			tx.rollback();
@@ -324,10 +331,10 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 
 		// test if the readed collection is equal
 		BeanEqualsTester.testEqualsOnSize(beansCreated, beansReaded);
-		BeanEqualsTester.testEqualsOnPersistentFields(beansCreated, beansReaded,
-				this.intro);
-		BeanEqualsTester
-				.testEqualsImplementationForEntityBeans(beansCreated, beansReaded);
+		BeanEqualsTester.testEqualsOnPersistentFields(beansCreated,
+				beansReaded, this.intro);
+		BeanEqualsTester.testEqualsImplementationForEntityBeans(beansCreated,
+				beansReaded);
 
 	}
 
@@ -348,11 +355,12 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 				StringBuilder sb = new StringBuilder();
 				List<Property> props = this.intro.getPersitentProperties();
 				for (Property prop : props) {
-					sb.append("Field (").append(prop.getName()).append(") Value: ")
-							.append(prop.getField(lastBean));
+					sb.append("Field (").append(prop.getName()).append(
+							") Value: ").append(prop.getField(lastBean));
 					sb.append("\n");
 				}
-				log.info("Error writing bean: (" + lastBean.getClass().getName() + ")");
+				log.info("Error writing bean: ("
+						+ lastBean.getClass().getName() + ")");
 				log.info("Persistent fields values");
 				log.info(sb.toString());
 				log.error("Reason: ", e);

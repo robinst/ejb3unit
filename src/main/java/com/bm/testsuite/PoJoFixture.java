@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3guice.inject.Inject;
-import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Provider;
 import com.bm.jndi.Ejb3UnitJndiBinder;
 import com.bm.testsuite.dataloader.EntityInitialDataSet;
@@ -41,8 +40,6 @@ public abstract class PoJoFixture extends BaseTest {
 	@Inject
 	private Ejb3UnitJndiBinder jndiBinder;
 
-	private final Injector injector;
-
 	/**
 	 * Constructor.
 	 * 
@@ -51,13 +48,25 @@ public abstract class PoJoFixture extends BaseTest {
 	 */
 	public PoJoFixture(Class<?>[] usedEntityBeans) {
 		super();
-		injector = InternalInjector.createInternalInjector(usedEntityBeans);
-		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
+		try {
+			injector = InternalInjector.createInternalInjector(usedEntityBeans);
 
-		for (Class<? extends Object> akt : usedEntityBeans) {
-			usedEntityBeansC.add(akt);
+		} catch (EntityInitializationException e) {
+			initializationError = e;
+
 		}
-		this.configuration = Ejb3UnitCfg.getConfiguration();
+
+		if (initializationError == null) {
+			final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
+
+			for (Class<? extends Object> akt : usedEntityBeans) {
+				usedEntityBeansC.add(akt);
+			}
+			this.configuration = Ejb3UnitCfg.getConfiguration();
+
+		} else {
+			this.configuration = null;
+		}
 
 	}
 
@@ -69,7 +78,8 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @param initialData -
 	 *            the initial data to create in the db
 	 */
-	public PoJoFixture(Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
+	public PoJoFixture(Class<?>[] usedEntityBeans,
+			InitialDataSet... initialData) {
 		this(usedEntityBeans);
 		this.initalDataSet = initialData;
 	}
@@ -82,6 +92,7 @@ public abstract class PoJoFixture extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		fireExceptionIfNotInitialized();
 		injector.injectMembers(this);
 		entityManagerProv.get().clear();
 		this.jndiBinder.bind();
@@ -117,7 +128,8 @@ public abstract class PoJoFixture extends BaseTest {
 	@SuppressWarnings("unchecked")
 	protected <T> List<T> findAll(Class<T> clazz) {
 		EntityManager manager = this.getEntityManager();
-		Query query = manager.createQuery("select c from " + clazz.getName() + " c");
+		Query query = manager.createQuery("select c from " + clazz.getName()
+				+ " c");
 		return query.getResultList();
 	}
 

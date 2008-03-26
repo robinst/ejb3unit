@@ -13,23 +13,25 @@ Roadmap for Ejb3Unit 2.0
   
   * <<Major features>>
       
-      * No dependencies - on jar thats it!! 
+      * Improvement: No dependencies - on jar thats it!! 
         (only {{{http://logging.apache.org/log4j/}log4j.jar}} and optional {{{http://www.jmock.org/}jmock.jar [for mocked tests]}}
         will be required). 
         This will ease the installation and development in large projects because less dependencies 
         are required. No jar file conflicts anymore!
         
-      * Support for relational CSV data loaders. Load your test data with references!
+      * New Feature: Support for relational CSV data loaders. Load your test data with references!
       
-      * Support for peristence.xml no need to specify your persistence objects for every test! 
+      * New Feature: Support for peristence.xml no need to specify your persistence objects for every test! 
 
-      * Completely refactored EntityManger life cycle handling - will speed up your testing!
+      * Improvement: Completely refactored EntityManger life cycle handling - will speed up your testing!
       
-      * Support of the new jMock2 framework!
+      * Improvement: Support of the new jMock2 framework!
       
-      * Improved feedback for failing test cases!
-      
-      * Bug fixes!
+      * Improvement: More feedback for failing test cases!
+
+      * Improvement: Broken entities (e.g. syntax error in query) will not break other tests anymore! 
+ 
+      * Lots of bug fixes!
       
 * Sneak preview
       
