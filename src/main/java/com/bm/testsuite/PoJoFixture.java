@@ -1,6 +1,7 @@
 package com.bm.testsuite;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -9,13 +10,8 @@ import javax.persistence.Query;
 import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
-import com.bm.ejb3guice.inject.Inject;
-import com.bm.ejb3guice.inject.Provider;
-import com.bm.jndi.Ejb3UnitJndiBinder;
-import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
 import com.bm.utils.BasicDataSource;
-import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * Supports entity manager and flat file db injection for pojos.
@@ -25,20 +21,10 @@ import com.bm.utils.injectinternal.InternalInjector;
  *            the type of the service
  * @since 12.11.2005
  */
-public abstract class PoJoFixture extends BaseTest {
+public abstract class PoJoFixture extends BaseFixture {
 
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(PoJoFixture.class);
-
-	private InitialDataSet[] initalDataSet = null;
-
-	private final Ejb3UnitCfg configuration;
-
-	@Inject
-	private Provider<EntityManager> entityManagerProv;
-
-	@Inject
-	private Ejb3UnitJndiBinder jndiBinder;
 
 	/**
 	 * Constructor.
@@ -47,26 +33,7 @@ public abstract class PoJoFixture extends BaseTest {
 	 *            the used entity beans
 	 */
 	public PoJoFixture(Class<?>[] usedEntityBeans) {
-		super();
-		try {
-			injector = InternalInjector.createInternalInjector(usedEntityBeans);
-
-		} catch (EntityInitializationException e) {
-			initializationError = e;
-
-		}
-
-		if (initializationError == null) {
-			final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
-
-			for (Class<? extends Object> akt : usedEntityBeans) {
-				usedEntityBeansC.add(akt);
-			}
-			this.configuration = Ejb3UnitCfg.getConfiguration();
-
-		} else {
-			this.configuration = null;
-		}
+		this(usedEntityBeans, (InitialDataSet[]) null);
 
 	}
 
@@ -80,8 +47,15 @@ public abstract class PoJoFixture extends BaseTest {
 	 */
 	public PoJoFixture(Class<?>[] usedEntityBeans,
 			InitialDataSet... initialData) {
-		this(usedEntityBeans);
-		this.initalDataSet = initialData;
+		super(initialData);
+		initInjector(Arrays.asList(usedEntityBeans));
+
+		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
+
+		for (Class<? extends Object> akt : usedEntityBeans) {
+			usedEntityBeansC.add(akt);
+		}
+
 	}
 
 	/**
@@ -92,28 +66,6 @@ public abstract class PoJoFixture extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fireExceptionIfNotInitialized();
-		injector.injectMembers(this);
-		entityManagerProv.get().clear();
-		this.jndiBinder.bind();
-		log.debug("Creating entity manager instance for POJO test");
-		if (this.initalDataSet != null) {
-			EntityManager em = this.getEntityManager();
-
-			for (InitialDataSet current : this.initalDataSet) {
-				// insert entity manager
-				if (current instanceof EntityInitialDataSet) {
-					EntityInitialDataSet<?> curentEntDs = (EntityInitialDataSet<?>) current;
-					curentEntDs.setEntityManager(em);
-					EntityTransaction tx = em.getTransaction();
-					tx.begin();
-					current.create();
-					tx.commit();
-				} else {
-					current.create();
-				}
-			}
-		}
 	}
 
 	/**
@@ -182,29 +134,12 @@ public abstract class PoJoFixture extends BaseTest {
 	}
 
 	/**
-	 * @author Daniel Wiese
-	 * @since 16.10.2005
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@Override
-	protected void tearDown() throws Exception {
-		if (this.initalDataSet != null) {
-			EntityManager entityManager = entityManagerProv.get();
-			for (InitialDataSet current : this.initalDataSet) {
-				current.cleanup(entityManager);
-			}
-		}
-		super.tearDown();
-
-	}
-
-	/**
 	 * Liefert die datasource.
 	 * 
 	 * @return die data source.
 	 */
 	public DataSource getDataSource() {
-		return new BasicDataSource(this.configuration);
+		return new BasicDataSource(Ejb3UnitCfg.getConfiguration());
 	}
 
 	/**
@@ -215,7 +150,7 @@ public abstract class PoJoFixture extends BaseTest {
 	 * @return - a instance of an entity manager
 	 */
 	public EntityManager getEntityManager() {
-		return this.entityManagerProv.get();
+		return getEntityManagerProv().get();
 	}
 
 }

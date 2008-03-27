@@ -1,4 +1,4 @@
-package com.bm.ejb3data.bo;
+package com.bm.ejb3data.bo.error;
 
 import java.io.Serializable;
 
@@ -20,9 +20,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * @since 18.09.2005
  */
 @Entity
-@Table(name = "newsIncorrect")
-@NamedQuery(name = "NewsBo.allNewsIncorrect", query = "from com.ejb3unit.NewsBoIncorrect")
-public class NewsBoIncorrect implements Serializable {
+@Table(name = "newsIncorrectQuery")
+@NamedQuery(name = "NewsBoIncorrectQuery.incorrect", query = "from com.ejb3unit.NewsBoIncorrectQuery")
+public class NewsBoIncorrectQuery implements Serializable {
     @Transient
     private static final long serialVersionUID = 1L;
 
@@ -48,7 +48,7 @@ public class NewsBoIncorrect implements Serializable {
     /**
      * Default constructor Constructor.
      */
-    public NewsBoIncorrect() {
+    public NewsBoIncorrectQuery() {
 
     }
 
@@ -57,8 +57,8 @@ public class NewsBoIncorrect implements Serializable {
      */
     @Override
 	public boolean equals(Object other) {
-        if (other instanceof NewsBoIncorrect) {
-            final NewsBoIncorrect otherCast = (NewsBoIncorrect) other;
+        if (other instanceof NewsBoIncorrectQuery) {
+            final NewsBoIncorrectQuery otherCast = (NewsBoIncorrectQuery) other;
             final EqualsBuilder builder = new EqualsBuilder();
             builder.append(this.getAgentur(), otherCast.getAgentur());
             builder.append(this.getWkn(), otherCast.getWkn());

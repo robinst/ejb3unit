@@ -5,7 +5,6 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
-import com.bm.ejb3guice.inject.Injector;
 import com.bm.introspectors.Property;
 import com.bm.utils.BeanEqualsTester;
 
@@ -18,13 +17,6 @@ import com.bm.utils.BeanEqualsTester;
  */
 public class BaseTest extends TestCase {
 
-	Injector injector;
-	
-	/**
-	 * If an exception during construction occurs, it is stored here to fail the tests.
-	 */
-	EntityInitializationException initializationError;
-	
 	/**
 	 * Create an instance.
 	 * 
@@ -35,6 +27,7 @@ public class BaseTest extends TestCase {
 		super(name);
 	}
 
+	
 	/**
 	 * Default costructor.
 	 */
@@ -42,6 +35,8 @@ public class BaseTest extends TestCase {
 		super();
 	}
 
+
+	
 	/**
 	 * Assert that the two collections are the same irrespective of order.
 	 * 
@@ -159,32 +154,5 @@ public class BaseTest extends TestCase {
 		}
 	}
 
-	Injector getInjector() {
-		return injector;
-	}
-
-	void setInjector(Injector injector) {
-		this.injector = injector;
-	}
-
-	/**
-	 * Fires an Exception if not Initialised.
-	 */
-	void fireExceptionIfNotInitialized() {
-		if (injector == null) {
-			if (initializationError == null) {
-				fail("Initialization failed.");
-			} else {
-				throw initializationError;
-			}
-		}
-	}
 	
-	EntityInitializationException getInitializationError() {
-		return initializationError;
-	}
-
-	void setInitializationError(EntityInitializationException initializationError) {
-		this.initializationError = initializationError;
-	}
 }

@@ -26,10 +26,10 @@ public class AnnonatedClassFinderTest extends TestCase {
 		EjbJarAnnotationMetadata metaData = clazzFinder.getResult(this
 				.getClass());
 		ClassAnnotationMetadata clzzMeta = metaData
-				.getClassAnnotationMetadata("com/bm/testsuite/metadata/TestServiceBean");
+				.getClassAnnotationMetadata("com/bm/testsuite/metadata/ExampleServiceBean");
 		String impl = metaData
 				.getBeanImplementationForInterface(IBusinessInterface.class);
-		assertEquals(impl, "com/bm/testsuite/metadata/TestStatlessSessionBean");
+		assertEquals(impl, "com/bm/testsuite/metadata/ExampleStatlessSessionBean");
 		assertEquals(clzzMeta.getLocalInterfaces().getInterfaces().get(0),
 				"com/bm/testsuite/metadata/IBusinessInterface3");
 		assertEquals(clzzMeta.isService(), true);

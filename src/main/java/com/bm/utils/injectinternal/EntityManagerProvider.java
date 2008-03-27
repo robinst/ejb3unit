@@ -141,8 +141,7 @@ public class EntityManagerProvider implements Provider<EntityManager> {
 			message = "EntityManager could not be initialized to load the enities "
 					+ new ArrayList<String>(fullList) + ". ";
 		}
-		message += "Normaly this is caused by an incorrect entity-definition. See the nested exceptions for details.";
-
+	
 		if (rollbackException == null) {
 			throw new EntityInitializationException(message, e);
 

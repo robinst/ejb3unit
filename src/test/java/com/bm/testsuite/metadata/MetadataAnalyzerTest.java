@@ -24,12 +24,12 @@ public class MetadataAnalyzerTest extends TestCase {
 	public void testAnalyzeMataData() throws ResolverException {
 		// classes.add("com/siemens/ct/ejb3metadata/TestStatlessSessionBean");
 		// classes.add("com/siemens/ct/ejb3metadata/TestStetlessSessionBean2");
-		EjbJarAnnotationMetadata metadata = MetadataAnalyzer.initialize(TestStatlessSessionBean.class);
+		EjbJarAnnotationMetadata metadata = MetadataAnalyzer.initialize(ExampleStatlessSessionBean.class);
 		ClassAnnotationMetadata clzzMeta = metadata
-				.getClassAnnotationMetadata("com/bm/testsuite/metadata/TestServiceBean");
+				.getClassAnnotationMetadata("com/bm/testsuite/metadata/ExampleServiceBean");
 		String impl = metadata
 				.getBeanImplementationForInterface(IBusinessInterface.class);
-		assertEquals(impl, "com/bm/testsuite/metadata/TestStatlessSessionBean");
+		assertEquals(impl, "com/bm/testsuite/metadata/ExampleStatlessSessionBean");
 		assertEquals(clzzMeta.getLocalInterfaces().getInterfaces().get(0),
 				"com/bm/testsuite/metadata/IBusinessInterface3");
 		assertEquals(clzzMeta.isService(), true);

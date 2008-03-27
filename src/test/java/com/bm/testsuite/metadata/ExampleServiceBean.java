@@ -1,16 +1,17 @@
 package com.bm.testsuite.metadata;
 
 import javax.ejb.EJB;
-import javax.ejb.Stateless;
+
+import org.jboss.annotation.ejb.Service;
 
 /**
- * Test seeion bean.
+ * Testklasse.
  * 
  * @author Daniel Wiese
  * @since 24.02.2007
  */
-@Stateless
-public class TestStatlessSessionBean implements IBusinessInterface {
+@Service
+public class ExampleServiceBean implements IBusinessInterface3 {
 
 	@EJB
 	IBusinessInterface2 reference;
@@ -20,7 +21,7 @@ public class TestStatlessSessionBean implements IBusinessInterface {
 	 * 
 	 * @author Daniel Wiese
 	 * @since 24.02.2007
-	 * @see com.bm.testsuite.metadata.IBusinessInterface#doSomething()
+	 * @see com.bm.testsuite.metadata.IBusinessInterface3#doSomething()
 	 */
 	public void doSomething() {
 		reference.doSomething();

@@ -1,16 +1,13 @@
 package com.bm.testsuite;
 
+import java.util.Arrays;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 import com.bm.creators.SessionBeanFactory;
 import com.bm.ejb3guice.inject.Inject;
-import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.IIntrospector;
-import com.bm.jndi.Ejb3UnitJndiBinder;
-import com.bm.testsuite.dataloader.EntityInitialDataSet;
 import com.bm.testsuite.dataloader.InitialDataSet;
-import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * This is the base class for all JUnit test - testing stateless/statefull
@@ -21,22 +18,28 @@ import com.bm.utils.injectinternal.InternalInjector;
  *            the type of the session bean to test
  * @since 16.10.2005
  */
-public abstract class BaseSessionBeanFixture<T> extends BaseTest {
+public abstract class BaseSessionBeanFixture<T> extends BaseFixture {
 
 	private final Class<T> beanClass;
 
 	private T beanToTest = null;
 
-	private InitialDataSet[] initalDataSets = null;
-
 	@Inject
 	private SessionBeanFactory<T> sbFactory;
 
-	@Inject
-	private Ejb3UnitJndiBinder jndiBinder;
+	/**
+	 * Constructor.
+	 * 
+	 * @param sessionBeanToTest -
+	 *            the class of the session bean to test
+	 * @param usedEntityBeans -
+	 *            the used entity bens
+	 */
+	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
+			Class<?>[] usedEntityBeans) {
+		this(sessionBeanToTest, usedEntityBeans, (InitialDataSet[]) null);
 
-	@Inject
-	private Provider<EntityManager> emProv;
+	}
 
 	/**
 	 * Constructor.
@@ -50,27 +53,8 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 */
 	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			Class<?>[] usedEntityBeans, InitialDataSet... initialData) {
-		this(sessionBeanToTest, usedEntityBeans);
-		this.initalDataSets = initialData;
-	}
-
-	/**
-	 * Constructor.
-	 * 
-	 * @param sessionBeanToTest -
-	 *            the class of the session bean to test
-	 * @param usedEntityBeans -
-	 *            the used entity bens
-	 */
-	public BaseSessionBeanFixture(Class<T> sessionBeanToTest,
-			Class<?>[] usedEntityBeans) {
-		super();
-		try {
-			injector = InternalInjector.createInternalInjector(usedEntityBeans);
-
-		} catch (EntityInitializationException e) {
-			initializationError = e;
-		}
+		super(initialData);
+		initInjector(Arrays.asList(usedEntityBeans));
 		this.beanClass = sessionBeanToTest;
 
 	}
@@ -90,23 +74,10 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	protected BaseSessionBeanFixture(Class<T> sessionBeanToTest,
 			IIntrospector<T> intro, Class<?>[] usedEntityBeans,
 			InitialDataSet... initialData) {
-		super();
-		injector = InternalInjector.createInternalInjector(usedEntityBeans);
-		this.beanClass = sessionBeanToTest;
-		this.initalDataSets = initialData;
+		this(sessionBeanToTest, usedEntityBeans, initialData);
+		// This is strange - what happens with the introspector intro?
 	}
 
-	/**
-	 * Sets a CSV inital data set to prepopylate the database with data.
-	 * 
-	 * @param initalDataSets
-	 *            the array of initial data sets
-	 */
-	public void setInitalDataSets(InitialDataSet... initalDataSets) {
-		this.initalDataSets = initalDataSets;
-	}
-
-	
 	/**
 	 * @author Daniel Wiese
 	 * @since 16.10.2005
@@ -115,51 +86,19 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fireExceptionIfNotInitialized();
-		injector.injectMembers(this);
-		this.jndiBinder.bind();
 		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
 
-		if (this.initalDataSets != null) {
-			for (InitialDataSet current : this.initalDataSets) {
-				// insert entity manager
-				EntityManager em = emProv.get();
-				if (current instanceof EntityInitialDataSet) {
-					EntityInitialDataSet<?> curentEntDs = (EntityInitialDataSet<?>) current;
-					curentEntDs.setEntityManager(em);
-					EntityTransaction tx = em.getTransaction();
-					try {
-						tx.begin();
-						current.create();
-						tx.commit();
-					} catch (Exception e) {
-						tx.rollback();
-						throw e;
-					}
-				} else {
-					current.create();
-				}
-			}
-		}
 	}
 
 	/**
+	 * Returns a isntance of a EntityManager.
+	 * 
 	 * @author Daniel Wiese
-	 * @since 16.10.2005
-	 * @see junit.framework.TestCase#tearDown()
+	 * @since 12.11.2005
+	 * @return - a instance of an entity manager
 	 */
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		EntityManager em = emProv.get();
-		em.clear();
-		if (this.initalDataSets != null) {
-			// be violated
-			for (int i = this.initalDataSets.length - 1; i >= 0; i--) {
-				this.initalDataSets[i].cleanup(em);
-			}
-		}
-
+	public EntityManager getEntityManager() {
+		return getEntityManagerProv().get();
 	}
 
 	/**
@@ -178,17 +117,6 @@ public abstract class BaseSessionBeanFixture<T> extends BaseTest {
 	 */
 	public T getBeanToTest() {
 		return this.beanToTest;
-	}
-
-	/**
-	 * Returns a isntance of a EntityManager.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 12.11.2005
-	 * @return - a instance of an entity manager
-	 */
-	public EntityManager getEntityManager() {
-		return emProv.get();
 	}
 
 	/**

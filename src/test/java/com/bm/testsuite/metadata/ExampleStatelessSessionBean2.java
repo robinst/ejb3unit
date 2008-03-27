@@ -9,7 +9,7 @@ import javax.ejb.Stateless;
  * @since 24.02.2007
  */
 @Stateless
-public class TestStetlessSessionBean2 implements IBusinessInterface2 {
+public class ExampleStatelessSessionBean2 implements IBusinessInterface2 {
 
 	/**
 	 * Testmethode.

@@ -15,15 +15,12 @@ import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
 import com.bm.datagen.relation.EntityRelation;
-import com.bm.ejb3guice.inject.Inject;
-import com.bm.ejb3guice.inject.Provider;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.utils.BeanEqualsTester;
 import com.bm.utils.NullableSetter;
 import com.bm.utils.SimpleGetterSetterTest;
 import com.bm.utils.UndoScriptGenerator;
-import com.bm.utils.injectinternal.InternalInjector;
 
 /**
  * This class is the base executes for all entity beans the automated test
@@ -34,7 +31,7 @@ import com.bm.utils.injectinternal.InternalInjector;
  *            the type of the entity bean
  * @since 07.10.2005
  */
-public abstract class BaseEntityFixture<T> extends BaseTest {
+public abstract class BaseEntityFixture<T> extends BaseFixture {
 
 	private static final Logger log = Logger.getLogger(BaseEntityFixture.class);
 
@@ -52,9 +49,6 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	private boolean lastTestRollbacked = false;
 
 	private final List<Generator<?>> currentGenList;
-
-	@Inject
-	private Provider<EntityManager> manager;
 
 	/**
 	 * Default constructor.
@@ -113,16 +107,14 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 			}
 		}
 
-		try {
-			injector = InternalInjector.createInternalInjector(entitiesToTest);
-		} catch (EntityInitializationException e) {
-			initializationError = e;
-		}
+		initInjector(entitiesToTest);
 
 		this.baseClass = entityToTest;
 		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
 
 	}
+
+	
 
 	
 
@@ -132,13 +124,10 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		fireExceptionIfNotInitialized();
-		injector.injectMembers(this);
-		this.manager.get().clear();
 		log.debug("Setting up BaseEntityTest");
 		this.undo = new UndoScriptGenerator<T>(intro);
 		this.lastTestRollbacked = false;
-		this.creator = new EntityBeanCreator<T>(this.manager.get(), intro,
+		this.creator = new EntityBeanCreator<T>(this.getEntityManagerProv().get(), intro,
 				this.baseClass, currentGenList);
 		this.creator.prepare();
 	}
@@ -154,7 +143,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 		try {
 			// only delete objects if the test was not rollbacked
 			if (!this.lastTestRollbacked) {
-				EntityManager entityManager = manager.get();
+				EntityManager entityManager = this.getEntityManagerProv().get();
 				entityManager.clear();
 				if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
 					this.undo.deleteAllDataInAllUsedTables(entityManager);
@@ -201,7 +190,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *             in an error case
 	 */
 	public void testWrite() throws Exception {
-		EntityManager entityManager = this.manager.get();
+		EntityManager entityManager = this.getEntityManagerProv().get();
 		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
 		try {
@@ -231,7 +220,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 * 
 	 */
 	public void testGetterSetter() {
-		EntityManager entityManager = this.manager.get();
+		EntityManager entityManager = this.getEntityManagerProv().get();
 		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
 		try {
@@ -254,7 +243,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *             in an error case
 	 */
 	public void testWriteWithNullFields() throws Exception {
-		EntityManager entityManager = this.manager.get();
+		EntityManager entityManager = this.getEntityManagerProv().get();
 		EntityTransaction tx = entityManager.getTransaction();
 		T created = null;
 		try {
@@ -291,7 +280,7 @@ public abstract class BaseEntityFixture<T> extends BaseTest {
 	 *             in an error case
 	 */
 	public void testWriteRead() throws Exception {
-		EntityManager entityManager = this.manager.get();
+		EntityManager entityManager = this.getEntityManagerProv().get();
 		EntityTransaction tx = entityManager.getTransaction();
 		final List<T> beansCreated = new ArrayList<T>();
 		final List<T> beansReaded = new ArrayList<T>();
