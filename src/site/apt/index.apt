@@ -26,8 +26,8 @@ Ejb3Unit - out of container EJB 3.0 testing - Automate your ejb3 testing NOW!
    
    See our <<{{{Roadmap.html}Roadmap}}>>for a full feature list. 
   
-  <<Quick Overview>>
-  
+[images/overview.png] Test Cases
+
   Ejb3Unit provides three different test categories for ejb3: Entity bean test, Session bean test and Mocked session bean test.
 
 **  1. <<{{{Entity-Bean.html}Entity bean test}}>>
