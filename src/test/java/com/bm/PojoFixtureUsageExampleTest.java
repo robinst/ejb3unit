@@ -22,8 +22,7 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 	}
 
 	/**
-	 * Delets all data.
-	 * {@inheritDoc}
+	 * Delets all data. {@inheritDoc}
 	 */
 	@Override
 	protected void setUp() throws Exception {
@@ -31,10 +30,9 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 		deleteAll(LineItem.class);
 		deleteAll(Order.class);
 	}
-	
+
 	/**
-	 * Delets all data.
-	 * {@inheritDoc}
+	 * Delets all data. {@inheritDoc}
 	 */
 	@Override
 	protected void tearDown() throws Exception {
@@ -44,7 +42,11 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 	}
 
 	public void testToWriteComplexObjectGraph() {
+		Order radomOrder = this.generateRandomInstance(Order.class);
+		radomOrder.addPurchase(this.generateRandomInstance(LineItem.class));
+		radomOrder.addPurchase(this.generateRandomInstance(LineItem.class));
 		List<Order> complexObjectGraph = generateTestOrders();
+		complexObjectGraph.add(radomOrder);
 
 		// persist the graph and load it again
 		List<Order> persisted = persist(complexObjectGraph);

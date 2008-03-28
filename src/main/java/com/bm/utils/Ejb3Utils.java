@@ -449,7 +449,9 @@ public final class Ejb3Utils {
 			return Long.class;
 		} else if (aktField == short.class) {
 			return Short.class;
-		} else if (hasSuperclassOrInterface(aktField, Collection.class)) {
+		} else if (hasSuperclassOrInterface(aktField, Set.class)) {
+			return Set.class;
+		}else if (hasSuperclassOrInterface(aktField, Collection.class)) {
 			return Collection.class;
 		}
 

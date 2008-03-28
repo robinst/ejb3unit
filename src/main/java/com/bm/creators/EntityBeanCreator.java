@@ -147,8 +147,8 @@ public class EntityBeanCreator<T> {
 				this.intro
 						.setField(back, emInspector.getAttibuteName(), embeddedInstance);
 			} catch (IllegalAccessException e) {
-				log.error("Cannot create the Embedded PK-Class", e);
-				throw new RuntimeException("Cannot create the Embedded PK-Class", e);
+				log.error("Can't create the Embedded PK-Class", e);
+				throw new RuntimeException("Can't create the Embedded PK-Class", e);
 			}
 
 		}

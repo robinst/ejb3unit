@@ -104,13 +104,13 @@ public class EntityInstanceCreator<T> {
 
 			return back;
 		} catch (IllegalAccessException e) {
-			log.error("Can´t set the value to the NON TANSIENT field: " + aktFieldName
+			log.error("Can't set the value to the NON TANSIENT field: " + aktFieldName
 					+ "\n(Class: " + toCreate.getName()
 					+ ") Perhaps it´s not marked as @Tansient!");
-			log.error("Can´t create the entity bean", e);
+			log.error("Can't create the entity bean", e);
 			throw new RuntimeException("Can´t create the entity bean", e);
 		} catch (IllegalArgumentException e) {
-			log.error("Can´t create the entity bean", e);
+			log.error("Can't create the entity bean", e);
 			throw new RuntimeException("Can´t create the entity bean", e);
 		} catch (SecurityException e) {
 			throw new RuntimeException(

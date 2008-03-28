@@ -67,11 +67,11 @@ public final class RelationPropertyResolver {
             final EntityBeanIntrospector<Object> tmpIn = new EntityBeanIntrospector<Object>(aktProperty
                     .getType());
             log.debug("Dependend class: " + tmpIn.getTableName());
-            // now it should be in theglobal store
+            // now it should be in the global store
             relProp = GlobalRelationStore.getStore().getProperty(aktProperty.getType(),
                     aktProperty.getDeclaringClass());
             if (relProp == null) {
-                throw new RuntimeException("Cant´t resolve releations for property (" + aktProperty.getName()
+                throw new RuntimeException("Cant't resolve releations for property (" + aktProperty.getName()
                         + ") in class (" + aktProperty.getDeclaringClass() + ")");
             }
         }

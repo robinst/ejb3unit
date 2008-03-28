@@ -8,8 +8,6 @@ import com.bm.datagen.utils.BaseRandomDataGenerator;
 /**
  * Generates boolean values (only for non PK fields).
  * 
- * @author Daniel Wiese
- * 
  */
 @GeneratorType(className = Boolean.class, fieldType = FieldType.NON_PK_FIELDS)
 public class PrimitiveRandomBooleanGenerator implements Generator<Boolean> {

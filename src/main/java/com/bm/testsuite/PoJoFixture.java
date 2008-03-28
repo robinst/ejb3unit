@@ -2,7 +2,9 @@ package com.bm.testsuite;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -10,6 +12,7 @@ import javax.persistence.Query;
 import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.creators.EntityBeanCreator;
 import com.bm.testsuite.dataloader.InitialDataSet;
 import com.bm.utils.BasicDataSource;
 
@@ -25,6 +28,8 @@ public abstract class PoJoFixture extends BaseFixture {
 
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(PoJoFixture.class);
+
+	private final Map<Class<?>, EntityBeanCreator<?>> creators = new HashMap<Class<?>, EntityBeanCreator<?>>();
 
 	/**
 	 * Constructor.
@@ -66,6 +71,30 @@ public abstract class PoJoFixture extends BaseFixture {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
+		this.creators.clear();
+	}
+
+	/**
+	 * Creates a random bean filled with values for the primitive fields which
+	 * can be used for test purposes
+	 * 
+	 * @param <T>
+	 *            the type
+	 * @param toGenerate
+	 *            the instance to generate
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	protected <T> T generateRandomInstance(Class<T> toGenerate) {
+		EntityBeanCreator<T> creator = null;
+		if (this.creators.containsKey(toGenerate)) {
+			creator = (EntityBeanCreator<T>) creators.get(toGenerate);
+		} else {
+			creator = new EntityBeanCreator<T>(this.getEntityManager(),
+					toGenerate);
+			this.creators.put(toGenerate, creator);
+		}
+		return creator.createBeanInstance();
 	}
 
 	/**

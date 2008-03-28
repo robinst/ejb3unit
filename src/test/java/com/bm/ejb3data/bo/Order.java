@@ -33,7 +33,7 @@ public class Order implements java.io.Serializable {
 	private int id;
 
 	private double total;
-	
+
 	private byte byteData;
 
 	private Collection<LineItem> lineItems;
@@ -113,7 +113,24 @@ public class Order implements java.io.Serializable {
 		lineItems.add(item);
 		total += quantity * price;
 	}
-	
+
+	/**
+	 * Adds a line item.
+	 * 
+	 * @param product -
+	 *            the product
+	 * @param quantity -
+	 *            the quantity
+	 * @param price -
+	 *            the price
+	 */
+	public void addPurchase(LineItem toAdd) {
+		if (lineItems == null) {
+			lineItems = new ArrayList<LineItem>();
+		}
+
+		lineItems.add(toAdd);
+	}
 
 	public byte getByteData() {
 		return byteData;
