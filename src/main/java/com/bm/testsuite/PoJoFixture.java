@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.EntityBeanCreator;
 import com.bm.testsuite.dataloader.InitialDataSet;
+import com.bm.testsuite.interfaces.IPoJoFixture;
 import com.bm.utils.BasicDataSource;
 
 /**
@@ -24,7 +25,7 @@ import com.bm.utils.BasicDataSource;
  *            the type of the service
  * @since 12.11.2005
  */
-public abstract class PoJoFixture extends BaseFixture {
+public abstract class PoJoFixture extends BaseFixture implements IPoJoFixture {
 
 	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
 			.getLogger(PoJoFixture.class);
@@ -54,22 +55,13 @@ public abstract class PoJoFixture extends BaseFixture {
 			InitialDataSet... initialData) {
 		super(initialData);
 		initInjector(Arrays.asList(usedEntityBeans));
-
-		final List<Class<? extends Object>> usedEntityBeansC = new ArrayList<Class<? extends Object>>();
-
-		for (Class<? extends Object> akt : usedEntityBeans) {
-			usedEntityBeansC.add(akt);
-		}
-
 	}
 
 	/**
-	 * @author Daniel Wiese
-	 * @since 16.10.2005
-	 * @see junit.framework.TestCase#setUp()
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		this.creators.clear();
 	}
@@ -98,16 +90,10 @@ public abstract class PoJoFixture extends BaseFixture {
 	}
 
 	/**
-	 * Find all rows of the given class in the database.
-	 * 
-	 * @param <T>
-	 *            the tyme of the persistent object
-	 * @param clazz
-	 *            the class of of the persistent object
-	 * @return all DB instances
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T> List<T> findAll(Class<T> clazz) {
+	public <T> List<T> findAll(Class<T> clazz) {
 		EntityManager manager = this.getEntityManager();
 		Query query = manager.createQuery("select c from " + clazz.getName()
 				+ " c");
@@ -115,16 +101,10 @@ public abstract class PoJoFixture extends BaseFixture {
 	}
 
 	/**
-	 * Deletes all rows of the given class in the database.
-	 * 
-	 * @param <T>
-	 *            the tyme of the persistent object
-	 * @param clazz
-	 *            the class of of the persistent object
-	 * @return all DB instances
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <T> void deleteAll(Class<T> clazz) {
+	public <T> void deleteAll(Class<T> clazz) {
 		EntityManager manager = this.getEntityManager();
 		EntityTransaction tx = manager.getTransaction();
 		tx.begin();
@@ -134,15 +114,9 @@ public abstract class PoJoFixture extends BaseFixture {
 	}
 
 	/**
-	 * Persists all objects in the database.
-	 * 
-	 * @param <T>
-	 *            the tyme of the persistent object
-	 * @param complexObjectGraph
-	 *            th egraph to persist
-	 * @return the persisted objects
+	 * {@inheritDoc}
 	 */
-	protected <T> List<T> persist(List<T> complexObjectGraph) {
+	public <T> List<T> persist(List<T> complexObjectGraph) {
 		EntityManager manager = this.getEntityManager();
 		EntityTransaction tx = manager.getTransaction();
 		tx.begin();
@@ -163,23 +137,18 @@ public abstract class PoJoFixture extends BaseFixture {
 	}
 
 	/**
-	 * Liefert die datasource.
-	 * 
-	 * @return die data source.
+	 * {@inheritDoc}
 	 */
 	public DataSource getDataSource() {
 		return new BasicDataSource(Ejb3UnitCfg.getConfiguration());
 	}
 
 	/**
-	 * Returns a isntance of a EntityManager.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 12.11.2005
-	 * @return - a instance of an entity manager
+	 * {@inheritDoc}
 	 */
 	public EntityManager getEntityManager() {
 		return getEntityManagerProv().get();
 	}
+
 
 }

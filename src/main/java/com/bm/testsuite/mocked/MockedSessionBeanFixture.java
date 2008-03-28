@@ -17,6 +17,7 @@ import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3guice.inject.Stage;
 import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.testsuite.BaseTest;
+import com.bm.testsuite.interfaces.IMockedSessionBeanFixture;
 
 /**
  * This class enables the testing of Seteless/Statefull Session beans and JBoss
@@ -28,7 +29,7 @@ import com.bm.testsuite.BaseTest;
  * @param <T> -
  *            the type of the bena to test.
  */
-public abstract class MockedSessionBeanFixture<T> extends BaseTest {
+public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IMockedSessionBeanFixture<T> {
 
 	private final Class<T> beanUnderTestClass;
 
@@ -49,16 +50,12 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 		this.beanUnderTestClass = beanToTest;
 	}
 
+	
 	/**
-	 * Returns the mock controll to the given property. If this is a dependency injection
-	 * field exactly this property will be injected to the session bean instance
-	 * 
-	 * @param interfaze -
-	 *            the name of the property
-	 * @return - the mock controll
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
-	protected <M> M getMock(Class<M> interfaze) {
+	public <M> M getMock(Class<M> interfaze) {
 		if (this.mockedDependencies != null) {
 			return (M) this.mockedDependencies.get(interfaze);
 		} else {
@@ -66,34 +63,28 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 		}
 	}
 
+
 	/**
-	 * Returns the bean to test.
-	 * 
-	 * @return - the bean to test
+	 * {@inheritDoc}
 	 */
-	protected T getBeanToTest() {
+	public T getBeanToTest() {
 		return this.beanToTest;
 	}
 
+	
 	/**
-	 * Sets a value for a field in the tested-bean instance.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 02.05.2006
-	 * @param fieldName -
-	 *            the name of the field
-	 * @param toSet -
-	 *            the value to set
+	 * {@inheritDoc}
 	 */
-	protected void setValueForField(String fieldName, Object toSet) {
+	public void setValueForField(String fieldName, Object toSet) {
 		this.setValueForField(this.beanToTest, fieldName, toSet);
 	}
 
+	
 	/**
-	 * @see junit.framework.TestCase#setUp()
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		MockedDIModuleCreator module = MetaDataCache.getMockModuleCreator(beanUnderTestClass,
 				context);
@@ -114,14 +105,22 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest {
 		return instance;
 	}
 
+
 	/**
-	 * @see junit.framework.TestCase#tearDown()
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		context.assertIsSatisfied();
 		super.tearDown();
 		this.beanToTest = null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Mockery getContext() {
+		return context;
 	}
 
 }

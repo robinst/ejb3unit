@@ -26,7 +26,19 @@ Ejb3Unit - out of container EJB 3.0 testing - Automate your ejb3 testing NOW!
    
    See our <<{{{Roadmap.html}Roadmap}}>>for a full feature list. 
   
-[images/overview.png] Test Cases
+   <<Overview of Test Cases in Ejb3Unit>>
+
+[images/overview.png] Overview of Test Cases
+
+   <<Feature matrix of Test Cases in Ejb3Unit>>
+
+[images/feature-matrix.png] Feature Matrix
+
+  * Database: Ejb3Unit provides Database access for entity beans (real database or in-memory database). Note the in-memory database is automatically created
+  
+  * Data Generators: Ejb3Unit uses data generators for fully automated entity bean test. 
+
+  * JNDI: Ejb3Unit binds all used enitity bean to an InitialContext
 
   Ejb3Unit provides three different test categories for ejb3: Entity bean test, Session bean test and Mocked session bean test.
 

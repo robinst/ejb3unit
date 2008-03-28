@@ -34,7 +34,7 @@ public class MyOtherSessionBeanTest extends
 
 		final DataSource ds = getMock(DataSource.class);
 
-		context.checking(new Expectations() {{
+		getContext().checking(new Expectations() {{
 			atLeast(1).of(mySessionBean).getDs();
 			will(returnValue(ds));
 			allowing(ds);

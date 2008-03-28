@@ -2,6 +2,7 @@ package com.bm.testsuite;
 
 import com.bm.introspectors.JbossServiceIntrospector;
 import com.bm.testsuite.dataloader.InitialDataSet;
+import com.bm.testsuite.interfaces.IBaseJbossServiceFixture;
 
 /**
  * Base Jboss-Service test case.
@@ -11,7 +12,7 @@ import com.bm.testsuite.dataloader.InitialDataSet;
  *            the type of the service
  * @since 12.11.2005
  */
-public abstract class BaseJbossServiceFixture<T> extends BaseSessionBeanFixture<T> {
+public abstract class BaseJbossServiceFixture<T> extends BaseSessionBeanFixture<T>  implements IBaseJbossServiceFixture<T>{
 
 	/**
 	 * Constructor.

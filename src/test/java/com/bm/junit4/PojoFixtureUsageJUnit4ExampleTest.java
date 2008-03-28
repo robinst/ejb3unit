@@ -1,32 +1,34 @@
-package com.bm;
+package com.bm.junit4;
+
+import static com.bm.testsuite.BaseTest.assertCollectionsEqual;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.bm.ejb3data.bo.LineItem;
 import com.bm.ejb3data.bo.Order;
-import com.bm.testsuite.PoJoFixture;
+import com.bm.testsuite.junit4.PoJoJUnit4Fixture;
 
-/**
- * Shows the usage of the pojo fixture.
- * 
- */
-public class PojoFixtureUsageExampleTest extends PoJoFixture {
-
+public class PojoFixtureUsageJUnit4ExampleTest extends PoJoJUnit4Fixture {
 	private static final Class<?>[] USED_ENTITIES = { Order.class,
 			LineItem.class };
 
-	public PojoFixtureUsageExampleTest() {
+	public PojoFixtureUsageJUnit4ExampleTest() {
 		super(USED_ENTITIES);
 	}
-
+	
+	
 	/**
 	 * Delets all data. {@inheritDoc}
 	 */
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
+	@Before
+	public void setUpAdditional() throws Exception {
 		deleteAll(LineItem.class);
 		deleteAll(Order.class);
 	}
@@ -34,19 +36,15 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 	/**
 	 * Delets all data. {@inheritDoc}
 	 */
-	@Override
-	public void tearDown() throws Exception {
+	@After
+	public void tearDownAdditional() throws Exception {
 		deleteAll(LineItem.class);
 		deleteAll(Order.class);
-		super.tearDown();
 	}
-
-	public void testToWriteComplexObjectGraph() {
-		Order radomOrder = this.generateRandomInstance(Order.class);
-		radomOrder.addPurchase(this.generateRandomInstance(LineItem.class));
-		radomOrder.addPurchase(this.generateRandomInstance(LineItem.class));
+	
+	@Test
+	public void toWriteComplexObjectGraph() {
 		List<Order> complexObjectGraph = generateTestOrders();
-		complexObjectGraph.add(radomOrder);
 
 		// persist the graph and load it again
 		List<Order> persisted = persist(complexObjectGraph);
@@ -55,8 +53,9 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 		// assert the persisted graph and the loaded are equal
 		assertCollectionsEqual(persisted, allFromDB);
 	}
-
-	public void testGetEntityManager() {
+	
+	@Test
+	public void checkGetEntityManager() {
 		assertNotNull(this.getEntityManager());
 	}
 
@@ -71,5 +70,4 @@ public class PojoFixtureUsageExampleTest extends PoJoFixture {
 		orders.add(order);
 		return orders;
 	}
-
 }

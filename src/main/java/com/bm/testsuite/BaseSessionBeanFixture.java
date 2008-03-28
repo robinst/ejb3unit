@@ -3,11 +3,15 @@ package com.bm.testsuite;
 import java.util.Arrays;
 
 import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 
+import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.SessionBeanFactory;
 import com.bm.ejb3guice.inject.Inject;
 import com.bm.introspectors.IIntrospector;
 import com.bm.testsuite.dataloader.InitialDataSet;
+import com.bm.testsuite.interfaces.IBaseSessionBeanFixture;
+import com.bm.utils.BasicDataSource;
 
 /**
  * This is the base class for all JUnit test - testing stateless/statefull
@@ -18,7 +22,7 @@ import com.bm.testsuite.dataloader.InitialDataSet;
  *            the type of the session bean to test
  * @since 16.10.2005
  */
-public abstract class BaseSessionBeanFixture<T> extends BaseFixture {
+public abstract class BaseSessionBeanFixture<T> extends BaseFixture implements IBaseSessionBeanFixture<T> {
 
 	private final Class<T> beanClass;
 
@@ -79,53 +83,47 @@ public abstract class BaseSessionBeanFixture<T> extends BaseFixture {
 	}
 
 	/**
-	 * @author Daniel Wiese
-	 * @since 16.10.2005
-	 * @see junit.framework.TestCase#setUp()
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
 
 	}
 
 	/**
-	 * Returns a isntance of a EntityManager.
-	 * 
-	 * @author Daniel Wiese
-	 * @since 12.11.2005
-	 * @return - a instance of an entity manager
+	 * {@inheritDoc}
 	 */
 	public EntityManager getEntityManager() {
 		return getEntityManagerProv().get();
 	}
 
 	/**
-	 * Returns the beanClass.
-	 * 
-	 * @return Returns the beanClass.
+	 * {@inheritDoc}
 	 */
 	public Class<T> getBeanClass() {
 		return this.beanClass;
 	}
 
 	/**
-	 * Returns the beanToTest.
-	 * 
-	 * @return Returns the beanToTest.
+	 * {@inheritDoc}
 	 */
 	public T getBeanToTest() {
 		return this.beanToTest;
 	}
 
 	/**
-	 * Returns the sbFactory.
-	 * 
-	 * @return Returns the sbFactory.
+	 * {@inheritDoc}
 	 */
 	public SessionBeanFactory<T> getSbFactory() {
 		return this.sbFactory;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public DataSource getDataSource() {
+		return new BasicDataSource(Ejb3UnitCfg.getConfiguration());
+	}
 }

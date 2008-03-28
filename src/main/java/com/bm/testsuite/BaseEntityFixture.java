@@ -17,6 +17,7 @@ import com.bm.datagen.Generator;
 import com.bm.datagen.relation.EntityRelation;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
+import com.bm.testsuite.interfaces.IBaseEntityFixture;
 import com.bm.utils.BeanEqualsTester;
 import com.bm.utils.NullableSetter;
 import com.bm.utils.SimpleGetterSetterTest;
@@ -31,7 +32,7 @@ import com.bm.utils.UndoScriptGenerator;
  *            the type of the entity bean
  * @since 07.10.2005
  */
-public abstract class BaseEntityFixture<T> extends BaseFixture {
+public abstract class BaseEntityFixture<T> extends BaseFixture implements IBaseEntityFixture<T> {
 
 	private static final Logger log = Logger.getLogger(BaseEntityFixture.class);
 
@@ -119,10 +120,10 @@ public abstract class BaseEntityFixture<T> extends BaseFixture {
 	
 
 	/**
-	 * @see junit.framework.TestCase#setUp()
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		log.debug("Setting up BaseEntityTest");
 		this.undo = new UndoScriptGenerator<T>(intro);
@@ -133,10 +134,10 @@ public abstract class BaseEntityFixture<T> extends BaseFixture {
 	}
 
 	/**
-	 * @see junit.framework.TestCase#tearDown()
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 		this.creator.cleanup();
 		log.debug("Cleaning database from previous test");
@@ -184,10 +185,7 @@ public abstract class BaseEntityFixture<T> extends BaseFixture {
 	}
 
 	/**
-	 * This test writes n random generated beans into the database.
-	 * 
-	 * @throws Exception -
-	 *             in an error case
+	 * {@inheritDoc}
 	 */
 	public void testWrite() throws Exception {
 		EntityManager entityManager = this.getEntityManagerProv().get();
@@ -216,8 +214,7 @@ public abstract class BaseEntityFixture<T> extends BaseFixture {
 	}
 
 	/**
-	 * This test tests the simpe getter-/ setter methods.
-	 * 
+	 * {@inheritDoc}
 	 */
 	public void testGetterSetter() {
 		EntityManager entityManager = this.getEntityManagerProv().get();
@@ -236,11 +233,7 @@ public abstract class BaseEntityFixture<T> extends BaseFixture {
 	}
 
 	/**
-	 * This test writes n random generated beans into the database - all
-	 * null-able fields are set to null.
-	 * 
-	 * @throws Exception -
-	 *             in an error case
+	 * {@inheritDoc}
 	 */
 	public void testWriteWithNullFields() throws Exception {
 		EntityManager entityManager = this.getEntityManagerProv().get();
@@ -270,14 +263,7 @@ public abstract class BaseEntityFixture<T> extends BaseFixture {
 	}
 
 	/**
-	 * This test writes n random generated beans into the database Reads all
-	 * beans agin form the database and test if the reded beans are equal 1) by
-	 * introspectin all persistent fields 2) by callung the eqals method.
-	 * 
-	 * Additionaly the hash-code implementation will be checked
-	 * 
-	 * @throws Exception -
-	 *             in an error case
+	 * {@inheritDoc}
 	 */
 	public void testWriteRead() throws Exception {
 		EntityManager entityManager = this.getEntityManagerProv().get();

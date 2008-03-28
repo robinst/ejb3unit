@@ -47,7 +47,7 @@ public class BaseTest extends TestCase {
 	 * @param <T> -
 	 *            the type of the collection
 	 */
-	public <T> void assertCollectionsEqual(final Collection<? extends T> a,
+	public static <T> void assertCollectionsEqual(final Collection<? extends T> a,
 			final Collection<? extends T> b) {
 		BeanEqualsTester.testColletionsForEqual(a, b);
 	}
@@ -95,7 +95,7 @@ public class BaseTest extends TestCase {
 	 * @param <T> -
 	 *            the type of the object
 	 */
-	public <T> void assertInstanceOf(final String label, final T object,
+	public static <T>  void assertInstanceOf(final String label, final T object,
 			final Class<? extends T> clazz) {
 		if (!clazz.isAssignableFrom(object.getClass())) {
 			fail(label + ": object [" + object
@@ -113,13 +113,13 @@ public class BaseTest extends TestCase {
 	 * @param <T> -
 	 *            the type of the object
 	 */
-	public <T> void assertInstanceOf(final T object,
+	public static <T> void assertInstanceOf(final T object,
 			final Class<? extends T> clazz) {
-		this.assertInstanceOf("", object, clazz);
+		assertInstanceOf("", object, clazz);
 	}
 
 	/**
-	 * We don´t want that test fails because htey have no test method.
+	 * We don´t want that test fails because they have no test method.
 	 * 
 	 * @author Daniel Wiese
 	 * @since 23.04.2006
@@ -138,7 +138,7 @@ public class BaseTest extends TestCase {
 	 * @param toSet -
 	 *            the value to set
 	 */
-	protected void setValueForField(Object forObject, String fieldName,
+	public void setValueForField(Object forObject, String fieldName,
 			Object toSet) {
 		try {
 			final Field field = forObject.getClass()

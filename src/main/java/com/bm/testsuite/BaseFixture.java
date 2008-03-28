@@ -57,7 +57,7 @@ public class BaseFixture extends BaseTest {
 	 * @see junit.framework.TestCase#setUp()
 	 */
 	@Override
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		super.setUp();
 		fireExceptionIfNotInitialized();
 		injector.injectMembers(this);
@@ -94,7 +94,7 @@ public class BaseFixture extends BaseTest {
 	 * @see junit.framework.TestCase#tearDown()
 	 */
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		super.tearDown();
 
 		// If there are Initaldatasets there have to be cleared up
@@ -141,7 +141,7 @@ public class BaseFixture extends BaseTest {
 		return initializationError;
 	}
 
-	Ejb3UnitJndiBinder getJndiBinder() {
+	public Ejb3UnitJndiBinder getJndiBinder() {
 		return jndiBinder;
 	}
 
