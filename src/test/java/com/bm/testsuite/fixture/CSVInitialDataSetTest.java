@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import com.bm.ejb3data.bo.EmbeddedExampleBo;
 import com.bm.ejb3data.bo.StockWKNBo;
 import com.bm.ejb3data.bo.StockWKNBoWithShema;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.utils.injectinternal.InternalInjector;
 
@@ -33,7 +33,7 @@ public class CSVInitialDataSetTest extends TestCase {
 			EmbeddedExampleBo.class, "trades.csv", "wkn", "day", "framenr", "price", "volume",
 			"transactions");
 
-	@Inject
+	@Ejb3UnitInternalInject
 	private EntityManager em;
 	
 	

@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import com.bm.ejb3data.bo.Department;
 import com.bm.ejb3data.bo.Employee;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.utils.injectinternal.InternalInjector;
 
@@ -46,7 +46,7 @@ public class EmployeeRelationsTest extends TestCase {
 	private final CSVInitialDataSet<Department> departmentData = new CSVInitialDataSet<Department>(
 			Department.class, "departmentData.csv", "deptId", "name");
 
-	@Inject
+	@Ejb3UnitInternalInject
 	private EntityManager entityManager;
 
 	public EmployeeRelationsTest() {

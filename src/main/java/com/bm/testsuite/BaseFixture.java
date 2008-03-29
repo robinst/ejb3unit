@@ -5,7 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Provider;
 import com.bm.jndi.Ejb3UnitJndiBinder;
@@ -36,10 +36,10 @@ public class BaseFixture extends BaseTest {
 
 	}
 
-	@Inject
+	@Ejb3UnitInternalInject
 	private Ejb3UnitJndiBinder jndiBinder;
 
-	@Inject
+	@Ejb3UnitInternalInject
 	private Provider<EntityManager> entityManagerProv;
 
 	private Injector injector;

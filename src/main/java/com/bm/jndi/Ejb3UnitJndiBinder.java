@@ -12,7 +12,7 @@ import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.cfg.JndiProperty;
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.SessionBeanFactory;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.utils.LifeCycleMethodExecuter;
 
@@ -42,7 +42,7 @@ public class Ejb3UnitJndiBinder {
 	 * @param em
 	 *            the entity manager.
 	 */
-	@Inject
+	@Ejb3UnitInternalInject
 	public Ejb3UnitJndiBinder(EntityManager em) {
 		this.em = em;
 		try {

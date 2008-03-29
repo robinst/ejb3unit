@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.ejb3guice.inject.CreationListner;
 import com.bm.ejb3guice.inject.Ejb3Guice;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.ejb3guice.inject.Injector;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3guice.inject.Stage;
@@ -39,7 +39,7 @@ public final class SessionBeanFactory<T> {
 	 *            the current entity manager
 	 * 
 	 */
-	@Inject
+	@Ejb3UnitInternalInject
 	public SessionBeanFactory(EntityManager em) {
 		this.em = em;
 	}

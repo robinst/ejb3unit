@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.SessionBeanFactory;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.introspectors.IIntrospector;
 import com.bm.testsuite.dataloader.InitialDataSet;
 import com.bm.testsuite.interfaces.IBaseSessionBeanFixture;
@@ -28,7 +28,7 @@ public abstract class BaseSessionBeanFixture<T> extends BaseFixture implements I
 
 	private T beanToTest = null;
 
-	@Inject
+	@Ejb3UnitInternalInject
 	private SessionBeanFactory<T> sbFactory;
 
 	/**

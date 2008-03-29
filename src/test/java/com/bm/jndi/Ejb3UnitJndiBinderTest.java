@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import com.bm.ejb3data.bo.IMySessionBean;
 import com.bm.ejb3data.bo.MySessionBean;
 import com.bm.ejb3data.bo.StockWKNBo;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.utils.injectinternal.InternalInjector;
 
 /**
@@ -19,7 +19,7 @@ import com.bm.utils.injectinternal.InternalInjector;
  */
 public class Ejb3UnitJndiBinderTest extends TestCase {
 	
-	@Inject
+	@Ejb3UnitInternalInject
 	private EntityManager em;
 	
 	/**

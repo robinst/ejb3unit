@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import com.bm.ejb3data.bo.FullTimeEmployee1;
 import com.bm.ejb3data.bo.FullTimeEmployee2;
 import com.bm.ejb3data.bo.FullTimeEmployee3;
-import com.bm.ejb3guice.inject.Inject;
+import com.bm.ejb3guice.inject.Ejb3UnitInternalInject;
 import com.bm.testsuite.dataloader.CSVInitialDataSet;
 import com.bm.utils.AccessType;
 import com.bm.utils.AccessTypeFinder;
@@ -22,7 +22,7 @@ import com.bm.utils.injectinternal.InternalInjector;
  */
 public class EmployeeInheritanceTest extends TestCase {
 
-	@Inject
+	@Ejb3UnitInternalInject
 	private EntityManager entityManager;
 
 	/**
