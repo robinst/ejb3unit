@@ -56,7 +56,7 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
 	 */
 	@SuppressWarnings("unchecked")
 	public <M> M getMock(Class<M> interfaze) {
-		if (this.mockedDependencies != null) {
+		if (this.mockedDependencies != null && this.mockedDependencies.containsKey(interfaze)) {
 			return (M) this.mockedDependencies.get(interfaze);
 		} else {
 			return context.mock(interfaze);
