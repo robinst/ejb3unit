@@ -8,7 +8,8 @@
 Session bean test
 
   With EJB3Unit you can create and test session beans outside the container. Every test can may be
-  setup with a predefined set of data. This data is loaded using predefined data sets (CSV files) into the database.
+  setup with a predefined set of data (see {{{DataSets.html} Data Sets}}. This data is loaded using 
+  predefined data sets (CSV files) into the database.
   <<This means every test can rely on a well defined set of data, loaded into the database, 
   every time a test is executed.>> EJB3Unit supports EJB 3 dependency injection, life cycle methods and 
   other EJB 3 features for statefull and stateless session beans. Jndi lookup is also supported!

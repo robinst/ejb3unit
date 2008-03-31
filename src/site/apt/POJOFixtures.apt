@@ -1,0 +1,66 @@
+  				    ------
+                                    Pojo Fixture 
+                                    ------
+				    Daniel Wiese, Fabian Bauschulte
+                                    ------
+                                    2007
+
+
+POJO Fixture -  the alrounder for testing complex object graphs or complex queries
+
+  The POJO fixture provides access to the entity manager, it creates the schema for you if 
+  you are using Ejb3Unit with the in memory database and provides helper methods to persist and
+  generate random instances of your persistent objects.
+  
+  POJO fixture is suitable to test complex object graphs of your domain objects or test complex
+  database operations (by testing complex queries). The POJO gives you access to the EntityManager 
+  "this.getEntityManager()" and provides a convenient way to store, retrieve and compare 
+  (using "assertCollectionsEqual(..)") complex persistent objects. 
+  
+  Additionally POJO Fixture provides methods to generate random instances of your persistent objects.
+  POJO Fixture randomly fills all primitive typed fields (int, short,..), their object representatives
+  (Integer, Short,..) plus String and Date fields.
+
+----
+public class PojoFixtureUsageExampleTest extends PoJoFixture {
+
+	private static final Class<?>[] USED_ENTITIES = { Order.class,
+			LineItem.class };
+
+	public PojoFixtureUsageExampleTest() {
+		super(USED_ENTITIES);
+	}
+
+	public void testToWriteComplexObjectGraph() {
+		List<Order> complexObjectGraph = {.. build your own graph here...}
+
+		// persist the graph and load it again
+		List<Order> persisted = persist(complexObjectGraph);
+		List<Order> allFromDB = findAll(Order.class);
+
+		// assert the persisted graph and the loaded are equal
+		assertCollectionsEqual(persisted, allFromDB);
+	}
+}
+----
+
+  To generate random instances you can use the following method:
+  
+----
+Order radomOrder = this.generateRandomInstance(Order.class);
+      radomOrder.addPurchase(this.generateRandomInstance(LineItem.class));
+      radomOrder.addPurchase(this.generateRandomInstance(LineItem.class));
+----
+
+  To delete the inserted data you can use:
+  
+----
+    protected void tearDown() throws Exception {
+		deleteAll(LineItem.class);
+		deleteAll(Order.class);
+		super.tearDown();
+	}
+----
+
+  POJO fixture supports also the concept of {{{DataSets.html} Data sets}} to put the underlying
+  database in an certain stage and deletes these data afer each test execution again.

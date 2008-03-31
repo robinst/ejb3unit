@@ -32,13 +32,15 @@
 		  </script>
 		</head>
 		<menu name="Howto">
-			<item name="Quick Overview" href="Overview.html"/>
+			<item name="Quick Overview" href="index.html"/>
 			<item name="EntityBeans" href="Entity-Bean.html"/>
 			<item name="SessionBeans" href="Session-Bean.html"/>
 			<item name="SessionBeans (Mocked)" href="Mocked-Session-Bean.html"/>
-			<item name="Complex test cases" href="testingComplexObjectGraphs.html"/>
+			<item name="Complex test cases" href="POJOFixtures.html"/>
 			<item name="JbossServices" href="Jboss-Service.html"/>
+			<item name="Data Sets" href="DataSets.html"/>
 			<item name="Multiple Jar files" href="MultipleJarFiles.html"/>
+			<item name="Configuration" href="Configuration.html"/>
 		</menu>
 
 		<menu name="Get your hands on ejb3unit">

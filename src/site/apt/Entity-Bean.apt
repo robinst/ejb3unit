@@ -15,7 +15,7 @@ Entity-Bean test
   your Entity beans. 
   
   Sometimes Ejb3Unit your use case will be too complex for automated testing. In this
-  case you should read the section {{{testingComplexObjectGraphs.html} testing complex object graphs}}!
+  case you should read the section {{{POJOFixtures.html} testing complex object graphs}}!
 
   <<How to write a simple Entity bean test?>>
 

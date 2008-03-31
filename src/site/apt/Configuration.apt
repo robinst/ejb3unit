@@ -7,7 +7,8 @@
 
 Configuration
 
-  Ejb3Unit use a single configuration file named ejb3unit.properties. This file has to be present in your class path. All necessary configuration is done here (like the database driver, connection, etc.) . This is an example for the in memory database:
+  Ejb3Unit use a single configuration file named ejb3unit.properties. This file has to be present in 
+  your class path. All necessary configuration is done here (like the database driver, connection, etc.) . This is an example for the in memory database:
 
 ----
 ### The ejb3unit configuration file ###
@@ -16,7 +17,7 @@ ejb3unit.show_sql=false
 
 ----
 
-  This is an example of a user defined database:
+  This is an example how to configure EJB3Unit to run against an existing user defined database:
 
 ----
 ### The ejb3unit configuration file ###
@@ -31,3 +32,26 @@ ejb3unit.show_sql=true
 ## values are create-drop, create, update ##
 ejb3unit.schema.update=create
 ----
+
+ Ejb3Unit supports JNDI binding. You can bind POJO's and Session Beans into the JNDI tree. If a 
+ session bean is bound to the JNDO tree EJB3UNit makes suere that all dependencies are injected and
+ the lifecycle methods are executed befor the bean is bound. 
+ 
+----
+ ejb3unit_jndi.1.isSessionBean=true
+ ejb3unit_jndi.1.jndiName=ejb/MySessionBean
+ ejb3unit_jndi.1.className=com.bm.ejb3data.bo.MySessionBean
+----
+  
+Configuration of your persistent classes.
+
+  With Ejb3Unit you usually pass the set of persistent objects you want to use within a test. This allows
+  you the full contoll over the object graph used for each test. For convenience it's possible to 
+  enable Ejb3Unit to read your persistence.xml and register all persistent beans defined there instead
+  passing them for every test
+
+----
+ejb3unit.loadPersistenceXML=true
+ejb3unit.persistenceUnit.name=<<name of the persistent unit>>
+---- 
+ 

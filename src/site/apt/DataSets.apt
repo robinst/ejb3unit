@@ -1,0 +1,48 @@
+  				    ------
+                                    Data Sets 
+                                    ------
+				    Daniel Wiese, Fabian Bauschulte
+                                    ------
+                                    2008
+
+
+Data Sets -  put your database in an predefined state
+
+  The concepts of InitialDataSets provide a convenient way to populate your test database (default the in memory database)
+  with a predefined set of data. This means every test can rely on a well defined set of data, loaded into the database, 
+  every time a test is executed.
+  
+  
+  Ejb3Unit comes with two different InitialDataSet implementations:
+  
+  * EntityInitialDataSet - provides a way to programatically create instances of persistent
+    objects. This objects are automatically persistent before every test execution and after the test 
+    completes this data is deleted again. 
+    
+  * CSVInitialDataSet - provides a way to populate your test data base with larger amount of data. The
+    data is loaded from a comma separated value files (CSV) and stored in the database before every 
+    test run. CSVInitialDataSet supports also relational data (e.g.a Order can be loaded with 
+    the LineItems of this Order).
+    
+EntityInitialDataSet
+
+  The following example shows how sets of persistent objects can be created programatically. Yoy
+  need to extend the base class EntityInitialDataSet:
+  
+----
+public static class OrderInitialDataSet extends
+			EntityInitialDataSet<Order> {
+
+		public StockWKNEntityInitialDataSet() {
+			super(Order.class);
+		}
+
+		public void create() {
+			this.add(new Order(1, "First Order"));
+			this.add(new Order(2, "Second Order"));
+
+		}
+----   
+
+  An instance of "OrderInitialDataSet" can be passed to a {{{Sesstion-Bean.html} SessionBeanFixture}} or 
+  a {{{POJOFixture.html}} POJO}} fixture to prepopulate every test with this Order data. 

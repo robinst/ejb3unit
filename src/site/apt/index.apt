@@ -70,7 +70,7 @@ Ejb3Unit - out of container EJB 3.0 testing - Automate your ejb3 testing NOW!
     
     * Limitations:  
       
-        * ManyToMany relations, OneToOne relations and unidirectional relationships are curently not supported. For this or complex scenarios you can use the "PoJoFixture" which setups the infrastructure and gives you access to an
+        * ManyToMany relations, OneToOne relations and unidirectional relationships are currently not supported. For this or complex scenarios you can use the "PoJoFixture" which setups the infrastructure and gives you access to an
 entity manager which allows to persist your own object graph.
 
 	* Currently only the access type 'field' is supported (annotation are declared on the field). The access type 'property' (annotation are declared on the methods) is currently not supported.
@@ -84,6 +84,15 @@ entity manager which allows to persist your own object graph.
     * Also a DataSource, EntityManager and a SessionContext are injected.
 
     * The in memory database is initialized with predefined data using comma separated value files. Each .csv file represents data for one table (using the mapping definitions form the corresponding entity bean). The testdata can also be defined directly in the testclass if this is necessary.
+
+** 4. <<{{{POJOFixtures.html} POJO test}}>>
+  
+  POJO test is the alrounder for testing any POJO (Plain Old Java Object) which would be normally 
+  executed inside the container. Test complex object graphs or complex queries.
+
+  The POJO fixture provides access to the entity manager, it creates the schema for you if 
+  you are using Ejb3Unit with the in memory database and provides helper methods to persist and
+  generate random instances of your persistent objects.
 
 **  3. <<{{{Mocked-Session-Bean.html}Mocked session bean test}}>>
    
