@@ -28,7 +28,7 @@ Session bean test
 
 ----
 public class MySessionBeanTest extends
-		BaseSessionBeanTest<SaleAccessService> {
+		BaseSessionBeanFixture<MySessionBean> {
 
 
 	private static final Class[] usedBeans = { StockWKNBo.class };
@@ -50,7 +50,7 @@ public class MySessionBeanTest extends
 	 * Testmethod.
 	 */
 	public void testBaunWithPreloadedData() {
-		SaleAccessService toTest = this.getBeanToTest();
+		MySessionBean toTest = this.getBeanToTest();
 	}
 }
 ----
