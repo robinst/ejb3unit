@@ -65,7 +65,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 	private final boolean isCopressed;
 
-	private List<DateFormats> userDefinedDateFormats = new ArrayList<DateFormats>();
+	private final List<DateFormats> userDefinedDateFormats = new ArrayList<DateFormats>();
 
 	private final boolean useSchemaName;
 
@@ -85,19 +85,17 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @param csvFileName -
 	 *            the name of the csv file
 	 */
-	public CSVInitialDataSet(
-			Class<T> entityBeanClass,
-			String csvFileName,
-			boolean isCompressed,
-			boolean useSchemaName,
+	public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
+			boolean isCompressed, boolean useSchemaName,
 			String... propertyMapping) {
 		this.useSchemaName = useSchemaName;
 		this.isCopressed = isCompressed;
 		initialize(entityBeanClass, propertyMapping);
-		final URL tmp = Thread.currentThread().getContextClassLoader().getResource(csvFileName);
+		final URL tmp = Thread.currentThread().getContextClassLoader()
+				.getResource(csvFileName);
 		if (tmp == null) {
-			throw new IllegalArgumentException("Can't find the CVS file named (" + csvFileName
-					+ ")");
+			throw new IllegalArgumentException(
+					"Can't find the CVS file named (" + csvFileName + ")");
 		}
 
 		file = new File(Ejb3Utils.getDecodedFilename(tmp));
@@ -118,11 +116,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @param csvFileName -
 	 *            the name of the csv file
 	 */
-	public CSVInitialDataSet(
-			Class<T> entityBeanClass,
-			String csvFileName,
-			boolean isCompressed,
-			String... propertyMapping) {
+	public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
+			boolean isCompressed, String... propertyMapping) {
 		this(entityBeanClass, csvFileName, isCompressed, false, propertyMapping);
 	}
 
@@ -138,9 +133,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @param csvFileName -
 	 *            the name of the csv file
 	 */
-	public CSVInitialDataSet(
-			Class<T> entityBeanClass,
-			String csvFileName,
+	public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
 			String... propertyMapping) {
 		this(entityBeanClass, csvFileName, false, false, propertyMapping);
 	}
@@ -184,10 +177,11 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		for (String stringProperty : this.propertyMapping) {
 			final Property property = this.getProperty(stringProperty);
 			// persistent field info
-			final PersistentPropertyInfo info = this.getPersistentFieldInfo(stringProperty);
+			final PersistentPropertyInfo info = this
+					.getPersistentFieldInfo(stringProperty);
 
-			insertSQL.append((info.getDbName().length() == 0) ? property.getName() : info
-					.getDbName());
+			insertSQL.append((info.getDbName().length() == 0) ? property
+					.getName() : info.getDbName());
 			questionMarks.append("?");
 			counter++;
 			// store the property
@@ -200,18 +194,23 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		// If entity uses single table inheritance, insert a discriminator value
 		// (which must be present)
 		if (this.introspector.usesSingleTableInheritance()) {
-			insertSQL.append(", ").append(this.introspector.getDiscriminatorName()).append(") ")
-					.append("VALUES (").append(questionMarks.toString()).append(", ");
-			Class<?> discriminatorType = this.introspector.getDiscriminatorType();
+			insertSQL.append(", ").append(
+					this.introspector.getDiscriminatorName()).append(") ")
+					.append("VALUES (").append(questionMarks.toString())
+					.append(", ");
+			Class<?> discriminatorType = this.introspector
+					.getDiscriminatorType();
 			if (discriminatorType.equals(Integer.class)) {
 				insertSQL.append(this.introspector.getDiscriminatorValue());
 			} else {
-				insertSQL.append("'").append(this.introspector.getDiscriminatorValue()).append("'");
+				insertSQL.append("'").append(
+						this.introspector.getDiscriminatorValue()).append("'");
 			}
 			insertSQL.append(")");
 		} else {
 			// Normal case: just insert the values.
-			insertSQL.append(") ").append("VALUES (").append(questionMarks.toString()).append(")");
+			insertSQL.append(") ").append("VALUES (").append(
+					questionMarks.toString()).append(")");
 		}
 
 		return insertSQL.toString();
@@ -219,7 +218,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 	private String getTableName() {
 		if (useSchemaName && this.introspector.hasSchema()) {
-			return this.introspector.getShemaName() + "." + this.introspector.getTableName();
+			return this.introspector.getShemaName() + "."
+					+ this.introspector.getTableName();
 		}
 		return this.introspector.getTableName();
 	}
@@ -232,7 +232,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	private Property getProperty(String property) {
 		Property info = null;
 		if (this.introspector.hasEmbeddedPKClass()) {
-			final EmbeddedClassIntrospector pkintro = this.introspector.getEmbeddedPKClass();
+			final EmbeddedClassIntrospector pkintro = this.introspector
+					.getEmbeddedPKClass();
 			final List<Property> pkFields = pkintro.getPersitentProperties();
 
 			for (Property current : pkFields) {
@@ -263,7 +264,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	private PersistentPropertyInfo getPersistentFieldInfo(String property) {
 		PersistentPropertyInfo info = null;
 		if (this.introspector.hasEmbeddedPKClass()) {
-			final EmbeddedClassIntrospector pkintro = this.introspector.getEmbeddedPKClass();
+			final EmbeddedClassIntrospector pkintro = this.introspector
+					.getEmbeddedPKClass();
 			final List<Property> pkFields = pkintro.getPersitentProperties();
 
 			for (Property current : pkFields) {
@@ -301,25 +303,33 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg.getConfiguration());
 		Connection con = null;
 		PreparedStatement prep = null;
+		String value = "<Not Initialised>";
+		String line = "<Not Initialised>";
+		int lineNr = 0;
+
 		try {
 			con = ds.getConnection();
 			prep = con.prepareStatement(this.insertSQLString);
 			final CSVParser parser = new CSVParser(getCSVInputStream());
 			parser.setCommentStart("#;!");
 			parser.setEscapes("nrtf", "\n\r\t\f");
-			String value;
+
 			int count = 0;
 			int lastLineNumber = parser.lastLineNumber();
+
 			while ((value = parser.nextValue()) != null) {
 				if (parser.lastLineNumber() != lastLineNumber) {
 					// we have a new line
 					lastLineNumber = parser.lastLineNumber();
 					count = 0;
+					line = "";
+					lineNr++;
 				}
-
+				line += value + ";";
 				// insert only if neccessary (ignore not requiered fields)
 				if (count < this.propertyInfo.length) {
-					this.setPreparedStatement(count + 1, prep, this.propertyInfo[count], value);
+					this.setPreparedStatement(count + 1, prep,
+							this.propertyInfo[count], value);
 					count++;
 				}
 
@@ -335,11 +345,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			log.error("Data-Loader failing ", e);
 			new RuntimeException(e);
 		} catch (IOException e) {
-			log.error("Data-Loader failing ", e);
-			new RuntimeException(e);
+			final String errorText = "Data-Loader failing in Linie " + lineNr
+					+ ": " + line;
+			log.error(errorText, e);
+			new RuntimeException(errorText, e);
 		} catch (SQLException e) {
-			log.error("Data-Loader failing ", e);
-			new RuntimeException(e);
+			final String errorText = "Data-Loader failing in Linie " + lineNr
+					+ ": " + line;
+			log.error(errorText, e);
+			new RuntimeException(errorText, e);
 		} finally {
 			SQLUtils.cleanup(con, prep);
 		}
@@ -351,12 +365,14 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			try {
 				toReturn = Ejb3Utils.unjar(new FileInputStream(this.file));
 				if (toReturn == null) {
-					throw new IllegalArgumentException("The copressed file " + this.file.getName()
-							+ " was empty");
+					throw new IllegalArgumentException("The copressed file "
+							+ this.file.getName() + " was empty");
 				}
 			} catch (IOException e) {
-				log.error("The file " + this.file.getName() + " could not be accessed", e);
-				throw new IllegalArgumentException("The file " + this.file.getAbsolutePath()
+				log.error("The file " + this.file.getName()
+						+ " could not be accessed", e);
+				throw new IllegalArgumentException("The file "
+						+ this.file.getAbsolutePath()
 						+ " could not be accessed", e);
 			}
 
@@ -364,8 +380,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 			try {
 				toReturn = new FileInputStream(this.file);
 			} catch (FileNotFoundException e) {
-				throw new IllegalArgumentException("The copressed file " + this.file.getName()
-						+ "not found");
+				throw new IllegalArgumentException("The copressed file "
+						+ this.file.getName() + "not found");
 			}
 		}
 
@@ -406,15 +422,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 * @throws SQLException -
 	 *             in error case
 	 */
-	private void setPreparedStatement(int index,
-			PreparedStatement statement,
-			Property prop,
-			String value) throws SQLException {
+	private void setPreparedStatement(int index, PreparedStatement statement,
+			Property prop, String value) throws SQLException {
 
 		// First, check whether this property denotes a relation
-		PersistentPropertyInfo persistentFieldInfo = getPersistentFieldInfo(prop.getPropertyName());
+		PersistentPropertyInfo persistentFieldInfo = getPersistentFieldInfo(prop
+				.getPropertyName());
 		if (persistentFieldInfo.isReleation()) {
-			EntityReleationInfo relationInfo = persistentFieldInfo.getEntityReleationInfo();
+			EntityReleationInfo relationInfo = persistentFieldInfo
+					.getEntityReleationInfo();
 			// Must determine the type of the primary key of the class that is
 			// referenced by the relation.
 			Set<Property> targetKeyProps = relationInfo.getTargetKeyProperty();
@@ -425,12 +441,14 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 						"Can't determine key type of relation target - relation type not yet supported?");
 			}
 			if (targetKeyProps.size() > 1) {
-				throw new IllegalArgumentException("Composite foreign keys are not yet supported.");
+				throw new IllegalArgumentException(
+						"Composite foreign keys are not yet supported.");
 			}
 			for (Property keyProp : targetKeyProps) { // Because of the check
-														// above, this will loop
-														// at most once
-				Class<?> foreignKeyType = Ejb3Utils.getNonPrimitiveType(keyProp.getType());
+				// above, this will loop
+				// at most once
+				Class<?> foreignKeyType = Ejb3Utils.getNonPrimitiveType(keyProp
+						.getType());
 				setPreparedStatement(index, statement, foreignKeyType, value);
 			}
 		} else {
@@ -454,29 +472,30 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	 *            the value to set
 	 * @throws SQLException
 	 */
-	private void setPreparedStatement(int index,
-			PreparedStatement statement,
-			Class<?> type,
-			String value) throws SQLException {
+	private void setPreparedStatement(int index, PreparedStatement statement,
+			Class<?> type, String value) throws SQLException {
 		if (type.equals(String.class)) {
 			statement.setString(index, value);
 		} else if (type.equals(Integer.class)) {
 			if (value == null || value.equals("") || value.equals("null")) {
 				statement.setNull(index, Types.INTEGER);
 			} else {
-				statement.setInt(index, ((value.equals("")) ? 0 : Integer.valueOf(value)));
+				statement.setInt(index, ((value.equals("")) ? 0 : Integer
+						.valueOf(value)));
 			}
 		} else if (type.equals(Long.class)) {
 			if (value == null || value.equals("") || value.equals("null")) {
 				statement.setNull(index, Types.BIGINT);
 			} else {
-				statement.setLong(index, ((value.equals("")) ? 0 : Long.valueOf(value)));
+				statement.setLong(index, ((value.equals("")) ? 0 : Long
+						.valueOf(value)));
 			}
 		} else if (type.equals(Boolean.class)) {
 			final boolean result = BooleanUtils.toBoolean(value);
 			statement.setBoolean(index, result);
 		} else if (type.equals(Short.class)) {
-			statement.setShort(index, ((value.equals("")) ? 0 : Short.valueOf(value)));
+			statement.setShort(index, ((value.equals("")) ? 0 : Short
+					.valueOf(value)));
 		} else if (type.equals(Byte.class)) {
 			statement.setByte(index, Byte.valueOf(value));
 		} else if (type.equals(Character.class)) {
@@ -484,9 +503,11 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		} else if (type.equals(Date.class)) {
 			parseAndSetDate(index, value, statement);
 		} else if (type.equals(Double.class)) {
-			statement.setDouble(index, ((value.equals("")) ? 0 : Double.valueOf(value)));
+			statement.setDouble(index, ((value.equals("")) ? 0 : Double
+					.valueOf(value)));
 		} else if (type.equals(Float.class)) {
-			statement.setFloat(index, ((value.equals("")) ? 0 : Float.valueOf(value)));
+			statement.setFloat(index, ((value.equals("")) ? 0 : Float
+					.valueOf(value)));
 		} else if (type.isEnum()) {
 			// TODO: possible to have the ordinal value of an
 			// enum in a .csv file maybe it would be reasonable to extend this
@@ -495,8 +516,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		}
 	}
 
-	private void parseAndSetDate(int index, String value, PreparedStatement statement)
-			throws SQLException {
+	private void parseAndSetDate(int index, String value,
+			PreparedStatement statement) throws SQLException {
 		if (value.equals("") || value.equalsIgnoreCase("null")) {
 			statement.setNull(index, java.sql.Types.DATE);
 		} else {
@@ -509,7 +530,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 					success = true;
 					break;
 				} catch (ParseException ex) {
-					log.debug("Date parser (" + current + ") was not working, trying next");
+					log.debug("Date parser (" + current
+							+ ") was not working, trying next");
 				}
 			}
 
