@@ -36,6 +36,9 @@ import com.bm.utils.csv.CSVParser;
 
 /**
  * This class creates initial data from a comma separated file.
+ * The default separator is ',' for columns and \n\r for a new line
+ * If a ',' is used inside a colun use quotes "xx" to indicate the 
+ * start and and of an column.  
  * 
  * @param <T>
  *            the type of the entity bean (mapping the table)
@@ -322,6 +325,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 				// execute sql
 				if (count == this.propertyInfo.length) {
+					System.out.println(prep);
 					prep.execute();
 				}
 
