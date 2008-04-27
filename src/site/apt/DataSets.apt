@@ -26,7 +26,7 @@ Data Sets -  put your database in an predefined state
     
 EntityInitialDataSet
 
-  The following example shows how sets of persistent objects can be created programatically. Yoy
+  The following example shows how sets of persistent objects can be created programatically. You
   need to extend the base class EntityInitialDataSet:
   
 ----
@@ -46,3 +46,18 @@ public static class OrderInitialDataSet extends
 
   An instance of "OrderInitialDataSet" can be passed to a {{{Sesstion-Bean.html} SessionBeanFixture}} or 
   a {{{POJOFixture.html}} POJO}} fixture to prepopulate every test with this Order data. 
+  
+ CSVInitialDataSet
+ 
+  CSV files provides convinient way to bulk load data into your database.  CSVInitialDataSet supports comma 
+  separated files. If the special character comma is used indide a column quotes shoud be used
+  
+  In this case a line wold look like: "500340","ADIDAS SALOMON AG O."," DE0005003404"
+  
+  If you want to use CSVInitialDataSet a saple code look like this:
+  
+  ----
+  private static final CSVInitialDataSet<StockWKNBo> CSV_SET = 
+  		new CSVInitialDataSet<StockWKNBo>(
+			StockWKNBo.class, "allStocks.csv", "wkn", "isin", "symbol");
+  ----

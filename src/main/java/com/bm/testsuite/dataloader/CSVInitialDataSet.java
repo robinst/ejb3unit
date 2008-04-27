@@ -325,7 +325,6 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 
 				// execute sql
 				if (count == this.propertyInfo.length) {
-					System.out.println(prep);
 					prep.execute();
 				}
 
