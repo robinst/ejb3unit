@@ -47,7 +47,7 @@ public static class OrderInitialDataSet extends
   An instance of "OrderInitialDataSet" can be passed to a {{{Sesstion-Bean.html} SessionBeanFixture}} or 
   a {{{POJOFixture.html}} POJO}} fixture to prepopulate every test with this Order data. 
   
- CSVInitialDataSet
+CSVInitialDataSet
  
   CSV files provides convinient way to bulk load data into your database.  CSVInitialDataSet supports comma 
   separated files. If the special character comma is used indide a column quotes shoud be used
@@ -56,8 +56,8 @@ public static class OrderInitialDataSet extends
   
   If you want to use CSVInitialDataSet a saple code look like this:
   
-  ----
+----
   private static final CSVInitialDataSet<StockWKNBo> CSV_SET = 
   		new CSVInitialDataSet<StockWKNBo>(
 			StockWKNBo.class, "allStocks.csv", "wkn", "isin", "symbol");
-  ----
+----
