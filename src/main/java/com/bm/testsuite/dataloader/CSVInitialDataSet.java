@@ -95,7 +95,8 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 				.getResource(csvFileName);
 		if (tmp == null) {
 			throw new IllegalArgumentException(
-					"Can't find the CVS file named (" + csvFileName + ")");
+					"Can't find the CSV file named '" + csvFileName 
+                                        + "' (must be on classpath)");
 		}
 
 		file = new File(Ejb3Utils.getDecodedFilename(tmp));
