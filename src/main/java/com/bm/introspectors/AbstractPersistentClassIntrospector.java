@@ -287,11 +287,20 @@ public abstract class AbstractPersistentClassIntrospector<T> implements Introspe
                 // put this property to the global store
                 GlobalRelationStore.getStore().put(classToInspect, aktProperty);
                 String mappedBy = aC.mappedBy();
+                Class targetEntityType = aC.targetEntity();
 
-                if (aktProperty.getGenericTypeClass() != null) {
+                if (aktProperty.getGenericTypeClass() != null || !void.class.equals(targetEntityType)) {
 
-                    // the n side> source side is a collection
-                    Class<Object> ty = aktProperty.getGenericTypeClass();
+                    // the other (many) side is a collection; type is defined by generic collection
+                    // or "targetEntity" attribute on annotation (which overrides the generic type!)
+                    Class<Object> ty = null;
+                    if (!void.class.equals(targetEntityType)) {
+                    	ty = aC.targetEntity();
+                    }
+                    else {
+                    	ty = aktProperty.getGenericTypeClass(); 
+                    }
+
                     Property relProp = RelationPropertyResolver.findAttributeForRelationAtOtherSide(
                             ty, mappedBy);
                     final OneToManyReleation o2mReleation = new OneToManyReleation(classToInspect, ty,

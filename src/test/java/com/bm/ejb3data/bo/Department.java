@@ -32,6 +32,9 @@ public class Department implements Serializable {
 	@OneToMany(mappedBy = "department3")
 	private List<Employee> employees3;
 
+	@OneToMany(mappedBy = "department4", targetEntity = Employee.class)
+	private List employees4;
+
 	/**
 	 * Getter to return the serialVersionUID.
 	 * 
