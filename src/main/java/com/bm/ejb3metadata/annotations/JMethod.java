@@ -28,7 +28,7 @@ package com.bm.ejb3metadata.annotations;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import org.objectweb.asm.Type;
+import org.ejb3unit.asm.jar.Type;
 
 /**
  * This class defines a Method object. It is not based on reflection but allows
