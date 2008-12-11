@@ -40,7 +40,7 @@ import com.bm.introspectors.Property;
  */
 public final class Ejb3Utils {
 
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(Ejb3Utils.class);
 
 	/**

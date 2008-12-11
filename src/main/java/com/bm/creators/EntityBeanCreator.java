@@ -1,11 +1,12 @@
 package com.bm.creators;
 
+import com.bm.datagen.random.primitive.PrimitiveRandomByteArrayGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.datagen.Generator;
 import com.bm.datagen.empty.EmptyCollection;
@@ -31,15 +32,18 @@ import com.bm.introspectors.EntityBeanIntrospector;
  */
 public class EntityBeanCreator<T> {
 
-	private static final Logger log = Logger.getLogger(EntityBeanCreator.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EntityBeanCreator.class);
 
 	private static final List<Generator<?>> DEFAULT_GENERATORS = new ArrayList<Generator<?>>();
 
+        private static final List<Generator<?>> DEFAULT_ARRAY_GENERATORS = new ArrayList<Generator<?>>();
+        
 	private final EntityBeanIntrospector<T> intro;
 
 	private final EntityInstanceCreator<T> baseCreator;
 
 	private final List<Generator<?>> currentGeneratorList = new ArrayList<Generator<?>>();
+        private final List<Generator<?>> currentArrayGeneratorList = new ArrayList<Generator<?>>();
 
 	private final EntityManager em;
 
@@ -55,6 +59,8 @@ public class EntityBeanCreator<T> {
 		DEFAULT_GENERATORS.add(new RandomStringGenerator());
 		DEFAULT_GENERATORS.add(new PrimitiveRandomDoubleGenerator());
 		DEFAULT_GENERATORS.add(new EmptyCollection());
+                
+                DEFAULT_ARRAY_GENERATORS.add(new PrimitiveRandomByteArrayGenerator());
 	}
 
 	/**
@@ -64,7 +70,7 @@ public class EntityBeanCreator<T> {
 	 *            the class to create
 	 */
 	public EntityBeanCreator(EntityManager em, Class<T> toCreate) {
-		this(em, new EntityBeanIntrospector<T>(toCreate), toCreate);
+		this(em, EntityBeanIntrospector.getEntityBeanIntrospector(toCreate), toCreate);
 	}
 
 	/**
@@ -82,8 +88,9 @@ public class EntityBeanCreator<T> {
 		this.em = em;
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
+                this.currentArrayGeneratorList.addAll(DEFAULT_ARRAY_GENERATORS);
 		this.baseCreator = new EntityInstanceCreator<T>(em, intro, toCreate,
-				this.currentGeneratorList);
+				this.currentGeneratorList, this.currentArrayGeneratorList);
 	}
 
 	/**
@@ -103,11 +110,12 @@ public class EntityBeanCreator<T> {
 		this.em = em;
 		this.intro = intro;
 		this.currentGeneratorList.addAll(DEFAULT_GENERATORS);
+                this.currentArrayGeneratorList.addAll(DEFAULT_ARRAY_GENERATORS);
 		if (additionalGenerators != null) {
 			this.currentGeneratorList.addAll(additionalGenerators);
 		}
 		this.baseCreator = new EntityInstanceCreator<T>(this.em, intro, toCreate,
-				this.currentGeneratorList);
+				this.currentGeneratorList, this.currentArrayGeneratorList);
 	}
 
 	/**
@@ -142,7 +150,7 @@ public class EntityBeanCreator<T> {
 						.getEmbeddedPKClass();
 				final EntityInstanceCreator<T> embCreator = new EntityInstanceCreator<T>(
 						em, emInspector, emInspector.getEmbeddedClassName(),
-						this.currentGeneratorList);
+						this.currentGeneratorList, this.currentArrayGeneratorList);
 				final Object embeddedInstance = embCreator.createInstance();
 				this.intro
 						.setField(back, emInspector.getAttibuteName(), embeddedInstance);

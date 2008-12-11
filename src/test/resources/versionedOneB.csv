@@ -1,0 +1,9 @@
+# id, version, bfeature
+1,1,"bFeature1"
+1,2,"bFeature1_2"
+1,3,"bFeature1_3"
+2,1,"bFeature2"
+3,1,"bFeature3"
+3,2,"bFeature3_2"
+4,1,"bFeature4"
+5,1,"bFeature5"

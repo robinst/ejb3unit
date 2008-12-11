@@ -1,8 +1,8 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.jar.ClassVisitor;
-import org.ejb3unit.asm.jar.FieldVisitor;
-import org.ejb3unit.asm.jar.MethodVisitor;
+import org.hibernate.repackage.cglib.asm.ClassVisitor;
+import org.hibernate.repackage.cglib.asm.FieldVisitor;
+import org.hibernate.repackage.cglib.asm.MethodVisitor;
 
 import com.bm.ejb3metadata.annotations.JField;
 import com.bm.ejb3metadata.annotations.JMethod;

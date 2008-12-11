@@ -58,8 +58,16 @@ public class DynamicDIModuleCreator implements Module {
 		binder.bind(DataSource.class)
 				.toInstance(new BasicDataSource(this.conf));
 		binder.bind(EntityManager.class).toInstance(this.manager);
-		binder.bind(SessionContext.class).to(FakedSessionContext.class);
 		binder.bind(TimerService.class).to(MockedTimerService.class);
+
+                try {
+                        Class<SessionContext> clazz = (Class<SessionContext>) Thread.currentThread().getContextClassLoader()
+                                .loadClass(conf.getValue(Ejb3UnitCfg.KEY_SESSION_CONTEXT_CLASS));
+                        binder.bind(SessionContext.class).to(clazz);
+                } catch (Exception e) {
+			throw new RuntimeException("Can't load SessionContext class "
+					+ conf.getValue(Ejb3UnitCfg.KEY_SESSION_CONTEXT_CLASS), e);
+                }
 
 		for (String interfaze : interface2implemantation.keySet()) {
 			try {

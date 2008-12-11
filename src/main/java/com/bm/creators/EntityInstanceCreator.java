@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.datagen.DataGenerator;
 import com.bm.datagen.Generator;
@@ -25,13 +25,15 @@ import com.bm.utils.Ejb3Utils;
  */
 public class EntityInstanceCreator<T> {
 
-	private static final Logger log = Logger.getLogger(EntityInstanceCreator.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EntityInstanceCreator.class);
 
 	private final Introspector<T> intro;
 
 	private final Class<T> toCreate;
 
 	private final DataGenerator dataGen;
+
+        private final DataGenerator dataAGen;
 
 	private final EntityManager em;
 
@@ -48,14 +50,19 @@ public class EntityInstanceCreator<T> {
 	 *            the generator list
 	 */
 	public EntityInstanceCreator(EntityManager em, Introspector<T> intro,
-			Class<T> toCreate, List<Generator<?>> generators) {
+			Class<T> toCreate, List<Generator<?>> generators, List<Generator<?>> arrayGenerators) {
 		this.em = em;
 		this.intro = intro;
 		this.toCreate = toCreate;
 		this.dataGen = new DataGenerator(this.em);
+                this.dataAGen = new DataGenerator(this.em);
 		// register current generators
 		for (Generator<?> actGen : generators) {
 			this.dataGen.registerGen(actGen);
+		}
+                // register current array generators
+		for (Generator<?> actAGen : arrayGenerators) {
+			this.dataAGen.registerGen(actAGen);
 		}
 	}
 
@@ -91,27 +98,35 @@ public class EntityInstanceCreator<T> {
 				aktFieldName = aktProperty.getName();
 				final PersistentPropertyInfo pfi = this.intro
 						.getPresistentFieldInfo(aktProperty);
-				// don´t not generate values for embedded class fields
+				// don't not generate values for embedded class fields
 				// and not for TABLE, SEQUENCE, IDENTITY, AUTO pk fields
 				if (!pfi.isEmbeddedClass()
 						&& shouldPkValueBeGenerated(aktProperty, this.intro)) {
 					// delegate to the data generator
+                                    
+                                        Class clazz = aktProperty.getType();
+                                        if (clazz.isArray()) {
+                                            this.setField(back, aktProperty, this.dataAGen.getNextValue(
+                                                		aktProperty, this.intro, back, true));
+
+                                        } else {
 					this.setField(back, aktProperty, this.dataGen.getNextValue(
-							aktProperty, this.intro, back));
+                                                		aktProperty, this.intro, back, false));
+                                        }
 				}
 
 			}
 
 			return back;
 		} catch (IllegalAccessException e) {
-			log.error("Can't set the value to the NON TANSIENT field: " + aktFieldName
+			log.error("Can't set the value to the NON TRANSIENT field: " + aktFieldName
 					+ "\n(Class: " + toCreate.getName()
-					+ ") Perhaps it´s not marked as @Tansient!");
+					+ ") Perhaps it's not marked as @Tansient!");
 			log.error("Can't create the entity bean", e);
-			throw new RuntimeException("Can´t create the entity bean", e);
+			throw new RuntimeException("Can't create the entity bean", e);
 		} catch (IllegalArgumentException e) {
 			log.error("Can't create the entity bean", e);
-			throw new RuntimeException("Can´t create the entity bean", e);
+			throw new RuntimeException("Can't create the entity bean", e);
 		} catch (SecurityException e) {
 			throw new RuntimeException(
 					"Insufficient access rights to create the entity bean ("

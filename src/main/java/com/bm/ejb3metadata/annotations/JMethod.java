@@ -28,7 +28,7 @@ package com.bm.ejb3metadata.annotations;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
-import org.ejb3unit.asm.jar.Type;
+import org.hibernate.repackage.cglib.asm.Type;
 
 /**
  * This class defines a Method object. It is not based on reflection but allows

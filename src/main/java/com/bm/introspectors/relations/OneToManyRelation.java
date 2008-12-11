@@ -9,7 +9,7 @@ import com.bm.introspectors.Property;
  * @author Daniel Wiese
  *
  */
-public class OneToManyReleation extends AbstractRelation implements EntityReleationInfo {
+public class OneToManyRelation extends AbstractRelation implements EntityReleationInfo {
 
 	
 
@@ -24,7 +24,7 @@ public class OneToManyReleation extends AbstractRelation implements EntityReleat
 	 * @param annotation -
 	 *            the annotation (with values)
 	 */
-	public OneToManyReleation(Class sourceClass, Class targetClass, Property sourceProperty, Property targetProperty, OneToMany annotation) {
+	public OneToManyRelation(Class sourceClass, Class targetClass, Property sourceProperty, Property targetProperty, OneToMany annotation) {
 		
 		super(sourceClass, targetClass, sourceProperty, targetProperty,
 				annotation.fetch(), annotation.cascade());

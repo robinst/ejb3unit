@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
@@ -20,7 +20,7 @@ import com.bm.introspectors.Introspector;
 import com.bm.introspectors.PersistentPropertyInfo;
 import com.bm.introspectors.Property;
 import com.bm.introspectors.relations.EntityReleationInfo;
-import com.bm.introspectors.relations.OneToManyReleation;
+import com.bm.introspectors.relations.OneToManyRelation;
 import com.bm.introspectors.relations.RelationType;
 import com.bm.utils.Ejb3Utils;
 
@@ -35,7 +35,7 @@ import com.bm.utils.Ejb3Utils;
  */
 public class BeanCollectionGenerator<T> implements Generator<Collection<T>>, EntityRelation<T> {
 
-    private static final Logger log = Logger.getLogger(BeanCollectionGenerator.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BeanCollectionGenerator.class);
 
     private final EntityBeanIntrospector<T> intro;
 
@@ -78,7 +78,7 @@ public class BeanCollectionGenerator<T> implements Generator<Collection<T>>, Ent
             currentGenList.add(aktGen);
         }
 
-        this.intro = new EntityBeanIntrospector<T>(beanToCreate);
+        this.intro = EntityBeanIntrospector.getEntityBeanIntrospector(beanToCreate);
         this.beansToCreate = beansToCreate;
     }
 
@@ -91,7 +91,7 @@ public class BeanCollectionGenerator<T> implements Generator<Collection<T>>, Ent
      *            bean to create
      */
     public BeanCollectionGenerator(Class<T> beanToCreate, int beansToCreate) {
-        this.intro = new EntityBeanIntrospector<T>(beanToCreate);
+        this.intro = EntityBeanIntrospector.getEntityBeanIntrospector(beanToCreate);
         this.beanType = beanToCreate;
         this.beansToCreate = beansToCreate;
         this.currentGenList=new ArrayList<Generator<?>>();
@@ -122,14 +122,14 @@ public class BeanCollectionGenerator<T> implements Generator<Collection<T>>, Ent
                 final EntityReleationInfo er = pi.getEntityReleationInfo();
                 if (er.getReleationType() == RelationType.OneToMany) {
 
-                    OneToManyReleation o2m = (OneToManyReleation) er;
+                    OneToManyRelation o2m = (OneToManyRelation) er;
                     if (!o2m.isUnidirectional()) {
                         try {
                             o2m.getTargetProperty().setField(created, this.entityInstance);
                         } catch (IllegalAccessException e) {
-                            log.error("OneToMany rel.: Can´t set the property: "
+                            log.error("OneToMany rel.: Canï¿½t set the property: "
                                     + o2m.getTargetProperty().getName());
-                            throw new RuntimeException("OneToMany rel.: Can´t set the property: "
+                            throw new RuntimeException("OneToMany rel.: Canï¿½t set the property: "
                                     + o2m.getTargetProperty().getName());
                         }
                     }

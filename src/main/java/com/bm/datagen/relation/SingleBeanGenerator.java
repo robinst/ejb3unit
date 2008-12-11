@@ -8,7 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.creators.EntityBeanCreator;
 import com.bm.datagen.Generator;
@@ -21,7 +21,7 @@ import com.bm.introspectors.Introspector;
 import com.bm.introspectors.PersistentPropertyInfo;
 import com.bm.introspectors.Property;
 import com.bm.introspectors.relations.EntityReleationInfo;
-import com.bm.introspectors.relations.ManyToOneReleation;
+import com.bm.introspectors.relations.ManyToOneRelation;
 import com.bm.introspectors.relations.RelationType;
 import com.bm.utils.Ejb3Utils;
 
@@ -36,7 +36,7 @@ import com.bm.utils.Ejb3Utils;
  */
 public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 
-	private static Logger log = Logger.getLogger(SingleBeanGenerator.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SingleBeanGenerator.class);
 
 	private final EntityBeanIntrospector<T> intro;
 
@@ -76,7 +76,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 			currentGenList.add(aktGen);
 		}
 
-		this.intro = new EntityBeanIntrospector<T>(beanToCreate);
+		this.intro = EntityBeanIntrospector.getEntityBeanIntrospector(beanToCreate);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 	 */
 	public SingleBeanGenerator(Class<T> beanToCreate) {
 		this.beanType = beanToCreate;
-		this.intro = new EntityBeanIntrospector<T>(beanToCreate);
+		this.intro = EntityBeanIntrospector.getEntityBeanIntrospector(beanToCreate);
 		currentGenList = new ArrayList<Generator<?>>();
 	}
 
@@ -118,7 +118,7 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 			// this.entityInstance (who is requesting the value)
 			if (er.getReleationType() == RelationType.ManyToOne) {
 
-				ManyToOneReleation m2o = (ManyToOneReleation) er;
+				ManyToOneRelation m2o = (ManyToOneRelation) er;
 				if (!m2o.isUnidirectional()) {
 					try {
 						Collection toAdd = null;
@@ -134,10 +134,10 @@ public class SingleBeanGenerator<T> implements Generator<T>, EntityRelation<T> {
 						toAdd.add(this.entityInstance);
 						m2o.getTargetProperty().setField(this.createdBean, toAdd);
 					} catch (IllegalAccessException e) {
-						log.error("OneToMany rel.: Can´t set the property: "
+						log.error("OneToMany rel.: Canï¿½t set the property: "
 								+ m2o.getTargetProperty().getName());
 						throw new RuntimeException(
-								"OneToMany rel.: Can´t set the property: "
+								"OneToMany rel.: Canï¿½t set the property: "
 										+ m2o.getTargetProperty().getName());
 					}
 				}

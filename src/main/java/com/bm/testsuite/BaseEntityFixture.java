@@ -8,7 +8,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.apache.log4j.Logger;
+
 import org.hibernate.exception.GenericJDBCException;
 
 import com.bm.cfg.Ejb3UnitCfg;
@@ -34,7 +34,7 @@ import com.bm.utils.UndoScriptGenerator;
  */
 public abstract class BaseEntityFixture<T> extends BaseFixture implements IBaseEntityFixture<T> {
 
-	private static final Logger log = Logger.getLogger(BaseEntityFixture.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BaseEntityFixture.class);
 
 	private static final int BEANS_TO_CREATE = 50;
 
@@ -111,7 +111,7 @@ public abstract class BaseEntityFixture<T> extends BaseFixture implements IBaseE
 		initInjector(entitiesToTest);
 
 		this.baseClass = entityToTest;
-		this.intro = new EntityBeanIntrospector<T>(this.baseClass);
+		this.intro = EntityBeanIntrospector.getEntityBeanIntrospector(this.baseClass);
 
 	}
 

@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.ejb3metadata.utils.MetadataUtils;
 import com.bm.utils.Ejb3Utils;
@@ -26,7 +26,7 @@ import com.bm.utils.Ejb3Utils;
  */
 public class ClassFinder {
 
-	private static final Logger log = Logger.getLogger(ClassFinder.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ClassFinder.class);
 
 	private final Set<String> allClasses = new HashSet<String>();
 

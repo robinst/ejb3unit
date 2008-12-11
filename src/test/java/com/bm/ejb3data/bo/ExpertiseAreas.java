@@ -17,6 +17,7 @@ public class ExpertiseAreas implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Column(name = "EXPERTISE_LEVEL", nullable = false)
 	private String expertiseLevel;
+    @Column(name = "NOTES", length = 255)
 	private String notes;
 	@Id
 	@Column(name = "PROD_ID", nullable = false, insertable = false, updatable = false)

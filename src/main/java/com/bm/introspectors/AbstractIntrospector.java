@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.persistence.PersistenceContext;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;
 import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
@@ -30,7 +30,7 @@ import com.bm.utils.Ejb3Utils;
  * 
  */
 public abstract class AbstractIntrospector<T> implements IIntrospector<T> {
-	private static final Logger log = Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(SessionBeanIntrospector.class);
 
 	/** we assume thet a injected field has only one annotation * */

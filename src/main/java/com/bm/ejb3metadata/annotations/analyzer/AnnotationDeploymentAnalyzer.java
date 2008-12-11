@@ -9,7 +9,7 @@ import java.util.Enumeration;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
-import org.ejb3unit.asm.jar.ClassReader;
+import org.hibernate.repackage.cglib.asm.ClassReader;
 
 import com.bm.ejb3metadata.annotations.exceptions.AnalyzerException;
 import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
@@ -21,7 +21,7 @@ import com.bm.ejb3metadata.annotations.metadata.EjbJarAnnotationMetadata;
  */
 public class AnnotationDeploymentAnalyzer {
 
-	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
 			.getLogger(AnnotationDeploymentAnalyzer.class);
 
 	/**

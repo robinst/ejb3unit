@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.datagen.annotations.FieldType;
 import com.bm.datagen.annotations.GeneratorType;
@@ -29,7 +29,7 @@ public class DataGenerator {
 
 	private static final String ALL_FIELDS = "$all";
 
-	private static final Logger log = Logger.getLogger(DataGenerator.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DataGenerator.class);
 
 	private final GeneratorDependencyInjector injector = new GeneratorDependencyInjector();
 
@@ -55,6 +55,7 @@ public class DataGenerator {
 		GeneratorType gtype = this.getGeneratorTypeAnnotation(toRegister);
 
 		if (gtype != null) {
+                    
 			if (generators.containsKey(gtype.className())) {
 				final List<Generator<?>> aktList = generators.get(gtype.className());
 				aktList.add(toRegister);
@@ -115,7 +116,37 @@ public class DataGenerator {
 	 */
 	public <T> Object getNextValue(Property property,
 			Introspector<T> introspector, Object instance) {
-		final Class<?> type = this.getType(property);
+            return getNextValue(property, introspector, instance, false);
+        }
+
+	/**
+	 * Return the value form the generator.
+	 * 
+	 * @param <T> -
+	 *            the type of the bean
+	 * @param em
+	 *            the entity manager
+	 * @param property -
+	 *            the field/property for what the value should be generated
+	 * @param introspector -
+	 *            the current introspector (belonging to the class with the
+	 *            field)
+	 * @param instance -
+	 *            the current instance
+	 * @return - the new generated value
+	 */
+	public <T> Object getNextValue(Property property,
+			Introspector<T> introspector, Object instance, boolean isArray) {
+            
+		Class<?> type = null;
+                
+                if (isArray) {
+                    Class clazz = property.getType();
+                    type = Ejb3Utils.getNonPrimitiveType(clazz.getComponentType());
+                } else {
+                    type = this.getType(property);
+                }
+                
 		if (generators.containsKey(type)) {
 			final List<Generator<?>> actList = generators.get(type);
 			int highestSpecialisation = -1;
@@ -123,6 +154,7 @@ public class DataGenerator {
 			// search for the best generator > highest specialisation
 			for (Generator<?> actGen : actList) {
 				GeneratorType gtype = this.getGeneratorTypeAnnotation(actGen);
+                                
 				int actSpecialisation = this.generatorMatcher(property, gtype,
 						introspector);
 				if (actSpecialisation > highestSpecialisation) {

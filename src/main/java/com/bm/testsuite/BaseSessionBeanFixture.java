@@ -87,8 +87,13 @@ public abstract class BaseSessionBeanFixture<T> extends BaseFixture implements I
 	 */
 	@Override
 	public void setUp() throws Exception {
+            try {
 		super.setUp();
 		this.beanToTest = this.sbFactory.createSessionBean(this.beanClass);
+            } catch (Exception e) {
+                super.tearDown();
+                throw e;
+            }
 
 	}
 

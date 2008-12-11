@@ -13,7 +13,7 @@ import com.bm.testsuite.EntityInitializationException;
 public final class InternalInjector extends AbstractModule {
 
 	private final EntityManagerProvider prov;
-	private final static EntityManagerProvider entityManagerProvider = new EntityManagerProvider();
+	private static EntityManagerProvider entityManagerProvider = null;
 	private static Injector injector;
 
 	private InternalInjector(EntityManagerProvider prov) {
@@ -48,6 +48,15 @@ public final class InternalInjector extends AbstractModule {
 	public static synchronized Injector createInternalInjector(
 			Collection<Class<?>> entyties) throws EntityInitializationException {
 
+                if (entityManagerProvider == null) {
+                    try {
+                        entityManagerProvider = new EntityManagerProvider();
+                    } catch (Exception e) {
+                        throw new EntityInitializationException(
+                                                "Warning the test may fail because EntityManager failed to initialize. ",
+                                                                 e);
+                    }
+                }
 		if (entityManagerProvider.addPersistenceClasses(entyties)
 				|| injector == null) {
 			injector = Ejb3Guice.createInjector(new InternalInjector(

@@ -1,9 +1,12 @@
 package com.bm.introspectors.relations;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Helper class to find properties wich are inwolved in releations.
@@ -13,7 +16,7 @@ import com.bm.introspectors.Property;
  */
 public final class RelationPropertyResolver {
 
-    private static final Logger log = Logger.getLogger(RelationPropertyResolver.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RelationPropertyResolver.class);
 
     private RelationPropertyResolver() {
         // empty to avoid contructions
@@ -34,15 +37,11 @@ public final class RelationPropertyResolver {
         if (relProp == null) {
             // use a new instrospector to put the relation to the global
             // store
-            final EntityBeanIntrospector<Object> tmpIn = new EntityBeanIntrospector<Object>(declaredInClass);
-            log.debug("Dependend class: " + tmpIn.getTableName());
+            final EntityBeanIntrospector<Object> tmpIn = EntityBeanIntrospector.getEntityBeanIntrospector(declaredInClass);
+            log.debug("Dependent class: " + tmpIn.getTableName());
             // now it should be in theglobal store
 
             relProp = GlobalRelationStore.getStore().getProperty(declaredInClass, mappedBy);
-            if (relProp == null) {
-                log.debug("The relation is unidirectional. Cant´t resolve releations for property (" + mappedBy
-                        + ") decared in class (" + declaredInClass.getName() + ")");
-            }
         }
         return relProp;
     }
@@ -57,25 +56,30 @@ public final class RelationPropertyResolver {
     @SuppressWarnings("unchecked")
     public static Property findAttributeForRelationAtOtherSide(Property aktProperty) {
         // now look for the other if exist at the global store
-        // WIR MÜSSEN DIE N SEITE FINDEN: die als target uns hat (aktProperty)
-        // TODO WIR MÜSSEN DIE N SEITE FINDEN:
+        // WIR Mï¿½SSEN DIE N SEITE FINDEN: die als target uns hat (aktProperty)
+        // TODO WIR Mï¿½SSEN DIE N SEITE FINDEN:
         Property relProp = GlobalRelationStore.getStore().getProperty(aktProperty.getType(),
                 aktProperty.getDeclaringClass());
         if (relProp == null) {
             // use a new instrospector to put the relation to the global
             // store
-            final EntityBeanIntrospector<Object> tmpIn = new EntityBeanIntrospector<Object>(aktProperty
+            final EntityBeanIntrospector<Object> tmpIn = EntityBeanIntrospector.getEntityBeanIntrospector(aktProperty
                     .getType());
-            log.debug("Dependend class: " + tmpIn.getTableName());
+            
             // now it should be in the global store
             relProp = GlobalRelationStore.getStore().getProperty(aktProperty.getType(),
                     aktProperty.getDeclaringClass());
-            if (relProp == null) {
-                throw new RuntimeException("Cant't resolve releations for property (" + aktProperty.getName()
-                        + ") in class (" + aktProperty.getDeclaringClass() + ")");
-            }
         }
         return relProp;
+    }
+    
+    public static Set<Property> findPkAttributesAtTheOtherSide(Property aktProperty) {
+        @SuppressWarnings("unchecked")
+        final EntityBeanIntrospector<Object> tmpIn = EntityBeanIntrospector.getEntityBeanIntrospector(aktProperty.
+                getType());
+        Set<Property> pkFields = tmpIn.getPkFields();
+        
+        return pkFields;
     }
 
 }

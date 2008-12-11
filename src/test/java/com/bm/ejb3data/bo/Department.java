@@ -89,4 +89,13 @@ public class Department implements Serializable {
 		return employees3;
 	}
 
+        /**
+	 * Getter to return the employees3.
+	 * 
+	 * @return the employees3
+	 */
+	public List<Employee> getEmployees4() {
+		return employees4;
+	}
+
 }

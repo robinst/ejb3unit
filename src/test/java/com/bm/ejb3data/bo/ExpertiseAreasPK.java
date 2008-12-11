@@ -16,4 +16,11 @@ public class ExpertiseAreasPK implements Serializable {
 
 	Long userId;
 
+        public ExpertiseAreasPK() {
+        }
+
+        public ExpertiseAreasPK(Long prodId, Long userId) {
+            this.prodId = prodId;
+            this.userId = userId;
+        }
 }

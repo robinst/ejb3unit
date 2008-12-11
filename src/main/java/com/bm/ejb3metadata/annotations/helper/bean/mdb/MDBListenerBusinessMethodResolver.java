@@ -25,7 +25,7 @@
 
 package com.bm.ejb3metadata.annotations.helper.bean.mdb;
 
-import org.ejb3unit.asm.jar.Opcodes;
+import org.hibernate.repackage.cglib.asm.Opcodes;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.metadata.ClassAnnotationMetadata;

@@ -12,14 +12,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import org.apache.log4j.Logger;
 
 import com.bm.introspectors.EmbeddedClassIntrospector;
 import com.bm.introspectors.EntityBeanIntrospector;
 import com.bm.introspectors.Property;
 import com.bm.introspectors.relations.EntityReleationInfo;
-import com.bm.introspectors.relations.ManyToOneReleation;
-import com.bm.introspectors.relations.OneToManyReleation;
+import com.bm.introspectors.relations.ManyToOneRelation;
+import com.bm.introspectors.relations.OneToManyRelation;
 import com.bm.introspectors.relations.RelationType;
 
 /**
@@ -33,7 +32,7 @@ import com.bm.introspectors.relations.RelationType;
  */
 public class UndoScriptGenerator<T> {
 
-	private static final Logger log = Logger.getLogger(UndoScriptGenerator.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UndoScriptGenerator.class);
 
 	private final Set<T> createdObjects = new HashSet<T>();
 
@@ -118,10 +117,12 @@ public class UndoScriptGenerator<T> {
 	 *            the entity manager
 	 */
 	public void deleteAllDataInAllUsedTables(EntityManager em) {
+            log.debug("deleteAllDataInAllUsedTables");
 		EntityTransaction tx = em.getTransaction();
 		tx.begin();
 		List<String> oneDeleteAllStatement = this.getOneDeleteAllStatement();
 		for (String currentdelete : oneDeleteAllStatement) {
+                    log.debug("currentDelete=" + currentdelete);
 			Query query = em.createQuery(currentdelete);
 			query.executeUpdate();
 		}
@@ -247,7 +248,7 @@ public class UndoScriptGenerator<T> {
 		if (this.subUndoGens.containsKey(forClass)) {
 			return this.subUndoGens.get(forClass);
 		}
-		final EntityBeanIntrospector targetIntro = new EntityBeanIntrospector(forClass);
+		final EntityBeanIntrospector targetIntro = EntityBeanIntrospector.getEntityBeanIntrospector(forClass);
 		final UndoScriptGenerator innerUndo = new UndoScriptGenerator(targetIntro, this);
 		this.subUndoGens.put(forClass, innerUndo);
 		this.subUndoGensOrder.put(forClass, deleteOrder);
@@ -303,8 +304,8 @@ public class UndoScriptGenerator<T> {
 
 			return sb.toString();
 		} catch (IllegalAccessException e) {
-			log.error("Can´t read the field: " + aktFieldName);
-			throw new RuntimeException("Can´t read the field: " + aktFieldName);
+			log.error("Can't read the field: " + aktFieldName);
+			throw new RuntimeException("Can't read the field: " + aktFieldName);
 		}
 	}
 
@@ -320,10 +321,10 @@ public class UndoScriptGenerator<T> {
 	@SuppressWarnings("unchecked")
 	private void processManyToOneRelation(EntityReleationInfo eri, T toCreate) {
 		if (eri.getReleationType() == RelationType.ManyToOne) {
-			ManyToOneReleation o2m = (ManyToOneReleation) eri;
+			ManyToOneRelation o2m = (ManyToOneRelation) eri;
 			try {
 				final Object relatedObject = o2m.getSourceProperty().getField(toCreate);
-				if (relatedObject != null) {
+				if (relatedObject != null && o2m.getTargetClass() != null /* FIXME! */) {
 					final UndoScriptGenerator innerUndo = this.getInnerUndoScriptGen(o2m
 							.getTargetClass(), DeleteOrder.DELETE_AFTER);
 					// protokoll assotiated object
@@ -331,7 +332,7 @@ public class UndoScriptGenerator<T> {
 				}
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(
-						"Can´t generate undo script for One to Many relation");
+						"Can't generate undo script for One to Many relation");
 			}
 		}
 	}
@@ -339,12 +340,12 @@ public class UndoScriptGenerator<T> {
 	@SuppressWarnings("unchecked")
 	private void processOneToManyRelation(EntityReleationInfo eri, T toCreate) {
 		if (eri.getReleationType() == RelationType.OneToMany) {
-			OneToManyReleation o2m = (OneToManyReleation) eri;
+			OneToManyRelation o2m = (OneToManyRelation) eri;
 			// no need for subs delete scripts if cascae type is all
 			try {
 				final Collection relatedObjects = (Collection) o2m.getSourceProperty()
 						.getField(toCreate);
-				if (relatedObjects != null) {
+				if (relatedObjects != null && o2m.getTargetClass() != null /* FIXME! */) {
 					final UndoScriptGenerator innerUndo = this.getInnerUndoScriptGen(o2m
 							.getTargetClass(), DeleteOrder.DELETE_FIRST);
 					// protokoll assotiated objects
@@ -355,7 +356,7 @@ public class UndoScriptGenerator<T> {
 
 			} catch (IllegalAccessException e) {
 				throw new RuntimeException(
-						"Can´t generate undo script for One to Many relation");
+						"Can't generate undo script for One to Many relation");
 			}
 		}
 

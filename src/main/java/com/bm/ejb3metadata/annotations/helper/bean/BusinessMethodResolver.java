@@ -36,7 +36,7 @@ import com.bm.ejb3metadata.annotations.metadata.MethodAnnotationMetadata;
  */
 public final class BusinessMethodResolver {
 	
-	private final static org.apache.log4j.Logger logger = org.apache.log4j.Logger
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
 			.getLogger(BusinessMethodResolver.class);
 
     /**

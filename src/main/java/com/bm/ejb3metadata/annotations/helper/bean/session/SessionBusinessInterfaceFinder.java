@@ -65,7 +65,8 @@ public final class SessionBusinessInterfaceFinder {
 			// the bean class has
 			// more than one interface: java.io.Serializable;
 			// java.io.Externalizable;
-			// any of the interfaces defined by the javax.ejb package.
+			// any of the interfaces defined by the javax.ejb package;
+                        // any of net.sourceforge.cobertura interfaces
 			String[] interfaces = sessionBean.getInterfaces();
 			int numberItfFound = 0;
 			String itfFound = null;
@@ -74,7 +75,8 @@ public final class SessionBusinessInterfaceFinder {
 						".", "/"))
 						&& !itf.equals(java.io.Externalizable.class.getName()
 								.replace(".", "/"))
-						&& !itf.startsWith("javax/ejb")) {
+						&& !itf.startsWith("javax/ejb")
+                                                && !itf.startsWith("net/sourceforge/cobertura")) {
 					itfFound = itf;
 					numberItfFound++;
 				}

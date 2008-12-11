@@ -25,7 +25,7 @@ import com.bm.utils.LifeCycleMethodExecuter;
  */
 public class Ejb3UnitJndiBinder {
 
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(Ejb3UnitJndiBinder.class);
 
 	private final InitialContext ctx;

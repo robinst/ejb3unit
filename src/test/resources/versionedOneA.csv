@@ -1,0 +1,5 @@
+# "id", "version", "aFeature", "oneB(ONE_B_ID)", "oneB(ONE_B_VERSION)", "uniOneB(UNI_ONE_B_ID)", "uniOneB(UNI_ONE_B_VERSION)"
+1,1,"aFeature1",1,1,2,1
+2,1,"aFeature2",2,1,1,2
+3,1,"aFeature3","",3,1,""
+4,1,"aFeature4","","","",""

@@ -1,7 +1,7 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.jar.AnnotationVisitor;
-import org.ejb3unit.asm.jar.MethodVisitor;
+import org.hibernate.repackage.cglib.asm.AnnotationVisitor;
+import org.hibernate.repackage.cglib.asm.MethodVisitor;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.analyzer.method.JavaxAnnotationPostConstructVisitor;

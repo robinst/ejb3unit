@@ -27,7 +27,7 @@ import com.bm.utils.BasicDataSource;
  */
 public abstract class PoJoFixture extends BaseFixture implements IPoJoFixture {
 
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(PoJoFixture.class);
 
 	private final Map<Class<?>, EntityBeanCreator<?>> creators = new HashMap<Class<?>, EntityBeanCreator<?>>();
@@ -62,8 +62,13 @@ public abstract class PoJoFixture extends BaseFixture implements IPoJoFixture {
 	 */
 	@Override
 	public void setUp() throws Exception {
+            try {
 		super.setUp();
 		this.creators.clear();
+            } catch (Exception e) {
+                super.tearDown();
+                throw e;
+            }
 	}
 
 	/**

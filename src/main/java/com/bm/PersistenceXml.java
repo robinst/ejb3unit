@@ -15,13 +15,13 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.log4j.Logger;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 public class PersistenceXml {
 
-	private static final Logger logger = Logger.getLogger(PersistenceXml.class);
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(PersistenceXml.class);
 
 	/**
 	 * Given a properly configured ejb3unit.properties file this will read a
@@ -123,21 +123,25 @@ public class PersistenceXml {
 				}
 			} catch (XPathExpressionException e) {
 				logger
-						.fatal(
+						.error(
 								"There's a problem with the xpath expressions in the code, this is a bug! please report it.",
 								e);
+                                throw new RuntimeException(e);
 			} catch (org.xml.sax.SAXException e) {
 				logger.error("Unable to parse the xml in the persistence.xml file", e);
+                                throw new RuntimeException(e);
 			} catch (ParserConfigurationException e) {
 				logger
-						.fatal(
+						.error(
 								"Unable to configure the xml parser to read the persistence.xml, this is a BUG",
 								e);
+                                throw new RuntimeException(e);
 			} catch (URISyntaxException e) {
 				logger
-						.fatal(
+						.error(
 								"Detected persistence.xml on the classpath but unable to load - BUG",
 								e);
+                                throw new RuntimeException(e);
 			}
 		}
 		return classes.toArray(new Class[classes.size()]);

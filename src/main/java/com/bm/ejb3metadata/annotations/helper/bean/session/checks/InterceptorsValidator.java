@@ -27,7 +27,7 @@ package com.bm.ejb3metadata.annotations.helper.bean.session.checks;
 
 import java.util.List;
 
-import org.ejb3unit.asm.jar.Opcodes;
+import org.hibernate.repackage.cglib.asm.Opcodes;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.exceptions.InterceptorsValidationException;

@@ -1,6 +1,6 @@
 package com.bm.ejb3metadata.annotations.analyzer;
 
-import org.ejb3unit.asm.jar.AnnotationVisitor;
+import org.hibernate.repackage.cglib.asm.AnnotationVisitor;
 
 /**
  * This class manages the handling of enum values.

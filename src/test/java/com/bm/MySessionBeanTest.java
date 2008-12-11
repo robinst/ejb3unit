@@ -77,8 +77,8 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 		List<StockWKNBo> back = toTest.getAllStocks();
 		assertNotNull(back);
 		assertEquals(188, back.size());
-		assertEquals(back.get(0), new StockWKNBo(1, "Das ist ein Name"));
-		assertEquals(back.get(1), new StockWKNBo(2, "Das ist ein andere Name"));
+		assertEquals(new StockWKNBo(1, "Das ist ein Name"), back.get(0));
+		assertEquals(new StockWKNBo(2, "Das ist ein andere Name"), back.get(1));
 	}
 
 	/**

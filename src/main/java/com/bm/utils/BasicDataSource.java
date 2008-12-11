@@ -61,8 +61,8 @@ public class BasicDataSource implements DataSource {
 			throws SQLException {
 		try {
 			if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
-				Class.forName("org.hsqldb.jdbcDriver");
-				final Connection cn = DriverManager.getConnection("jdbc:hsqldb:mem:ejb3unit", username,
+				Class.forName("org.h2.Driver");
+				final Connection cn = DriverManager.getConnection("jdbc:h2:mem:ejb3unit", username,
 						password);
 				return cn;
 			} else {

@@ -29,7 +29,7 @@ import com.bm.datagen.random.primitive.PrimitiveRandomStringGenerator;
  */
 public class SimpleGetterSetterTest extends Assert {
 
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(SimpleGetterSetterTest.class);
 
 	private static final List<Generator<?>> DEFAULT_GENERATORS = new ArrayList<Generator<?>>();

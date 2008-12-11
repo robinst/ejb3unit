@@ -1,6 +1,6 @@
 package com.bm.ejb3metadata.annotations.analyzer.classes;
 
-import org.ejb3unit.asm.jar.Type;
+import org.hibernate.repackage.cglib.asm.Type;
 import com.bm.ejb3metadata.annotations.analyzer.AnnotationType;
 import com.bm.ejb3metadata.annotations.analyzer.ObjectArrayAnnotationVisitor;
 import com.bm.ejb3metadata.annotations.impl.JRemote;

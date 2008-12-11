@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Properties;
 
 import org.hibernate.cache.NoCacheProvider;
-import org.hibernate.dialect.HSQLDialect;
+import org.hibernate.dialect.H2Dialect;
 import org.hibernate.ejb.Ejb3Configuration;
 import org.hibernate.transaction.JDBCTransactionFactory;
-import org.hsqldb.jdbcDriver;
+import org.h2.Driver;
 
 /**
  * This class reads and holds the ejb3unit configuration.
@@ -51,7 +51,13 @@ public final class Ejb3UnitCfg {
 	/** Konfiguration key. * */
 	public static final String KEY_SQL_DIALECT = "ejb3unit.dialect";
 
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+        /** Konfiguration key. * */
+	public static final String KEY_SESSION_CONTEXT_CLASS = "ejb3unit.sessionContext.class";
+        
+        
+        private static final String DEFAULT_SESSION_CONTEXT_CLASS = "com.bm.utils.substitues.FakedSessionContext";
+
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(Ejb3UnitCfg.class);
 
 	/** Konfiguration key. * */
@@ -73,6 +79,12 @@ public final class Ejb3UnitCfg {
 				// run the system in memory if no config if found
 				System.setProperty(KEY_IN_MEMORY_TEST, "true");
 			}
+                        if (config.getProperty(KEY_SESSION_CONTEXT_CLASS) == null ||
+                                "".equals(config.getProperty(KEY_SESSION_CONTEXT_CLASS).trim())) {
+                            this.setProperty(config, KEY_SESSION_CONTEXT_CLASS, DEFAULT_SESSION_CONTEXT_CLASS);
+                        log.debug("Loading default SessionContext class: " + DEFAULT_SESSION_CONTEXT_CLASS);
+                }
+                        
 		} catch (Exception e) {
 			// propagete the exception
 			throw new RuntimeException(e);
@@ -95,12 +107,12 @@ public final class Ejb3UnitCfg {
 			this.inMemory = true;
 			this
 					.setProperty(prop, "hibernate.connection.url",
-							"jdbc:hsqldb:mem:ejb3unit");
-			this.setProperty(prop, "hibernate.connection.driver_class", jdbcDriver.class
+							"jdbc:h2:mem:ejb3unit");
+			this.setProperty(prop, "hibernate.connection.driver_class", Driver.class
 					.getName());
 			this.setProperty(prop, "hibernate.connection.username", "sa");
 			this.setProperty(prop, "hibernate.connection.password", "");
-			this.setProperty(prop, "hibernate.dialect", HSQLDialect.class.getName());
+			this.setProperty(prop, "hibernate.dialect", H2Dialect.class.getName());
 			this.setProperty(prop, "hibernate.hbm2ddl.auto", "create-drop");
 		} else {
 			this.inMemory = false;
@@ -128,7 +140,7 @@ public final class Ejb3UnitCfg {
 				JDBCTransactionFactory.class.getName());
 		return cfg;
 	}
-
+        
 	/**
 	 * Returns the schema gen script.
 	 * 
@@ -277,10 +289,10 @@ public final class Ejb3UnitCfg {
 			return back;
 		} catch (InstantiationException e) {
 			log.error("Can't instantiate class: " + toRead);
-			throw new IllegalArgumentException("Can´t instantiate class: " + toRead);
+			throw new IllegalArgumentException("Canï¿½t instantiate class: " + toRead);
 		} catch (IllegalAccessException e) {
 			log.error("Can't instantiate class: " + toRead);
-			throw new IllegalArgumentException("Can´t instantiate class: " + toRead);
+			throw new IllegalArgumentException("Canï¿½t instantiate class: " + toRead);
 		}
 	}
 

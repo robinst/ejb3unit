@@ -45,7 +45,7 @@ import com.bm.ejb3metadata.annotations.metadata.interfaces.ITransactionAttribute
 public class ClassAnnotationMetadata extends CommonAnnotationMetadata implements
 		ITransactionAttribute, IEJBInterceptors {
 
-	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
 			.getLogger(ClassAnnotationMetadata.class);
 
 	/**

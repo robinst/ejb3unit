@@ -12,7 +12,7 @@ import javax.persistence.Temporal;
 
 import junit.framework.Assert;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.introspectors.Introspector;
 import com.bm.introspectors.Property;
@@ -31,7 +31,7 @@ public final class BeanEqualsTester extends Assert {
 	private static final String HASHCODE_WRONG = "The implementation of the hashCode is might incorrect, "
 			+ "two Entity-Beans representing the same row should have the same hashCode";
 
-	private static final Logger log = Logger.getLogger(BeanEqualsTester.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BeanEqualsTester.class);
 
 	private BeanEqualsTester() {
 		// intenionally left emty

@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.log4j.Logger;
+
 
 import com.bm.ejb3metadata.annotations.metadata.FieldAnnotationMetadata;
 import com.bm.utils.Ejb3Utils;
@@ -27,7 +27,7 @@ import com.bm.utils.Ejb3Utils;
  */
 public class Property {
 
-	private static final Logger log = Logger.getLogger(Property.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Property.class);
 
 	private final String propertyName;
 

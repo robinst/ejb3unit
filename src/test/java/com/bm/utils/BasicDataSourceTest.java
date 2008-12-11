@@ -3,7 +3,7 @@ package com.bm.utils;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 
-import org.apache.log4j.Logger;
+
 
 import com.bm.cfg.Ejb3UnitCfg;
 
@@ -17,7 +17,7 @@ import junit.framework.TestCase;
  */
 public class BasicDataSourceTest extends TestCase {
 
-	private static final Logger log = Logger
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
 			.getLogger(BasicDataSourceTest.class);
 
 	/**
@@ -33,8 +33,8 @@ public class BasicDataSourceTest extends TestCase {
 		assertNotNull(con);
 		DatabaseMetaData mt = con.getMetaData();
 		assertNotNull(mt);
-		log.debug(mt.getDatabaseProductVersion());
-		log.debug(mt.getDatabaseProductName());
+		logger.debug(mt.getDatabaseProductVersion());
+		logger.debug(mt.getDatabaseProductName());
 		con.close();
 
 	}

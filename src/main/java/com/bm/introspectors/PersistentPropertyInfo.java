@@ -1,9 +1,10 @@
 package com.bm.introspectors;
 
 import com.bm.introspectors.relations.EntityReleationInfo;
+import java.util.List;
 
 /**
- * This class represents all informations about persitent fields.
+ * This class represents information about persistent fields.
  * 
  * @author Daniel Wiese
  * @since 07.10.2005
@@ -21,6 +22,8 @@ public class PersistentPropertyInfo {
 	private EntityReleationInfo entityReleationInfo = null;
 
 	private String dbName;
+
+        private List<DbMappingInfo> dbMappingInfoList;
 
 	/**
 	 * Returns the isNullable.
@@ -59,6 +62,45 @@ public class PersistentPropertyInfo {
 	public void setLength(int length) {
 		this.length = length;
 	}
+
+        /**
+         * Add the DB mapping info for the field.
+         * @param dbMappingInfo
+         */
+        public void addDbMappingInfo(DbMappingInfo dbMappingInfo) {
+                dbMappingInfoList.add(dbMappingInfo);
+        }
+
+        /**
+         * Get the DB mapping info for the column 'name'.
+         * @param name name of the column
+         */
+        public DbMappingInfo getDbMappingInfo(String name) {
+            for (DbMappingInfo dbMappingInfo : dbMappingInfoList) {
+                if (name.equals(dbMappingInfo.getName())) {
+                    return dbMappingInfo;
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Returns the mapping info list.
+         *
+         * @return list of all mappings
+         */
+        public List<DbMappingInfo> getDbMappingInfoList() {
+            return dbMappingInfoList;
+        }
+
+        /**
+         * Set the mapping info list
+         * @param dbMappingInfoList list of all mappings for the field
+         */
+        public void setDbMappingInfoList(List<DbMappingInfo> dbMappingInfoList) {
+            this.dbMappingInfoList = dbMappingInfoList;
+        }
 
 	/**
 	 * Returns the dbName.

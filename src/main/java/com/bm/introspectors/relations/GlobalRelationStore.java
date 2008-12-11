@@ -17,6 +17,8 @@ import com.bm.introspectors.Property;
  * 
  */
 public final class GlobalRelationStore {
+    
+        static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(GlobalRelationStore.class);
 
 	private static final GlobalRelationStore singelton = new GlobalRelationStore();
 

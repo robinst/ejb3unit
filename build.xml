@@ -10,40 +10,38 @@
 				<attribute name="Can-Redefine-Classes" value="true" />
 			</manifest>
 			<zipfileset src="${project.build.directory}/liblocation/antlr.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/asm-attrs.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/asm.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/avalon-framework.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/cglib.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/commons-beanutils.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/commons-collections.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/commons-lang.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/commons-logging.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/dom4j.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/hsqldb.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/persistence-api.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/servlet-api.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/jta.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/javassist.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/jboss-archive-browsing.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/logkit.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/ehcache.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/hibernate-annotations.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/hibernate-entitymanager.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/hibernate.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/ejb3guice.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/ejb3-persistence.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hamcrest-core.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hamcrest-library.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hibernate-annotations.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/cglib-nodep.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hibernate-commons-annotations.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hibernate-core.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hibernate-entitymanager.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/h2.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/javassist.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/jta.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/logkit.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/servlet-api.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/slf4j-api.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/xml-apis.jar" />
 
 			<zipfileset src="${project.build.directory}/${project.build.finalName}.tmp" />
 			<rule pattern="org.hibernate.**" result="org.ejb3unit.hibernate.@1" />
-			<rule pattern="org.objectweb.asm.**" result="org.ejb3unit.hibernate.asm.@1" />
 			<rule pattern="org.apache.commons.**" result="org.ejb3unit.apache.commons.@1" />
 			<rule pattern="org.apache.avalon.**" result="org.ejb3unit.apache.avalon.@1" />
 			<rule pattern="org.apache.log.**" result="org.ejb3unit.apache.log.@1" />
 			<rule pattern="org.dom4j.**" result="org.ejb3unit.dom4j.@1" />
-			<rule pattern="org.hsqldb.**" result="org.ejb3unit.hsqldb.@1" />
+			<!-- <rule pattern="org.h2.**" result="org.ejb3unit.h2.@1" /> -->
 			<rule pattern="org.jboss.util.**" result="org.ejb3unit.util.@1" />
 			<rule pattern="antlr.**" result="org.ejb3unit.antlr.@1" />
-			<rule pattern="javassist.**" result="org.ejb3unit.javassist.@1" />
-			<rule pattern="net.sf.**" result="org.ejb3unit.hibernate.cglib.@1" />
 		</jarjar>
 
 		<delete>

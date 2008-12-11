@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.log4j.Logger;
+
 import org.hibernate.ejb.Ejb3Configuration;
 
 import com.bm.PersistenceXml;
@@ -19,7 +19,7 @@ import com.bm.ejb3guice.inject.Provider;
 import com.bm.testsuite.EntityInitializationException;
 
 public class EntityManagerProvider implements Provider<EntityManager> {
-	private static final Logger logger = Logger
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
 			.getLogger(EntityManagerProvider.class);
 	private final Set<Class<?>> entitiesToTest;
 	private final Set<String> entitiesToTestClassNames;
@@ -48,10 +48,10 @@ public class EntityManagerProvider implements Provider<EntityManager> {
 								Ejb3UnitCfg.KEY_PERSISTENCE_UNIT_NAME));
 				registerEntities(Arrays.asList(classesFromPersistenceXML));
 			} catch (IOException e) {
-				logger.error(e);
+				logger.error("Error creating EntityManagerProvider", e);
 				throw new IllegalArgumentException(e);
 			} catch (ClassNotFoundException e) {
-				logger.error(e);
+				logger.error("Error creating EntityManagerProvider",e);
 				throw new IllegalArgumentException(e);
 			}
 		}
@@ -149,7 +149,6 @@ public class EntityManagerProvider implements Provider<EntityManager> {
 			throw new EntityInitializationException(
 					"Warning following test may fail because no rollback of this error was possible. "
 							+ message, e);
-
 		}
 	}
 

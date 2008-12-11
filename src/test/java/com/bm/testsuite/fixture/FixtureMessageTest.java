@@ -29,7 +29,7 @@ public class FixtureMessageTest extends TestCase {
 		check(
 				InitilzationErrorBaseEntityFixture.class,
 				5,
-				"org.hibernate.HibernateException: Errors in named queries: NewsBoIncorrectQuery.incorrect",
+				"Unable to build EntityManagerFactory",
 				PersistenceException.class);
 	}
 
@@ -37,7 +37,7 @@ public class FixtureMessageTest extends TestCase {
 		check(
 				InitilzationErrorPoJoFixture.class,
 				1,
-				"org.hibernate.HibernateException: Errors in named queries: NewsBoIncorrectQuery.incorrect",
+				"Unable to build EntityManagerFactory",
 				PersistenceException.class);
 	}
 
@@ -53,7 +53,7 @@ public class FixtureMessageTest extends TestCase {
 		check(
 				InitilzationErrorBaseSessionBeanFixture.class,
 				1,
-				"org.hibernate.HibernateException: Errors in named queries: NewsBoIncorrectQuery.incorrect",
+				"Unable to build EntityManagerFactory",
 				PersistenceException.class);
 	}
 
@@ -66,18 +66,18 @@ public class FixtureMessageTest extends TestCase {
 		assertEquals(0, result.failureCount());
 		List<TestFailure> errorList = convertToList(result.errors());
 		assertEquals(errorCount, errorList.size());
-		String errorBegin = "EntityManager could not be initialized to load the enities ";
-		String errorEnde = ". Cause: " + nestedException.getName() + ": "
+		String errorBegin = "EntityManager could not be initialized to load the enities [";
+		String errorEnde = "]. Cause: " + nestedException.getName() + ": "
 				+ errorMessage;
 		for (TestFailure testFailure : errorList) {
 			assertEquals(EntityInitializationException.class, testFailure
 					.thrownException().getClass());
 			assertEquals(errorBegin, testFailure.thrownException().getMessage()
 					.substring(0, errorBegin.length()));
-			assertEquals(errorEnde, testFailure.thrownException().getMessage()
-					.substring(
-							testFailure.thrownException().getMessage().length()
-									- errorEnde.length()));
+                        
+                        String message = testFailure.thrownException().getMessage();
+                        String messageEnd = message.substring(message.indexOf("]. Cause:"));
+			assertEquals(errorEnde, messageEnd);
 			assertEquals(nestedException, testFailure.thrownException()
 					.getCause().getClass());
 		}

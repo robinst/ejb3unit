@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 /**
- * This class represents informations about PK fields.
+ * This class represents information about PK fields.
  * 
  * @author Daniel Wiese
  * 

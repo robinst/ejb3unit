@@ -11,7 +11,7 @@ import javax.naming.spi.InitialContextFactory;
  * provider. 
  */
 public class MemoryContextFactory implements InitialContextFactory {
-	private static final org.apache.log4j.Logger log = org.apache.log4j.Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(MemoryContextFactory.class);
 	
 	private static Context instance;

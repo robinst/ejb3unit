@@ -1,5 +1,6 @@
 package com.bm.testsuite.fixture;
 
+import com.bm.ejb3data.bo.ValuedFullTimeEmployee1;
 import javax.persistence.EntityManager;
 
 import junit.framework.TestCase;
@@ -53,6 +54,24 @@ public class EmployeeInheritanceTest extends TestCase {
 		// No exception: ok.
 	}
 
+	public void testInheritedHierarchyFields() {
+		CSVInitialDataSet<ValuedFullTimeEmployee1> employeeData = new CSVInitialDataSet<ValuedFullTimeEmployee1>(
+				ValuedFullTimeEmployee1.class, "valuedFulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary", "pocketMoney");
+		assertNotNull(employeeData);
+		// No exception: ok.
+	}
+
+        public void testHierachySql1() {
+		CSVInitialDataSet<ValuedFullTimeEmployee1> employeeData = new CSVInitialDataSet<ValuedFullTimeEmployee1>(
+				ValuedFullTimeEmployee1.class, "valuedFulltimeEmployeeData.csv", "empId", "name",
+				"fullname", "salary", "pocketMoney");
+
+		assertEquals(
+				"INSERT INTO Employees (empId, name, fullname, salary, pocketMoney, DTYPE) VALUES (?, ?, ?, ?, ?, 'VFT')",
+				employeeData.buildInsertSQL()[0]);
+	}
+        
 	public void testSql1() {
 		CSVInitialDataSet<FullTimeEmployee1> employeeData = new CSVInitialDataSet<FullTimeEmployee1>(
 				FullTimeEmployee1.class, "fulltimeEmployeeData.csv", "empId", "name",
@@ -60,7 +79,7 @@ public class EmployeeInheritanceTest extends TestCase {
 
 		assertEquals(
 				"INSERT INTO Employees (empId, name, fullname, salary, DTYPE) VALUES (?, ?, ?, ?, 'FT')",
-				employeeData.buildInsertSQL());
+				employeeData.buildInsertSQL()[0]);
 	}
 
 	public void testSql2() {
@@ -70,7 +89,7 @@ public class EmployeeInheritanceTest extends TestCase {
 
 		assertEquals(
 				"INSERT INTO Employees (empId, name, fullname, salary) VALUES (?, ?, ?, ?)",
-				employeeData.buildInsertSQL());
+				employeeData.buildInsertSQL()[0]);
 	}
 
 	public void testSql3() {
@@ -80,7 +99,7 @@ public class EmployeeInheritanceTest extends TestCase {
 
 		assertEquals(
 				"INSERT INTO Employees3 (empId, name, fullname, salary, type) VALUES (?, ?, ?, ?, 1)",
-				employeeData.buildInsertSQL());
+				employeeData.buildInsertSQL()[0]);
 	}
 
 	public void testInitialData1() {

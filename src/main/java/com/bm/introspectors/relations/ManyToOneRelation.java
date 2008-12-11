@@ -12,7 +12,7 @@ import com.bm.introspectors.Property;
  * @author Daniel Wiese
  * 
  */
-public class ManyToOneReleation extends AbstractRelation implements
+public class ManyToOneRelation extends AbstractRelation implements
 		EntityReleationInfo {
 
 	Set<Property> targetKeyProperty;
@@ -33,7 +33,7 @@ public class ManyToOneReleation extends AbstractRelation implements
 	 * @param annotation -
 	 *            the annotation (with values)
 	 */
-	public ManyToOneReleation(Class sourceClass, Class targetClass,
+	public ManyToOneRelation(Class sourceClass, Class targetClass,
 			Property sourceProperty, Property targetProperty,
 			ManyToOne annotation) {
 		super(sourceClass, targetClass, sourceProperty, targetProperty,

@@ -1,6 +1,6 @@
 package com.bm.ejb3metadata.annotations.helper.bean;
 
-import org.ejb3unit.asm.jar.Type;
+import org.hibernate.repackage.cglib.asm.Type;
 
 import com.bm.ejb3metadata.annotations.JMethod;
 import com.bm.ejb3metadata.annotations.exceptions.ResolverException;

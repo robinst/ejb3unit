@@ -28,7 +28,7 @@ public abstract class EntityInitialDataSet<T> implements InitialDataSet {
 	 *            sollen.
 	 */
 	public EntityInitialDataSet(Class<T> entityType) {
-		undo = new UndoScriptGenerator<T>(new EntityBeanIntrospector<T>(entityType));
+		undo = new UndoScriptGenerator<T>(EntityBeanIntrospector.getEntityBeanIntrospector(entityType));
 	}
 
 	/**

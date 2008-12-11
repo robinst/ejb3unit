@@ -25,7 +25,7 @@ public abstract class AbstractRelation implements EntityReleationInfo {
 
 	private final FetchType fetchType;
     
-    private final boolean isUnidirectional;
+        private final boolean isUnidirectional;
 
 	private final CascadeType[] cascadeType;
 
@@ -124,15 +124,20 @@ public abstract class AbstractRelation implements EntityReleationInfo {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("[" + this.getReleationType() + "] ")
+		sb.append("[" + this.getReleationType() + (isUnidirectional ? " (unidirectional)" : "") + "] ")
 				.append("Source class: ").append(
 						Ejb3Utils.getShortClassName(this.sourceClass)).append(
 						"\n");
 		sb.append("Source attrib: ").append(this.sourceProperty.getName())
 				.append("\n");
-		sb.append("Target class: ").append(
-				Ejb3Utils.getShortClassName(this.targetClass)).append("\n");
-		sb.append("Target attrib: ").append(this.targetProperty.getName());
+                if (!isUnidirectional) {
+                    sb.append("Target class: ").append(
+                            Ejb3Utils.getShortClassName(this.targetClass)).
+                            append("\n");
+
+                    sb.append("Target attrib: ").append(this.targetProperty.
+                            getName());
+                }
 		return sb.toString();
 	}
     

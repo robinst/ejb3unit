@@ -14,14 +14,17 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 
 import com.bm.introspectors.relations.EntityReleationInfo;
 import com.bm.introspectors.relations.GlobalPrimaryKeyStore;
-import com.bm.introspectors.relations.ManyToOneReleation;
+import com.bm.introspectors.relations.ManyToOneRelation;
+import com.bm.introspectors.relations.OneToOneRelation;
 import com.bm.utils.AccessType;
 import com.bm.utils.AccessTypeFinder;
 import com.bm.utils.IdClassInstanceGen;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This class inspects all relevant fields of an entity bean and holds the
@@ -36,7 +39,7 @@ import com.bm.utils.IdClassInstanceGen;
 public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospector<T>
 		implements Introspector<T> {
 
-	static final Logger log = Logger.getLogger(EntityBeanIntrospector.class);
+	static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(EntityBeanIntrospector.class);
 
 	/** true if the class has an composed pk field. * */
 	private boolean hasPKClass = false;
@@ -68,31 +71,55 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	/** the type of the discriminator (if a single-table inheritance strategy is used) */
 	private Class<?> discriminatorType;
 
+        /** the base entity class of the hierarchy */
+        private Class<? super T> baseClass;
+
+        /** type of the accessor */
+        private boolean isAccessTypeField = false;
+
+        private static Map<Class, EntityBeanIntrospector> introspectors = new HashMap<Class, EntityBeanIntrospector>();
+        
+        @SuppressWarnings("unchecked")
+        public static synchronized EntityBeanIntrospector getEntityBeanIntrospector(Class toInspect) {
+            
+            EntityBeanIntrospector ebi = introspectors.get(toInspect);
+            if (ebi == null) {
+                ebi = new EntityBeanIntrospector(toInspect);
+                ebi.basicInitialization();
+                introspectors.put(toInspect, ebi);
+                ebi.processAnnotations();
+            }
+            
+            return ebi;
+        }
+        
 	/**
 	 * Constructor with the class to inspect.
 	 * 
 	 * @param toInspect -
 	 *            the class to inspect
 	 */
-	public EntityBeanIntrospector(Class<T> toInspect) {
+	private  EntityBeanIntrospector(Class<T> toInspect) {
+            this.toInspect = toInspect;
+	}
 
-		this.toInspect = toInspect;
+        private void basicInitialization() {
 		Annotation[] classAnnotations = toInspect.getAnnotations();
-		boolean isSessionBean = false;
+		boolean isEntityBean = false;
 		boolean isTableNameSpecified = false;
-		boolean isAccessTypeField = false;
+		
 		Entity entityAnnotation = null;
+                isAccessTypeField = false;
 
-		// iterate over the annotations
+		// iterate over the basic annotations
 		for (Annotation a : classAnnotations) {
 			if (a instanceof Entity) {
 				log.debug("The class to introspect " + toInspect.getCanonicalName()
 						+ " is an Entity-Bean");
-				isSessionBean = true;
+				isEntityBean = true;
 				if (AccessTypeFinder.findAccessType(toInspect).equals(AccessType.FIELD)) {
 					isAccessTypeField = true;
 				}
-
 				entityAnnotation = (Entity) a;
 
 			} else if (a instanceof Table) {
@@ -107,7 +134,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		}
 
 		// check for mandatory conditions
-		if (!isSessionBean) {
+		if (!isEntityBean) {
 			throw new RuntimeException("The class " + toInspect.getSimpleName()
 					+ " is not a entity bean");
 		}
@@ -115,12 +142,15 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		if (!isTableNameSpecified) {
 			this.tableName = this.generateDefautTableName(toInspect, entityAnnotation);
 			log.debug("The class " + toInspect.getSimpleName()
-					+ " doas not specify a table name! Uning default Name: "
+					+ " does not specify a table name! Using default Name: "
 					+ this.tableName);
-
 		}
 
-		if (isAccessTypeField) {
+        }
+        
+        private void processAnnotations() {
+
+            if (isAccessTypeField) {
 			this.processAccessTypeField(toInspect);
 		} else {
 			this.processAccessTypeProperty(toInspect);
@@ -130,7 +160,8 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		processInheritance(toInspect);
 		
 		postProcessRelationProperties();
-	}
+            
+        }
 
 	/**
 	 * Overide the abstract implementation of this method, to handle with
@@ -203,7 +234,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 						"Multiple PK fields detected, use EmbeddedPKClass or IDClass");
 			}
 		} catch (IllegalAccessException e) {
-			log.error(e);
+			log.error("Unable to retrieve primary key", e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -234,6 +265,23 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	public boolean hasSchema() {
 		return this.hasSchema;
 	}
+
+
+        /**
+	 * Returns if a full table name including schema if required.
+         *
+         * @param useSchemaName if true, schema will be prefixed (if available)
+         *
+	 * @return full table name "schema.table"
+	 */
+	public String getFullTableName(boolean useSchemaName) {
+		if (useSchemaName && hasSchema()) {
+			return getShemaName() + "."
+					+ getTableName();
+		}
+		return getTableName();
+	}
+
 
 	/**
 	 * Returns the embeddedPKClass.
@@ -293,6 +341,14 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	}
 
 	/**
+	 * Returns the name of the class to inspect.
+	 */
+	public Class<T> getPersistentClass() {
+		return this.toInspect;
+	}
+        
+        
+	/**
 	 * Returns the logger for this class.
 	 * @return
 	 */
@@ -310,25 +366,39 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 		for (Entry<Property, PersistentPropertyInfo> entry: fieldInfo.entrySet()) {
 			if (entry.getValue().isReleation()) {
 				EntityReleationInfo relation = entry.getValue().getEntityReleationInfo();
+                                
 				// TODO (Pd): see if we can generalize this, to other relation types
-				if (relation instanceof ManyToOneReleation) {
-					Class<?> targetClass = ((ManyToOneReleation) relation).getTargetClass();
+				if (relation instanceof ManyToOneRelation && !relation.isUnidirectional()) {
+					Class<?> targetClass = ((ManyToOneRelation) relation).getTargetClass();
 					Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
-					((ManyToOneReleation) relation).setTargetKeyProperty(keyProps);
-					// Check that database name is set (it's explicitly unset while processing the 
-					// ManyToOne annotation, to be able to recognize the case when it's not 
-					// specified by a Column annotation)
-					if (entry.getValue().getDbName() == null) {
-						// Currently, only single key columns are supported
-						String keyName = keyProps.iterator().next().getName();
-						String dbName = entry.getKey().getName() + "_" + keyName;
-						entry.getValue().setDbName(dbName);
-						log.debug("No db name set for relation; using default " + entry.getValue().getDbName());
-					}
+					((ManyToOneRelation) relation).setTargetKeyProperty(keyProps);
+                                        setKeyProps(entry, keyProps);
+				}
+				if (relation instanceof OneToOneRelation && !relation.isUnidirectional()) {
+					Class<?> targetClass = ((OneToOneRelation) relation).getTargetClass();
+					Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
+					((OneToOneRelation) relation).setTargetKeyProperty(keyProps);
+                                        setKeyProps(entry, keyProps);
 				}
 			}
 		}
 	}
+
+        /**
+         *  Check that database name is set (it's explicitly unset while processing the
+          * ManyToOne annotation, to be able to recognize the case when it's not
+          * specified by a Column annotation).
+          */
+        private void setKeyProps(Entry<Property, PersistentPropertyInfo> entry, Set<Property> keyProps) {
+                if (entry.getValue().getDbName() == null) {
+                        // Currently, only single key columns are supported
+                        String keyName = keyProps.iterator().next().getName();
+                        String dbName = entry.getKey().getName() + "_" + keyName;
+                        entry.getValue().setDbName(dbName);
+                        log.debug("No db name set for relation; using default " + entry.getValue().getDbName());
+                }
+        }
+
 
 	/**
 	 * Determines whether the inspected entity class uses entity inheritance and of what type.
@@ -337,7 +407,7 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 */
 	private void processInheritance(Class<T> toInspect) {
 		// Find the root of the entity class hierarchy
-		Class<? super T> baseClass = toInspect;
+		baseClass = toInspect;
 		while (baseClass.getSuperclass().getAnnotation(Entity.class) != null) {
 			baseClass = baseClass.getSuperclass();
 		}
@@ -361,6 +431,10 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 				else {
 					this.tableName = generateDefautTableName(baseClass, baseClass.getAnnotation(Entity.class));
 				}
+                        }
+                        
+                        if (inheritanceStrategy.equals(InheritanceType.SINGLE_TABLE)
+                                || inheritanceStrategy.equals(InheritanceType.JOINED)) {
 				// Determine what discriminator to use
 				DiscriminatorColumn discriminatorColumn = baseClass.getAnnotation(DiscriminatorColumn.class);
 				if (discriminatorColumn != null) {
@@ -390,7 +464,9 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 				}
 			}
 			else {
-				log.debug("Inheritance strategy " + inheritanceStrategy + " not (yet) supported.");
+                                final String errorMessage = "Inheritance strategy " + inheritanceStrategy + " not (yet) supported.";
+                                log.debug(errorMessage);
+                                throw new RuntimeException(errorMessage);
 			}
 		}
 	}
@@ -400,6 +476,13 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	 */
 	public boolean usesSingleTableInheritance() {
 		return inheritanceStrategy != null && inheritanceStrategy.equals(InheritanceType.SINGLE_TABLE);
+	}
+
+	/**
+	 * @return	true when entity uses single-table inheritance strategy
+	 */
+	public boolean usesJoinedInheritance() {
+		return inheritanceStrategy != null && inheritanceStrategy.equals(InheritanceType.JOINED);
 	}
 
 	/**
@@ -425,4 +508,13 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 	public Class<?> getDiscriminatorType() {
 		return discriminatorType;
 	}
+
+
+        /**
+         * Return the base entity class in the entity hierarchy.
+         *
+         */
+        public Class<? super T> getBaseClass() {
+            return baseClass;
+        }
 }

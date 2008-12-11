@@ -2,9 +2,9 @@ package com.bm.ejb3metadata.annotations.analyzer.classes;
 
 import static com.bm.ejb3metadata.annotations.ClassType.MDB;
 
-import org.ejb3unit.asm.jar.AnnotationVisitor;
-import org.ejb3unit.asm.jar.commons.EmptyVisitor;
-import org.ejb3unit.asm.jar.Type;
+import org.hibernate.repackage.cglib.asm.AnnotationVisitor;
+import org.hibernate.repackage.cglib.asm.commons.EmptyVisitor;
+import org.hibernate.repackage.cglib.asm.Type;
 
 import com.bm.ejb3metadata.annotations.analyzer.AnnotationType;
 import com.bm.ejb3metadata.annotations.impl.JActivationConfigProperty;

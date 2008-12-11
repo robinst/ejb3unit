@@ -4,7 +4,8 @@ import java.lang.annotation.Annotation;
 
 import javax.persistence.Embeddable;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+
 
 /**
  * This class inspects all relevant fields of an embedded class and holds the
@@ -18,7 +19,7 @@ import org.apache.log4j.Logger;
 public class EmbeddedClassIntrospector<T> extends AbstractPersistentClassIntrospector<T>
 		implements Introspector<T> {
 
-	private static final Logger log = Logger
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(EmbeddedClassIntrospector.class);
 
 	/** the type of the ebmedded class* */

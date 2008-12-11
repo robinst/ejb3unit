@@ -87,7 +87,7 @@ public class EmployeeRelationsTest extends TestCase {
 	public void testDepartment1SQL() {
 		assertEquals(
 				"INSERT INTO EMPLOYEE (empId, name, fullname, department1_deptId) VALUES (?, ?, ?, ?)",
-				employeeData1.buildInsertSQL());
+				employeeData1.buildInsertSQL()[0]);
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class EmployeeRelationsTest extends TestCase {
 	public void testDepartment2SQL() {
 		assertEquals(
 				"INSERT INTO EMPLOYEE (empId, name, fullname, dept2) VALUES (?, ?, ?, ?)",
-				employeeData2.buildInsertSQL());
+				employeeData2.buildInsertSQL()[0]);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class EmployeeRelationsTest extends TestCase {
 	public void testDepartment3SQL() {
 		assertEquals(
 				"INSERT INTO EMPLOYEE (empId, name, fullname, dept3) VALUES (?, ?, ?, ?)",
-				employeeData3.buildInsertSQL());
+				employeeData3.buildInsertSQL()[0]);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class EmployeeRelationsTest extends TestCase {
 	public void testDepartment4SQL() {
 		assertEquals(
 				"INSERT INTO EMPLOYEE (empId, name, fullname, department4_deptId) VALUES (?, ?, ?, ?)",
-				employeeData4.buildInsertSQL());
+				employeeData4.buildInsertSQL()[0]);
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class EmployeeRelationsTest extends TestCase {
 	public void testDepartment5SQL() {
 		assertEquals(
 				"INSERT INTO EMPLOYEE (empId, name, fullname, dept5) VALUES (?, ?, ?, ?)",
-				employeeData5.buildInsertSQL());
+				employeeData5.buildInsertSQL()[0]);
 	}
 
 	/**
@@ -145,6 +145,6 @@ public class EmployeeRelationsTest extends TestCase {
 	public void testDepartment6SQL() {
 		assertEquals(
 				"INSERT INTO EMPLOYEE (empId, name, fullname, dept6) VALUES (?, ?, ?, ?)",
-				employeeData6.buildInsertSQL());
+				employeeData6.buildInsertSQL()[0]);
 	}
 }

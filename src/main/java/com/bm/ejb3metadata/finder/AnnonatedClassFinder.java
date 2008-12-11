@@ -18,7 +18,7 @@ import com.bm.ejb3metadata.utils.MetadataUtils;
  */
 public class AnnonatedClassFinder {
 
-	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger
+	private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory
 			.getLogger(AnnonatedClassFinder.class);
 
 	/**
