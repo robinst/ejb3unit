@@ -138,8 +138,6 @@ public abstract class BaseEntityFixture<T> extends BaseFixture implements IBaseE
 	 */
 	@Override
 	public void tearDown() throws Exception {
-		super.tearDown();
-		this.creator.cleanup();
 		log.debug("Cleaning database from previous test");
 		try {
 			// only delete objects if the test was not rollbacked
@@ -181,7 +179,10 @@ public abstract class BaseEntityFixture<T> extends BaseFixture implements IBaseE
 			log.error("-----------SQL Script end-------------------");
 			// rethrow the error
 			throw e;
-		}
+		} finally {
+            this.creator.cleanup();
+    		super.tearDown();
+        }
 	}
 
 	/**

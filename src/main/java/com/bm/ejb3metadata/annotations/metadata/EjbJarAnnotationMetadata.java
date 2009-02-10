@@ -26,7 +26,7 @@ public class EjbJarAnnotationMetadata {
 
 	/**
 	 * Map of interface names and the first possible implementation Currently we
-	 * don´t manage different implementations of a session bean TODO check the
+	 * don't manage different implementations of a session bean TODO check the
 	 * spect: if a Local/Romete interface has 2 different implementation
 	 */
 	private Map<String, String> interface2implemantation = null;
@@ -68,7 +68,7 @@ public class EjbJarAnnotationMetadata {
 		// already exists ?
 		if (classesAnnotationMetadata.containsKey(key)) {
 			String msg = "EjbJarAnnotationMetadata.addClassAnnotationMetadata.alreadyPresent";
-			logger.debug(msg);
+			logger.trace(msg);
 			// throw new IllegalStateException(msg);
 		}
 		classesAnnotationMetadata.put(key, classAnnotationMetadata);
@@ -105,7 +105,7 @@ public class EjbJarAnnotationMetadata {
 	}
 
 	/**
-	 * Builds a map of Local/Remote interfaces and it´s implementations.
+	 * Builds a map of Local/Remote interfaces and it's implementations.
 	 */
 	private void buildInterfaceImplementationMap() {
 		interface2implemantation = new HashMap<String, String>();

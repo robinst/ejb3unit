@@ -370,13 +370,19 @@ public class EntityBeanIntrospector<T> extends AbstractPersistentClassIntrospect
 				// TODO (Pd): see if we can generalize this, to other relation types
 				if (relation instanceof ManyToOneRelation && !relation.isUnidirectional()) {
 					Class<?> targetClass = ((ManyToOneRelation) relation).getTargetClass();
+
+                    getLogger().debug("post process (ManyToOne) target class=" + targetClass.getCanonicalName());
+
 					Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
 					((ManyToOneRelation) relation).setTargetKeyProperty(keyProps);
                                         setKeyProps(entry, keyProps);
 				}
 				if (relation instanceof OneToOneRelation && !relation.isUnidirectional()) {
 					Class<?> targetClass = ((OneToOneRelation) relation).getTargetClass();
-					Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
+
+                    getLogger().debug("post process (OneToOne) target class=" + targetClass.getCanonicalName());
+
+                    Set<Property> keyProps = GlobalPrimaryKeyStore.getStore().getPrimaryKeyInfo(targetClass);
 					((OneToOneRelation) relation).setTargetKeyProperty(keyProps);
                                         setKeyProps(entry, keyProps);
 				}

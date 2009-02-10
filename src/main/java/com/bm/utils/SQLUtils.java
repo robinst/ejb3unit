@@ -2,9 +2,9 @@ package com.bm.utils;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Untility class for SQL operations.
@@ -71,13 +71,13 @@ public final class SQLUtils {
      */
     public static void disableReferentialIntegrity(Connection con)
             throws SQLException {
-        PreparedStatement prs = null;
+        Statement prs = null;
         try {
             log.debug(
-                    "Trying to disable referential integrity for inserts.");
+                    "Trying to disable referential integrity.");
             final String disableRICommand = "SET REFERENTIAL_INTEGRITY FALSE";
-            prs = con.prepareStatement(disableRICommand);
-            prs.execute();
+            prs = con.createStatement();
+            prs.execute(disableRICommand);
             log.debug("OK. RI disabled.");
         } finally {
             SQLUtils.cleanup(prs);
@@ -91,13 +91,13 @@ public final class SQLUtils {
      */
     public static void enableReferentialIntegrity(Connection con)
             throws SQLException {
-        PreparedStatement prs = null;
+        Statement prs = null;
         try {
             log.debug(
-                    "Trying to enable referential integrity for inserts.");
+                    "Trying to enable referential integrity.");
             final String enableRICommand = "SET REFERENTIAL_INTEGRITY TRUE";
-            prs = con.prepareStatement(enableRICommand);
-            prs.execute();
+            prs = con.createStatement();
+            prs.execute(enableRICommand);
             log.debug("OK. RI enabled.");
         } finally {
             SQLUtils.cleanup(prs);
@@ -110,8 +110,8 @@ public final class SQLUtils {
      * @param prst -
      *            prepared statement
      */
-    public static void cleanup(PreparedStatement prst) {
-        cleanup(new PreparedStatement[]{prst});
+    public static void cleanup(Statement prst) {
+        cleanup(new Statement[]{prst});
     }
 
     /**
@@ -120,7 +120,7 @@ public final class SQLUtils {
      * @param prst -
      *            prepared statements
      */
-    public static void cleanup(PreparedStatement[] prst) {
+    public static void cleanup(Statement[] prst) {
         if (prst != null) {
             for (int i = 0; i < prst.length; i++) {
                 try {
@@ -142,7 +142,7 @@ public final class SQLUtils {
      *            result set
      */
     public static void cleanup(Connection con,
-            PreparedStatement[] prst,
+            Statement[] prst,
             ResultSet rs) {
         if (rs != null) {
             try {
@@ -185,7 +185,7 @@ public final class SQLUtils {
      *            prepared statement
      */
     public static void cleanup(Connection con,
-            PreparedStatement[] prst) {
+            Statement[] prst) {
         cleanup(con, prst, null);
     }
 
@@ -197,7 +197,7 @@ public final class SQLUtils {
      * @param prst -
      *            prepared statement
      */
-    public static void cleanup(Connection con, PreparedStatement prst) {
-        cleanup(con, new PreparedStatement[]{prst}, null);
+    public static void cleanup(Connection con, Statement prst) {
+        cleanup(con, new Statement[]{prst}, null);
     }
 }

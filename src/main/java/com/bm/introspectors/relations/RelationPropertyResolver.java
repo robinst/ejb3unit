@@ -33,6 +33,7 @@ public final class RelationPropertyResolver {
      */
     public static Property findAttributeForRelationAtOtherSide(Class<Object> declaredInClass, String mappedBy) {
         // now look for the other if exist at the global store
+        log.debug("declaredInClass=" + declaredInClass.getName());
         Property relProp = GlobalRelationStore.getStore().getProperty(declaredInClass, mappedBy);
         if (relProp == null) {
             // use a new instrospector to put the relation to the global

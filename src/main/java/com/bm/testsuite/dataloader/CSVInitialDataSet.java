@@ -37,6 +37,7 @@ import com.bm.utils.Ejb3Utils;
 import com.bm.utils.SQLUtils;
 import com.bm.utils.csv.CSVParser;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -62,16 +63,20 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory
 			.getLogger(CSVInitialDataSet.class);
 
-    private Class<T> entityBeanClass;
+        private Class<T> entityBeanClass;
 
 	private EntityBeanIntrospector<T> introspector;
 
 	private String[] propertyMapping;
 
 	private String[] insertSQLStrings;
-        
-    private List[] csvMapping;
 
+        private Set<String> usedTables;
+        
+        private List[] csvMapping;
+        
+        private final String csvFileName;
+        
 	private final File file;
 
 	private final boolean isCopressed;
@@ -99,12 +104,25 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 	public CSVInitialDataSet(Class<T> entityBeanClass, String csvFileName,
 			boolean isCompressed, boolean useSchemaName,
 			String... propertyMapping) {
-        this.entityBeanClass = entityBeanClass;
+                this.entityBeanClass = entityBeanClass;
 		this.useSchemaName = useSchemaName;
 		this.isCopressed = isCompressed;
-		initialize(entityBeanClass, propertyMapping);
-        file = resolveFile(csvFileName);
+		this.csvFileName = csvFileName;
+                initialize(entityBeanClass, propertyMapping);
+                file = resolveFile(csvFileName);
 	}
+
+        public Class<T> getEntityBeanClass() {
+            return entityBeanClass;
+        }
+
+        public String[] getPropertyMapping() {
+            return propertyMapping;
+        }
+        
+        public String getCSVFileName() {
+            return csvFileName;
+        }
 
     private File resolveFile(String fileName) {
         final URL tmp = Thread.currentThread().getContextClassLoader()
@@ -223,6 +241,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
                 @SuppressWarnings("unchecked")
                 SortedMap<TableInfo, Builder> insertSqlMap = new TreeMap<TableInfo, Builder>();
                 Class<?> toInspect = this.introspector.getPersistentClass();
+                usedTables = new HashSet<String>();
 
                 while (toInspect != null) {
                     try {
@@ -232,6 +251,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
                         if (b == null) {
                             b = new Builder(tableName);
                             insertSqlMap.put(ti, b);
+                            usedTables.add(tableName);
                         }
                     } catch (RuntimeException e) {
                         // Stop at first non-entity parent
@@ -422,6 +442,10 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		return info;
 	}
 
+    public Set<String> getUsedTables() {
+        return usedTables;
+    }
+
     public void create() {
         BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg.getConfiguration());
         Connection con = null;
@@ -454,7 +478,7 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 		String line = "";
 		int lineNr = 0;
 
-        log.debug("CSVInitialDataSet " + this.introspector.getPersistentClass().getName() + " setup");
+        log.debug("CSVInitialDataSet " + this.introspector.getPersistentClass().getName() + " create");
 		try {
             for (int i = 0; i < this.insertSQLStrings.length; i++) {
                 prep[i] = con.prepareStatement(this.insertSQLStrings[i]);

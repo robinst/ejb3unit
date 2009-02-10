@@ -18,6 +18,9 @@ import com.bm.utils.SQLUtils;
 import com.bm.utils.injectinternal.InternalInjector;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Baseclass for all Fixtures with Entity-Manager support.
@@ -62,6 +65,7 @@ public class BaseFixture extends BaseTest {
      */
     @Override
     public void setUp() throws Exception {
+        log.debug("BaseFixture setUp");
         super.setUp();
         fireExceptionIfNotInitialized();
         injector.injectMembers(this);
@@ -143,6 +147,60 @@ public class BaseFixture extends BaseTest {
         }
     }
 
+    private void removeEntitySet(EntityManager em) {
+        for (InitialDataSet current : this.initalDataSet) {
+            // insert entity manager
+            if (current instanceof EntityInitialDataSet) {
+                current.cleanup(em);
+            }
+        }
+    }
+
+    private void truncateCsvTables(EntityManager em) {
+        Set<String> usedTables = new HashSet<String>();
+        for (InitialDataSet current : this.initalDataSet) {
+            // insert entity manager
+            if (current instanceof CSVInitialDataSet) {
+                usedTables.addAll(((CSVInitialDataSet)current).getUsedTables());
+            }
+        }
+        if (!usedTables.isEmpty()) {
+            BasicDataSource ds = new BasicDataSource(Ejb3UnitCfg.
+                    getConfiguration());
+            Connection con = null;
+            Statement stmt = null;
+            try {
+                con = ds.getConnection();
+                con.setAutoCommit(true);
+                stmt = con.createStatement();
+
+                if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
+                    // disable referential integrity for csv loads in H2
+                    // one have to do this manually in external RDBMS
+                    SQLUtils.disableReferentialIntegrity(con);
+                }
+
+                for (String table : usedTables) {
+                    String sql = "DELETE FROM " + table;
+                    log.debug(sql);
+                    stmt.execute(sql);
+                }
+
+                if (Ejb3UnitCfg.getConfiguration().isInMemory()) {
+                    // enable referential integrity for csv loads in H2
+                    // one have to do this manually in external RDBMS
+                    SQLUtils.enableReferentialIntegrity(con);
+                }
+            } catch (SQLException e) {
+                String errMsg = "Can't delete CSVInitialDataSet tables!";
+                log.error(errMsg, e);
+                throw new RuntimeException(errMsg, e);
+            } finally {
+                SQLUtils.cleanup(con, stmt);
+            }
+        }
+    }
+
     /**
      * @author Daniel Wiese
      * @since 16.10.2005
@@ -150,8 +208,6 @@ public class BaseFixture extends BaseTest {
      */
     @Override
     public void tearDown() throws Exception {
-        super.tearDown();
-
         log.debug("BaseFixture tearDown");
 
         // If there are Initaldatasets there have to be cleared up
@@ -161,14 +217,16 @@ public class BaseFixture extends BaseTest {
             EntityManager em = getEntityManagerProv().get();
             // Is this necessary?
             em.clear();
-
             // be violated ??
 
-            for (int i = this.initalDataSet.length - 1; i >= 0; i--) {
-                this.initalDataSet[i].cleanup(em);
+            // In case Initialdatasets are persited
+            if (this.initalDataSet != null) {
+                removeEntitySet(em);
+                truncateCsvTables(em);
             }
         }
 
+        super.tearDown();
     }
 
     public boolean initFailed() {
