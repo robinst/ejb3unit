@@ -789,7 +789,15 @@ public class CSVInitialDataSet<T> implements InitialDataSet {
 						.valueOf(value)));
 			}
 		} else if (type.equals(Boolean.class)) {
-			final boolean result = BooleanUtils.toBoolean(value);
+            boolean result;
+                        // try to parse as int
+                        try {
+                            result = BooleanUtils.toBoolean(Integer.valueOf(value));
+                        } catch (NumberFormatException ex) {
+                            // not an int, continue trying a literal name
+                            result = BooleanUtils.toBoolean(value);
+                        }
+            
 			statement.setBoolean(index, result);
 		} else if (type.equals(Short.class)) {
 			statement.setShort(index, ((value.equals("")) ? 0 : Short

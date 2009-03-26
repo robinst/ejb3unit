@@ -41,7 +41,7 @@ public final class SessionBeanHelper {
 	/**
 	 * Validation.
 	 */
-	private static boolean validating = true;
+	private static boolean validating = false;
 
 	/**
 	 * Helper class, no public constructor.
