@@ -284,21 +284,21 @@
 		<site>
 			<id>ejb3unit-site</id>
 			<url>
-				scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs
+				sftp://web.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs
 			</url>
 		</site>
 		<repository>
 			<id>ejb3unit-repo</id>
 			<name>EJB3unit-Repository</name>
 			<url>
-				scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/maven2
+				sftp://web.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/maven2
 			</url>
 		</repository>
 		<snapshotRepository>
 			<id>ejb3unit-repo-snap</id>
 			<name>EJB3unit-Repository</name>
 			<url>
-				scp://ejb3unit.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/maven2-snap
+				sftp://web.sourceforge.net/home/groups/e/ej/ejb3unit/htdocs/maven2-snap
 			</url>
 			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
