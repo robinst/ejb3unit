@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Service annotaion from Jboss.
+ * Service annotation from Jboss.
  * @author Daniel Wiese
  * @since 24.02.2007
  */
@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 public @interface Service {
 	
 	/**
-	 * Teh object name.
+	 * The object name.
 	 * @author Daniel Wiese
 	 * @since 24.02.2007
 	 */
