@@ -12,7 +12,7 @@ import com.bm.ejb3data.bo.Societe;
 import com.bm.testsuite.BaseEntityFixture;
 
 /**
- * Importet test case from a bug report.
+ * Imported test case from a bug report.
  * @author Dnaiel Wiese
  * @author LIEMANS
  * @generated "UML to Java V5.0
