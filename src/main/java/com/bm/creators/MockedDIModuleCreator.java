@@ -11,8 +11,11 @@ import javax.sql.DataSource;
 
 import org.jmock.Mockery;
 
+import static org.mockito.Mockito.*;
+
 import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
+import com.bm.cfg.Ejb3UnitCfg;
 
 public class MockedDIModuleCreator implements Module {
 
@@ -23,10 +26,8 @@ public class MockedDIModuleCreator implements Module {
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param manager
-	 *            the entity manager instance which should be used for the
-	 *            binding
+     *
+     * @param context - 
 	 */
 	public MockedDIModuleCreator(
 			Mockery context) {
@@ -36,8 +37,7 @@ public class MockedDIModuleCreator implements Module {
 
 	/**
 	 * Adds a map with interface impl. to the structure.
-	 * 
-	 * @author Daniel Wiese
+	 *
 	 * @since Jul 19, 2007
 	 * @param toAdd
 	 *            the map to add
@@ -80,8 +80,17 @@ public class MockedDIModuleCreator implements Module {
 	}
 
 	public <T> T createMock(Class<T> forIterface) {
-		T mock = this.context.mock(forIterface);
-		this.interfacesMockControlls.put(forIterface, mock);
-		return mock;
-	}
+
+        T mock = null;
+
+        String mockLib = Ejb3UnitCfg.getConfiguration().getValue(Ejb3UnitCfg.KEY_MOCKING_PROVIDER);
+
+        if(Ejb3UnitCfg.JMOCK_VALUE.equals(mockLib)) {
+            mock = this.context.mock(forIterface);
+        } else if(Ejb3UnitCfg.MOCKITO_VALUE.equals(mockLib)) {
+            mock = mock(forIterface);
+        }
+        this.interfacesMockControlls.put(forIterface, mock);
+        return mock;
+    }
 }
