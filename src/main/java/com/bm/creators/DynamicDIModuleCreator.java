@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.ejb.SessionContext;
 import javax.ejb.TimerService;
+import javax.mail.Session;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
@@ -14,6 +15,7 @@ import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.utils.BasicDataSource;
 import com.bm.utils.substitues.FakedSessionContext;
+import com.bm.utils.substitues.MailSessionProvider;
 import com.bm.utils.substitues.MockedTimerService;
 
 public class DynamicDIModuleCreator implements Module {
@@ -59,6 +61,10 @@ public class DynamicDIModuleCreator implements Module {
 				.toInstance(new BasicDataSource(this.conf));
 		binder.bind(EntityManager.class).toInstance(this.manager);
 		binder.bind(TimerService.class).to(MockedTimerService.class);
+		
+		// Mail-Sessions can not easily be mocked. For a quick solution for issue 2802736
+		// a null value is inserted.
+		binder.bind(Session.class).toProvider(MailSessionProvider.class);
 
                 try {
                         Class<SessionContext> clazz = (Class<SessionContext>) Thread.currentThread().getContextClassLoader()

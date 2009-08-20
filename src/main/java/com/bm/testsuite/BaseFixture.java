@@ -72,7 +72,7 @@ public class BaseFixture extends BaseTest {
         this.jndiBinder.bind();
         entityManagerProv.get().clear();
 
-        // In case there are Initialdatasets they are persited
+        // In case there are InitialDatasets they are persisted
         if (this.initalDataSet != null) {
             loadCsvFirst();
             loadEntitySet();
