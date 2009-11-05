@@ -8,7 +8,6 @@ import javax.ejb.EJB;
 import javax.persistence.PersistenceContext;
 
 import org.jmock.Mockery;
-import static org.mockito.Mockito.mock;
 
 import com.bm.creators.BeanCreationListener;
 import com.bm.creators.MockedDIModuleCreator;
@@ -19,12 +18,11 @@ import com.bm.ejb3guice.inject.Stage;
 import com.bm.ejb3metadata.annotations.metadata.MetaDataCache;
 import com.bm.testsuite.BaseTest;
 import com.bm.testsuite.interfaces.IMockedSessionBeanFixture;
-import com.bm.cfg.Ejb3UnitCfg;
 
 /**
  * This class enables the testing of Seteless/Statefull Session beans and JBoss
  * Service classes under Mock-Isolation control. All JSR 220 (EJB 3) fields will
- * be injected as JMock objects.
+ * be injected using a pluggable MockProvider.
  *
  * @author Daniel Wiese
  * @param <T> -
@@ -33,11 +31,8 @@ import com.bm.cfg.Ejb3UnitCfg;
 public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IMockedSessionBeanFixture<T> {
 
     private final Class<T> beanUnderTestClass;
-
     private T beanToTest = null;
-
-    protected final Mockery context = new Mockery();
-
+    protected MockProvider mockProvider;
     private Map<Class<?>, Object> mockedDependencies = null;
 
     /**
@@ -51,7 +46,6 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
         this.beanUnderTestClass = beanToTest;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -60,17 +54,9 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
         if (this.mockedDependencies != null && this.mockedDependencies.containsKey(interfaze)) {
             return (M) this.mockedDependencies.get(interfaze);
         } else {
-            String mockLib = Ejb3UnitCfg.getConfiguration().getValue(Ejb3UnitCfg.KEY_MOCKING_PROVIDER);
-            if (Ejb3UnitCfg.JMOCK_VALUE.equals(mockLib)) {
-                return context.mock(interfaze);
-            } else if (Ejb3UnitCfg.MOCKITO_VALUE.equals(mockLib)) {
-                return mock(interfaze);
-            } else {
-                return null;
-            }
+            return mockProvider.getMock(interfaze);
         }
     }
-
 
     /**
      * {@inheritDoc}
@@ -79,7 +65,6 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
         return this.beanToTest;
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -87,15 +72,16 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
         this.setValueForField(this.beanToTest, fieldName, toSet);
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void setUp() throws Exception {
         super.setUp();
+        mockProvider = MockProviderFactory.createMockProvider();
+
         MockedDIModuleCreator module = MetaDataCache.getMockModuleCreator(beanUnderTestClass,
-                context);
+                mockProvider);
         this.beanToTest = createBeanIstance(module);
         this.mockedDependencies = module.getMocks();
     }
@@ -113,13 +99,12 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
         return instance;
     }
 
-
     /**
      * {@inheritDoc}
      */
     @Override
     public void tearDown() throws Exception {
-        context.assertIsSatisfied();
+        mockProvider.verifyMocks();
         super.tearDown();
         this.beanToTest = null;
     }
@@ -128,7 +113,6 @@ public abstract class MockedSessionBeanFixture<T> extends BaseTest implements IM
      * {@inheritDoc}
      */
     public Mockery getContext() {
-        return context;
-	}
-
+        return mockProvider.getContext();
+    }
 }

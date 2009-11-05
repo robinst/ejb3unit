@@ -9,18 +9,15 @@ import javax.ejb.TimerService;
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
-import org.jmock.Mockery;
-
-import static org.mockito.Mockito.*;
-
 import com.bm.ejb3guice.inject.Binder;
 import com.bm.ejb3guice.inject.Module;
-import com.bm.cfg.Ejb3UnitCfg;
+import com.bm.testsuite.mocked.MockProvider;
+
 
 public class MockedDIModuleCreator implements Module {
 
-	private final Mockery context;
-	private Map<Class<?>, Object> interfacesMockControlls = new HashMap<Class<?>, Object>();
+       private final MockProvider mockProvider;
+	private Map<Class<?>, Object> interfacesMockControls = new HashMap<Class<?>, Object>();
 
 	private final Map<String, String> interface2implemantation;
 
@@ -30,8 +27,8 @@ public class MockedDIModuleCreator implements Module {
      * @param context - 
 	 */
 	public MockedDIModuleCreator(
-			Mockery context) {
-		this.context = context;
+			MockProvider mockProvider) {
+		this.mockProvider = mockProvider;
 		this.interface2implemantation = new HashMap<String, String>();
 	}
 
@@ -76,21 +73,13 @@ public class MockedDIModuleCreator implements Module {
 	 * @return die interfaces und die mock controlls
 	 */
 	public Map<Class<?>, Object> getMocks() {
-		return interfacesMockControlls;
+		return interfacesMockControls;
 	}
 
-	public <T> T createMock(Class<T> forIterface) {
+	public <T> T createMock(Class<T> forInterface) {
+            T mock = mockProvider.getMock(forInterface);
 
-        T mock = null;
-
-        String mockLib = Ejb3UnitCfg.getConfiguration().getValue(Ejb3UnitCfg.KEY_MOCKING_PROVIDER);
-
-        if(Ejb3UnitCfg.JMOCK_VALUE.equals(mockLib)) {
-            mock = this.context.mock(forIterface);
-        } else if(Ejb3UnitCfg.MOCKITO_VALUE.equals(mockLib)) {
-            mock = mock(forIterface);
+            this.interfacesMockControls.put(forInterface, mock);
+            return mock;
         }
-        this.interfacesMockControlls.put(forIterface, mock);
-        return mock;
-    }
 }

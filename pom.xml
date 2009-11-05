@@ -56,6 +56,11 @@
 			<organization>Mimecast</organization>
 			<timezone />
 		</contributor>
+		<contributor>
+		  <name>Alphonse Bendt</name>
+		  <email>alphonse.bendt(at)akquinet.de</email>
+		  <organization>Akquinet AG</organization>
+        </contributor>
 	</contributors>
 	<licenses>
 		<license>
@@ -201,6 +206,11 @@
             <artifactId>mockito-all</artifactId>
             <version>1.7</version>
         </dependency>
+        <dependency>
+  <groupId>org.easymock</groupId>
+  <artifactId>easymock</artifactId>
+  <version>2.4</version>
+</dependency>
 		<!-- commons dependencies -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>

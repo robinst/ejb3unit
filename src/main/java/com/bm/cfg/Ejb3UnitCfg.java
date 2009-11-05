@@ -96,7 +96,9 @@ public final class Ejb3UnitCfg {
 
     public static final String JMOCK_VALUE = "jmock";
     public static final String MOCKITO_VALUE = "mockito";
-    private static final String[] VALID_MOCKING_PROVIDERS = {JMOCK_VALUE, MOCKITO_VALUE};
+    public static final String EASYMOCK_VALUE = "easymock";
+    
+    private static final String[] VALID_MOCKING_PROVIDERS = {JMOCK_VALUE, MOCKITO_VALUE, EASYMOCK_VALUE};
     private static final String DEFAULT_MOCKING_PROVIDER = JMOCK_VALUE;
 
     private final Properties config;

@@ -4,13 +4,14 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
-import org.jmock.Mockery;
 
 import com.bm.cfg.Ejb3UnitCfg;
 import com.bm.creators.DynamicDIModuleCreator;
 import com.bm.creators.MockedDIModuleCreator;
 import com.bm.ejb3guice.inject.Module;
 import com.bm.ejb3metadata.MetadataAnalyzer;
+import com.bm.testsuite.mocked.MockProvider;
+
 
 public final class MetaDataCache {
 
@@ -147,7 +148,7 @@ public final class MetaDataCache {
 	 *            the class to check
 	 * @return the module creator.
 	 */
-	public static MockedDIModuleCreator getMockModuleCreator(Class toCheck, Mockery context) {
+	public static MockedDIModuleCreator getMockModuleCreator(Class toCheck, MockProvider context) {
 		// ensure the metadata is resolved for this jar (where toCheck is in)
 		getMetaData(toCheck);
 		final MockedDIModuleCreator mockedDIModuleCreator = new MockedDIModuleCreator(context);
