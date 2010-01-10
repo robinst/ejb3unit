@@ -5,6 +5,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.bm.testsuite.interfaces.IMockedSessionBeanFixture;
+import com.bm.testsuite.mocked.MockProvider;
 import com.bm.testsuite.mocked.MockedSessionBeanFixture;
 
 /**
@@ -26,9 +27,13 @@ public class MockedSessionBeanJUnit4Fixture<T> implements
 		private MockedSessionBeanFixtureExtension(Class<T> beanToTest) {
 			super(beanToTest);
 		}
+
+                public MockProvider getMockProvider() {
+                    return mockProvider;
+                }
 	}
 
-	private final IMockedSessionBeanFixture<T> delegate;
+	private final MockedSessionBeanFixtureExtension delegate;
 
 	/**
 	 * Default constructor.
@@ -85,5 +90,9 @@ public class MockedSessionBeanJUnit4Fixture<T> implements
 	public void tearDown() throws Exception {
 		delegate.tearDown();
 	}
+
+        protected MockProvider getMockProvider() {
+            return delegate.getMockProvider();
+        }
 
 }
