@@ -169,6 +169,11 @@
 	</build>
 	<repositories>
 		<repository>
+			<id>jboss</id>
+			<name>JBossRepo</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
 			<id>ejb3unit</id>
 			<name>Ejb3UnitRepo</name>
 			<url>http://ejb3unit.sourceforge.net/maven2</url>
@@ -252,7 +257,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>3.4.0.GA</version>
+			<version>3.6.0.Final</version>
 			<scope>provided</scope>
 <!--
                         <exclusions>

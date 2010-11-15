@@ -17,21 +17,19 @@
 			<zipfileset src="${project.build.directory}/liblocation/commons-logging.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/dom4j.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/ejb3guice.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/ejb3-persistence.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hamcrest-core.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hamcrest-library.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/hibernate-annotations.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/cglib-nodep.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hibernate-commons-annotations.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hibernate-core.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/hibernate-entitymanager.jar" />
+			<zipfileset src="${project.build.directory}/liblocation/hibernate-jpa-2.0-api.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/h2.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/javassist.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/jta.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/logkit.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/servlet-api.jar" />
 			<zipfileset src="${project.build.directory}/liblocation/slf4j-api.jar" />
-			<zipfileset src="${project.build.directory}/liblocation/xml-apis.jar" />
 
 			<zipfileset src="${project.build.directory}/${project.build.finalName}.tmp" />
 			<rule pattern="org.hibernate.**" result="org.ejb3unit.hibernate.@1" />

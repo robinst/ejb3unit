@@ -9,6 +9,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import javax.sql.DataSource;
 
 /**
@@ -69,6 +70,16 @@ public class MySessionBean implements IMySessionBean {
 		List<StockWKNBo> loaded = Collections.checkedList(query.getResultList(),
 				StockWKNBo.class);
 		return loaded;
+	}
+	
+	/**
+	 * Returns a test list using a TypedQuery.
+	 * 
+	 * @return a test list
+	 */
+	public List<StockWKNBo> getAllStocksWithTypedQuery() {
+		final TypedQuery<StockWKNBo> query = this.manager.createNamedQuery("StockWKNBo.allStocks", StockWKNBo.class);
+		return query.getResultList();
 	}
 
 	/**

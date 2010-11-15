@@ -80,6 +80,18 @@ public class MySessionBeanTest extends BaseSessionBeanFixture<MySessionBean> {
 		assertEquals(new StockWKNBo(1, "Das ist ein Name"), back.get(0));
 		assertEquals(new StockWKNBo(2, "Das ist ein andere Name"), back.get(1));
 	}
+	
+	/**
+	 * Test a named query (typed).
+	 */
+	public void testTypedQuery() {
+		final MySessionBean toTest = this.getBeanToTest();
+		List<StockWKNBo> stocks = toTest.getAllStocksWithTypedQuery();
+		assertNotNull(stocks);
+		assertEquals(188, stocks.size());
+		assertEquals(new StockWKNBo(1, "Das ist ein Name"), stocks.get(0));
+		assertEquals(new StockWKNBo(2, "Das ist ein andere Name"), stocks.get(1));
+	}
 
 	/**
 	 * Test the dpendency injection.
