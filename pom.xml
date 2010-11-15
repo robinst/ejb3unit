@@ -179,6 +179,18 @@
 			<url>http://ejb3unit.sourceforge.net/maven2-snap</url>
 		</repository>
 	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>ejb3unit</id>
+			<name>Ejb3UnitRepo</name>
+			<url>http://ejb3unit.sourceforge.net/maven2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>ejb3unit-snap</id>
+			<name>Ejb3UnitRepo</name>
+			<url>http://ejb3unit.sourceforge.net/maven2-snap</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<dependencies>
 		<!-- ejb3guice has the same dependency -->
 		<dependency>
